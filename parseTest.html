@@ -4,7 +4,9 @@
 	<meta charset="UTF-8">
 	<title>Parse Test - Liam Conroy</title>
 	<link rel="stylesheet" href="css/style.css">
-	<script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"/>
+</head>
+<body>
+    <script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"/>
     <script type="text/javascript">
     
     function onFrame(event)
@@ -37,26 +39,25 @@
             }
         });
     }
-	function mainTry()
-	{
+    function mainTry()
+    {
         console.log("mainTry");
         // initialise Parse
         alert("main run");
         initialiseParse();
         retrieveEvents();
-	}
+    }
 
-	function onResize(event) 
-	{
-	// Whenever the window is resized, recenter the path:
-		//path.position = view.center;	
-	}
+    function onResize(event) 
+    {
+    // Whenever the window is resized, recenter the path:
+        //path.position = view.center;  
+    }
 
     mainTry();
 
-	</script>
-</head>
-<body>
+    </script>
+    
 	<canvas id="canvas" resize stats hidpi="off"></canvas>
     <button type="button" onclick="mainTry()">Connect To Parse</button>
 </form>
