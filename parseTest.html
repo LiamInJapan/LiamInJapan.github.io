@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Parse Test - Liam Conroy</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="http://www.parsecdn.com/js/parse-1.6.12.min.js">
+    
+    
+    function onFrame(event)
+    {
+    }
+
+    function initialiseParse()
+    {
+        Parse.initialize("53KCYXo7suR1lS2dh6WrGPyFJCtqdm56niYgSoev", "v30AM5vsr2asBrbKDeMDWxbhVnDNXYLdOWlgF5Ax");
+
+        //var TestObject = Parse.Object.extend("TestObject");
+        
+        //var testObject = new TestObject();
+        //testObject.save({foo: "barbaa"}).then(function(object) {
+        //alert("yay! it worked");
+        //});
+    }
+
+    function retrieveEvents()
+    {
+        var Events = Parse.Object.extend("Events");
+        var query = new Parse.Query(Events);
+        
+        query.get("B2ZsUIcDE4", {
+            success: function(gameScore) {
+                alert("yay! it worked");
+            },
+            error: function(object, error) {
+                alert("couldn't get object");
+            }
+        });
+    }
+	function main()
+	{
+        // initialise Parse
+        initialiseParse();
+        retrieveEvents();
+	}
+
+	main();
+
+	function onResize(event) 
+	{
+	// Whenever the window is resized, recenter the path:
+		//path.position = view.center;	
+	}
+
+
+
+	</script>
+</head>
+<body>
+	<canvas id="canvas" resize stats hidpi="off"></canvas>
+</body>
+</html>
