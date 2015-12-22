@@ -1,0 +1,158 @@
+{
+    "skills": [
+        [
+            "PS3/Xbox360",
+            "3000"
+        ],
+        [
+            "iOS",
+            "4000"
+        ],
+        [
+            "PC",
+            "1000"
+        ],
+        [
+            "Playstation Mobile",
+            "700"
+        ],
+        [
+            "Flash",
+            "500"
+        ],
+        [
+            "Yaroze",
+            "500"
+        ],
+        [
+            "Android",
+            "200"
+        ],
+        [
+            "Unity",
+            "200"
+        ],
+        [
+            "Game Boy Advance",
+            "100"
+        ],
+        [
+            "Web",
+            "100"
+        ],
+        [
+            "Objective C",
+            "3000"
+        ],
+        [
+            "C/C++",
+            "2000"
+        ],
+        [
+            "C#",
+            "1500"
+        ],
+        [
+            "Java",
+            "300"
+        ],
+        [
+            "Python",
+            "300"
+        ],
+        [
+            "Bash/Shell",
+            "200"
+        ],
+        [
+            "Actionscript",
+            "200"
+        ],
+        [
+            "SQL",
+            "50"
+        ],
+        [
+            "Javascript",
+            "60"
+        ],
+        [
+            "PHP",
+            "30"
+        ],
+        [
+            "Ruby",
+            "20"
+        ]
+    ],
+    "released_projects": [
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        },
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        }
+    ],
+    "current_projects": [
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        },
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        }
+    ],
+    "future_projects": [
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        },
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        }
+    ],
+    "on_hold_projects": [
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        },
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        }
+    ],
+    "cancelled_projects": [
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        },
+        {
+            "Platform": "iOS",
+            "Name": "My Announcer",
+            "Time": "120",
+            "URL": "https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8"
+        }
+    ]
+}
