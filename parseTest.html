@@ -27,25 +27,18 @@
     {
         var Events = Parse.Object.extend("Events");
         var query = new Parse.Query(Events);
-        
-        query.get("B2ZsUIcDE4", {
-            success: function(gameScore) {
-                alert("yay! it worked");
-            },
-            error: function(object, error) {
-                alert("couldn't get object");
-            }
-        });
 
         query.find({
             success: function(results) {
                 alert("Successfully retrieved " + results.length + " events.");
     
                 // Do something with the returned Parse.Object values
-                //for (var i = 0; i < results.length; i++) {
-                    //var object = results[i];
-                    //alert(object.id + ' - ' + object.get('playerName'));
-                //}
+                for (var i = 0; i < results.length; i++) 
+                {
+                    var object = results[i];
+                    alert(object.id + ' - ' + object.get('EventName'));
+                }
+
             },
             error: function(error) {
                 alert("Error: " + error.code + " " + error.message);
