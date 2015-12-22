@@ -300,40 +300,9 @@
             badges[i].update();
         }
     }
-
-    function initialiseParse()
-    {
-        Parse.initialize("53KCYXo7suR1lS2dh6WrGPyFJCtqdm56niYgSoev", "v30AM5vsr2asBrbKDeMDWxbhVnDNXYLdOWlgF5Ax");
-
-        //var TestObject = Parse.Object.extend("TestObject");
         
-        //var testObject = new TestObject();
-        //testObject.save({foo: "barbaa"}).then(function(object) {
-        //alert("yay! it worked");
-        //});
-    }
-
-    function retrieveEvents()
-    {
-        var Events = Parse.Object.extend("Events");
-        var query = new Parse.Query(Events);
-        
-        query.get("B2ZsUIcDE4", {
-            success: function(gameScore) {
-                alert("yay! it worked");
-            },
-            error: function(object, error) {
-                alert("couldn't get object");
-            }
-        });
-    }
 	function main()
 	{
-        // initialise Parse
-        initialiseParse();
-        retrieveEvents();
-
-
         var portfolioObj = JSON.parse(retrievePortfolioData());
         
         skills = portfolioObj["skills"];
