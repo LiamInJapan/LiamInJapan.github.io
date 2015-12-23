@@ -14,7 +14,7 @@ var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 35.01163629999999, lng: 135.76802939999993},
-    zoom: 13,
+    zoom: 12,
     draggable: false,
     scaleControl: false,
     scrollwheel: false,
@@ -39,6 +39,11 @@ function initMap() {
     }
   });
 
+  centralKyotoArea.addListener('click', function() {
+    map.fitBounds(centralKyotoArea.bounds);
+    map.setZoom(14);
+  });
+
   var northKyotoArea = new google.maps.Rectangle({
     strokeColor: '#0000FF',
     strokeOpacity: 0.8,
@@ -52,6 +57,11 @@ function initMap() {
       east: 135.801,
       west: 135.727
     }
+  });
+
+  northKyotoArea.addListener('click', function() {
+    map.fitBounds(northKyotoArea.bounds);
+    map.setZoom(15);
   });
 
   var kinkakujiArea = new google.maps.Rectangle({
@@ -69,6 +79,11 @@ function initMap() {
     }
   });
 
+  kinkakujiArea.addListener('click', function() {
+    map.fitBounds(kinkakujiArea.bounds);
+    map.setZoom(15);
+  });
+
   var arashiyamaArea = new google.maps.Rectangle({
     strokeColor: '#000000',
     strokeOpacity: 0.8,
@@ -84,6 +99,11 @@ function initMap() {
     }
   });
 
+  arashiyamaArea.addListener('click', function() {
+    map.fitBounds(arashiyamaArea.bounds);
+    map.setZoom(15);
+  });
+
   var fushimiArea = new google.maps.Rectangle({
     strokeColor: '#FFFFFF',
     strokeOpacity: 0.8,
@@ -92,11 +112,16 @@ function initMap() {
     fillOpacity: 0.35,
     map: map,
     bounds: {
-      north: 34.98,
-      south: 34.88,
-      east: 135.8,
-      west: 135.74
+      north: 34.97,
+      south: 34.94,
+      east: 135.78,
+      west: 135.745
     }
+  });
+  
+  fushimiArea.addListener('click', function() {
+    map.fitBounds(fushimiArea.bounds);
+    map.setZoom(15);
   });
 }
 
