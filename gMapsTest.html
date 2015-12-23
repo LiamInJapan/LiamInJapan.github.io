@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 35.01163629999999, lng: 135.76802939999993},
+    zoom: 13,
+    draggable: false,
+    scaleControl: false,
+    scrollwheel: false,
+    disableDoubleClickZoom: true,
+    disableDefaultUI: true,
+    keyboardShortcuts: false,
+
+  });
+
+  var centralKyotoArea = new google.maps.Rectangle({
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#FF0000',
+    fillOpacity: 0.35,
+    map: map,
+    bounds: {
+      north: 35.035,
+      south: 34.98,
+      east: 135.8,
+      west: 135.74
+    }
+  });
+
+  var northKyotoArea = new google.maps.Rectangle({
+    strokeColor: '#0000FF',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#0000FF',
+    fillOpacity: 0.35,
+    map: map,
+    bounds: {
+      north: 35.058,
+      south: 35.028,
+      east: 135.801,
+      west: 135.727
+    }
+  });
+
+  var kinkakujiArea = new google.maps.Rectangle({
+    strokeColor: '#00FF00',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#00FF00',
+    fillOpacity: 0.35,
+    map: map,
+    bounds: {
+      north: 35.045,
+      south: 35.014,
+      east: 135.737,
+      west: 135.697
+    }
+  });
+
+  var arashiyamaArea = new google.maps.Rectangle({
+    strokeColor: '#000000',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#000000',
+    fillOpacity: 0.35,
+    map: map,
+    bounds: {
+      north: 35.03,
+      south: 35.007,
+      east: 135.697,
+      west: 135.66
+    }
+  });
+
+  var fushimiArea = new google.maps.Rectangle({
+    strokeColor: '#FFFFFF',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#FFFFFF',
+    fillOpacity: 0.35,
+    map: map,
+    bounds: {
+      north: 34.98,
+      south: 34.88,
+      east: 135.8,
+      west: 135.74
+    }
+  });
+}
+
+
+
+    </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBr7DudxLcsuw4LWulpi2X7H25CUktszSg&callback=initMap">
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+

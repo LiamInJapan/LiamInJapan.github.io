@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Parse Test - Liam Conroy</title>
 	<link rel="stylesheet" href="css/style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"></script>
     <script type="text/javascript">
     
@@ -28,17 +29,45 @@
         var Events = Parse.Object.extend("Events");
         var query = new Parse.Query(Events);
 
+        var myEvents='';
+
         query.find({
             success: function(results) {
                 alert("Successfully retrieved " + results.length + " events.");
     
                 // Do something with the returned Parse.Object values
+                //for (var i = 0; i < results.length; i++) 
+                //{
+                //    var object = results[i];
+                //    alert(object.id + ' - ' + object.get('EventName') + ' - ' + object.toJSON );
+                //}
+
+                /*var tr=[];
                 for (var i = 0; i < results.length; i++) 
                 {
                     var object = results[i];
-                    alert(object.id + ' - ' + object.get('EventName') + ' - ' + object.length );
-                }
 
+                    tr.push('<tr>');
+                    tr.push("<td>" + object.get('EventName') + "</td>");
+                    tr.push("<td>" + object.get('Description') + "</td>");
+                    tr.push("<td>" + object.get('Details') + "</td>");
+                    tr.push('</tr>');
+                }
+                
+                $('#dataTable').append($(tr.join('')));*/
+
+                for (var i = 0; i < results.length; i++) 
+                { 
+                    var object = results[i];
+                    
+                    myEvents += '<tr><td>' + object.get('EventName') + '</td><td>' +
+                                '<tr><td>' + object.get('Description') + '</td></tr>' +
+                                '<tr><td>' + object.get('Details') + '</td></tr>';
+                }
+                (function($) 
+                {
+                    $('#events-table').append(myEvents);
+                })(jQuery);
             },
             error: function(error) {
                 alert("Error: " + error.code + " " + error.message);
@@ -67,6 +96,13 @@
 <body>
 	<canvas id="canvas" resize stats hidpi="off"></canvas>
     <button type="button" onclick="mainTry()">Connect To Parse</button>
+    <table id="events-table">
+    <tr>
+        <th>Event Name</th>
+        <th>Description</th>
+        <th>Details</th>
+    </tr>
+</table>
 </form>
 </body>
 </html>
