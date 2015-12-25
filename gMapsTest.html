@@ -4,7 +4,6 @@ TODO:
 - Get detailed info
 - Put in non-labelled information
 - Tweak Zone areas
-- Put in Parse and load out of parse
 - Leafy/seasonal shit
 - 
 -->
@@ -25,6 +24,9 @@ TODO:
 var map;
 var kyotoLoc;
 
+var infowindow;
+var service;
+
 function initParse()
 {
   Parse.initialize("53KCYXo7suR1lS2dh6WrGPyFJCtqdm56niYgSoev", "v30AM5vsr2asBrbKDeMDWxbhVnDNXYLdOWlgF5Ax");
@@ -40,20 +42,16 @@ function retrievePlacesForArea(area)
 {
   var places = Parse.Object.extend("Places");
   var query = new Parse.Query(places);
-
-  alert(area);
+  query.equalTo("AreaName", area);
 
   query.find({
     success: function(results) 
     {
-      alert("Successfully retrieved " + results.length + " places.");
-
       var placesOInterest = [];
 
       for (var i = 0; i < results.length; i++) 
       {
         var object = results[i];
-        
         placesOInterest.push(object.get('PlaceName'));
       }
       
@@ -98,8 +96,6 @@ function initAreas()
   query.find({
     success: function(results) 
     {
-      alert("Successfully retrieved " + results.length + " areas.");
-
       for (var i = 0; i < results.length; i++) 
       {
         initAreaFromResult(results[i]);
@@ -128,7 +124,37 @@ function initMap()
 
   });
 
-  initAreas();    
+  initAreas();
+}
+
+function placeDetailsByPlaceId(service, map, infowindow, marker) 
+{
+  // Create and send the request to obtain details for a specific place,
+  // using its Place ID.
+  var request = 
+  {
+    placeId: marker.getPlace().placeId
+  };
+
+  service.getDetails(request, function (place, status) 
+  {
+    if (status == google.maps.places.PlacesServiceStatus.OK) 
+    {
+      // If the request succeeds, draw the place location on the map
+      // as a marker, and register an event to handle a click on the marker.
+      
+      //google.maps.event.addListener(marker, 'click', function() 
+      //{
+        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+          'Place ID: ' + place.place_id + '<br>' +
+          place.formatted_address + '</div>');
+        infowindow.open(map, marker);
+
+      //});
+
+      //map.panTo(place.geometry.location);
+    }
+  });
 }
 
 function findPlaces(placesArray)
@@ -143,23 +169,35 @@ function findPlaces(placesArray)
       };
 
       service = new google.maps.places.PlacesService(map);
-      service.textSearch(request, callback);
+      service.textSearch(request, findPlacesCallback);
     }
 }
 
-function callback(results, status) 
+function findPlacesCallback(results, status) 
 {
+  infowindow = new google.maps.InfoWindow();
+  service = new google.maps.places.PlacesService(map);
+
   if (status == google.maps.places.PlacesServiceStatus.OK) 
   {
     for (var i = 0; i < results.length; i++) 
     {
-      var marker = new google.maps.Marker({
-      map: map,
-      place: {
-        placeId: results[i].place_id,
-        location: results[i].geometry.location
-      }
-    });
+      var marker = new google.maps.Marker(
+      {
+        map: map,
+        place: 
+        {
+          placeId: results[i].place_id,
+          location: results[i].geometry.location
+        }
+      });
+
+      var x = function () 
+      {
+        placeDetailsByPlaceId(service, map, infowindow, marker);
+      };
+
+      marker.addListener('click', x);
     }
   }
 }

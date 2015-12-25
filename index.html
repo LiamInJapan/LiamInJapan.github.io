@@ -1,5 +1,374 @@
-<a href="charSheet.html">Character Sheet</a>
-<br>
-<a href="parseTest.html">Parse Tests</a>
-<br>
-<a href="gMapsTest.html">Google Maps Test</a>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Character Sheet - Liam Conroy</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"></script>
+    <script type="text/javascript" src="js/paper-full.js"></script>
+	<script type="text/paperscript" canvas="canvas">
+    
+    
+
+	
+    function Badge(i, y) {
+
+        var active = false;
+        
+        this.path = new Path({
+        fillColor: {
+            hue: Math.random() * 360,
+            saturation: 1,
+            brightness: 1
+        },
+        blendMode: 'screen'
+    });
+
+            this.path.strokeColor = 'black';
+            this.path.fillColor = 'white';
+            this.path.add(new Point(100+(i*50)+30+(10*i), y)); 
+            this.path.add(new Point(100+(i*50)+80+(10*i), y)); 
+            this.path.add(new Point(100+(i*50)+80+(10*i), y-50));
+            this.path.add(new Point(100+(i*50)+30+(10*i), y-50));     
+            this.path.closed = true;
+            this.path.onMouseDown = function(event) {
+                console.log("click!");
+                this.active = true;
+            }
+
+
+    
+}
+    Badge.prototype = {
+        update: function()
+        {
+            console.log(this.active);
+            if(this.active == true)
+                this.scale(1.1, this.bounds.bottomLeft);
+        }
+    }
+
+
+    var skills;
+    var currentProjects;
+    var releasedProjects;
+    var futureProjects;
+    var onHoldProjects;
+    var cancelledProjects;
+
+    var badges = [];
+    var numBadges = 0;
+
+    // TODO: Pull this in from a server
+    function retrievePortfolioData()
+    {
+    	return "{\
+    \"skills\": [\
+        [\
+            \"PS3/Xbox360\",\
+            \"3000\"\
+        ],\
+        [\
+            \"iOS\",\
+            \"4000\"\
+        ],\
+        [\
+            \"PC\",\
+            \"1000\"\
+        ],\
+        [\
+            \"Playstation Mobile\",\
+            \"700\"\
+        ],\
+        [\
+            \"Flash\",\
+            \"500\"\
+        ],\
+        [\
+            \"Yaroze\",\
+            \"500\"\
+        ],\
+        [\
+            \"Android\",\
+            \"200\"\
+        ],\
+        [\
+            \"Unity\",\
+            \"200\"\
+        ],\
+        [\
+            \"Game Boy Advance\",\
+            \"100\"\
+        ],\
+        [\
+            \"Web\",\
+            \"100\"\
+        ],\
+        [\
+            \"Objective C\",\
+            \"3000\"\
+        ],\
+        [\
+            \"C/C++\",\
+            \"2000\"\
+        ],\
+        [\
+            \"C#\",\
+            \"1500\"\
+        ],\
+        [\
+            \"Java\",\
+            \"300\"\
+        ],\
+        [\
+            \"Python\",\
+            \"300\"\
+        ],\
+        [\
+            \"Bash/Shell\",\
+            \"200\"\
+        ],\
+        [\
+            \"Actionscript\",\
+            \"200\"\
+        ],\
+        [\
+            \"SQL\",\
+            \"50\"\
+        ],\
+        [\
+            \"Javascript\",\
+            \"60\"\
+        ],\
+        [\
+            \"PHP\",\
+            \"30\"\
+        ],\
+        [\
+            \"Ruby\",\
+            \"20\"\
+        ]\
+    ],\
+    \"released_projects\": [\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        },\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        }\
+    ],\
+    \"current_projects\": [\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        },\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        }\
+    ],\
+    \"future_projects\": [\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        },\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        }\
+    ],\
+    \"on_hold_projects\": [\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        },\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        }\
+    ],\
+    \"cancelled_projects\": [\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        },\
+        {\
+            \"Platform\": \"iOS\",\
+            \"Name\": \"My Announcer\",\
+            \"Time\": \"120\",\
+            \"URL\": \"https://itunes.apple.com/en/app/my-announcer/id371809861?mt=8\"\
+        }\
+    ]\
+}";
+    }
+
+	function drawSkillBars()
+	{
+        // draw vertical level bars
+		for(i = 0; i < 5; i++)
+		{
+			var path = new Path();
+			path.strokeColor = 'black';
+
+			if(i != 0)
+			{
+				path.strokeWidth = 0.1;	
+			}
+			
+			path.add(new Point(0, (2000*(i+1))/15));
+			path.add(new Point(10000, (2000*(i+1))/15));
+		}
+
+        // draw bars for skills
+    	for(i = 0; i < skills.length; i++)
+		{
+			var text1 = new PointText(new Point((i*50)+20, 750));
+			text1.fillColor = 'black'
+			text1.content = skills[i][0]
+			text1.rotate(90);
+
+            var barHeightDampener = 10;
+
+            var path = new Path();
+            path.strokeColor = 'black';
+            path.fillColor = 'white';
+            path.add(new Point((i*50)+20, 700)); 
+            path.add(new Point((i*50)+20, 700-(skills[i][1]/barHeightDampener))); 
+            path.add(new Point((i*50)+70, 700-(skills[i][1]/barHeightDampener)));
+            path.add(new Point((i*50)+70, 700));     
+            path.closed = true;
+
+		}
+	}
+
+    function drawProjectLabels()
+    {
+        var currentProjectsText = new PointText(new Point(10, 875));
+        currentProjectsText.fillColor = 'black'
+        currentProjectsText.content = "Current Projects:"
+
+        var releasedProjectsText = new PointText(new Point(10, 975));
+        releasedProjectsText.fillColor = 'black'
+        releasedProjectsText.content = "Released Projects:"
+
+        var futureProjectsText = new PointText(new Point(10, 1075));
+        futureProjectsText.fillColor = 'black'
+        futureProjectsText.content = "Future Projects:"
+
+        var onHoldProjectsText = new PointText(new Point(10, 1175));
+        onHoldProjectsText.fillColor = 'black'
+        onHoldProjectsText.content = "On Hold Projects:"
+
+        var cancelledProjectsText = new PointText(new Point(10, 1275));
+        cancelledProjectsText.fillColor = 'black'
+        cancelledProjectsText.content = "Cancelled Projects:"
+    }
+
+    function drawProjectBoxes(projects, y)
+    {
+        for(i = 0; i < projects.length; i++)
+        {
+            var text1 = new PointText(new Point((i*50)+20, 1100));
+            text1.fillColor = 'black'
+            text1.content = projects[i]["Name"]
+
+            badges.push(new Badge(i, y));   
+            numBadges++;
+        }
+    }
+
+    function onFrame(event)
+    {
+        for(var i = 0; i < numBadges; i++)
+        {
+            badges[i].update();
+        }
+    }
+
+    function initialiseParse()
+    {
+        Parse.initialize("53KCYXo7suR1lS2dh6WrGPyFJCtqdm56niYgSoev", "v30AM5vsr2asBrbKDeMDWxbhVnDNXYLdOWlgF5Ax");
+
+        //var TestObject = Parse.Object.extend("TestObject");
+        
+        //var testObject = new TestObject();
+        //testObject.save({foo: "barbaa"}).then(function(object) {
+        //alert("yay! it worked");
+        //});
+    }
+
+    function retrieveEvents()
+    {
+        var Events = Parse.Object.extend("Events");
+        var query = new Parse.Query(Events);
+        
+        query.get("B2ZsUIcDE4", {
+            success: function(gameScore) {
+                alert("yay! it worked");
+            },
+            error: function(object, error) {
+                alert("couldn't get object");
+            }
+        });
+    }
+	function main()
+	{
+        // initialise Parse
+        initialiseParse();
+        retrieveEvents();
+
+
+        var portfolioObj = JSON.parse(retrievePortfolioData());
+        
+        skills = portfolioObj["skills"];
+		currentProjects = portfolioObj["current_projects"];
+        releasedProjects = portfolioObj["released_projects"];
+        futureProjects = portfolioObj["future_projects"];
+        onHoldProjects = portfolioObj["on_hold_projects"];
+        cancelledProjects = portfolioObj["cancelled_projects"];
+    
+		drawSkillBars();
+        drawProjectLabels();
+        drawProjectBoxes(currentProjects, 900);
+        drawProjectBoxes(releasedProjects, 1000);
+        drawProjectBoxes(futureProjects, 1100);
+        drawProjectBoxes(onHoldProjects, 1200);
+        drawProjectBoxes(cancelledProjects, 1300);
+	}
+
+	main();
+
+	function onResize(event) 
+	{
+	// Whenever the window is resized, recenter the path:
+		//path.position = view.center;	
+	}
+
+
+
+	</script>
+</head>
+<body>
+	<canvas id="canvas" resize stats hidpi="off"></canvas>
+</body>
+</html>
