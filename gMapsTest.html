@@ -1,3 +1,14 @@
+<!--
+
+TODO:
+- Get detailed info
+- Put in non-labelled information
+- Tweak Zone areas
+- Put in Parse and load out of parse
+- Leafy/seasonal shit
+- 
+-->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,12 +19,105 @@
   </head>
   <body>
     <div id="map"></div>
+    <script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"></script>
     <script type="text/javascript">
 
 var map;
-function initMap() {
+var kyotoLoc;
+
+function initParse()
+{
+  Parse.initialize("53KCYXo7suR1lS2dh6WrGPyFJCtqdm56niYgSoev", "v30AM5vsr2asBrbKDeMDWxbhVnDNXYLdOWlgF5Ax");
+}
+
+function main()
+{
+  initParse();
+  initMap();
+}
+
+function retrievePlacesForArea(area)
+{
+  var places = Parse.Object.extend("Places");
+  var query = new Parse.Query(places);
+
+  alert(area);
+
+  query.find({
+    success: function(results) 
+    {
+      alert("Successfully retrieved " + results.length + " places.");
+
+      var placesOInterest = [];
+
+      for (var i = 0; i < results.length; i++) 
+      {
+        var object = results[i];
+        
+        placesOInterest.push(object.get('PlaceName'));
+      }
+      
+      findPlaces(placesOInterest);
+    },
+    error: function(error) 
+    {
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+}
+
+function initAreaFromResult(result)
+{
+  var area = new google.maps.Rectangle({
+    strokeColor: result.get('Color'),
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: result.get('Color'),
+    fillOpacity: 0.35,
+    map: map,
+    bounds: {
+      north: result.get('North'),
+      south: result.get('South'),
+      east: result.get('East'),
+      west: result.get('West')
+    }
+  });
+
+  area.addListener('click', function() 
+  {
+    map.fitBounds(area.bounds);
+    map.setZoom(result.get('ZoomLevel'));
+    retrievePlacesForArea(result.get('AreaName'));
+  });
+}
+function initAreas()
+{
+  var areas = Parse.Object.extend("Areas");
+  var query = new Parse.Query(areas);
+
+  query.find({
+    success: function(results) 
+    {
+      alert("Successfully retrieved " + results.length + " areas.");
+
+      for (var i = 0; i < results.length; i++) 
+      {
+        initAreaFromResult(results[i]);
+      }
+    },
+    error: function(error) 
+    {
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+}
+
+function initMap() 
+{
+  kyotoLoc = new google.maps.LatLng(35.01163629999999,135.76802939999993);
+
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 35.01163629999999, lng: 135.76802939999993},
+    center: kyotoLoc,
     zoom: 12,
     draggable: false,
     scaleControl: false,
@@ -24,113 +128,48 @@ function initMap() {
 
   });
 
-  var centralKyotoArea = new google.maps.Rectangle({
-    strokeColor: '#FF0000',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#FF0000',
-    fillOpacity: 0.35,
-    map: map,
-    bounds: {
-      north: 35.035,
-      south: 34.98,
-      east: 135.8,
-      west: 135.74
-    }
-  });
-
-  centralKyotoArea.addListener('click', function() {
-    map.fitBounds(centralKyotoArea.bounds);
-    map.setZoom(14);
-  });
-
-  var northKyotoArea = new google.maps.Rectangle({
-    strokeColor: '#0000FF',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#0000FF',
-    fillOpacity: 0.35,
-    map: map,
-    bounds: {
-      north: 35.058,
-      south: 35.028,
-      east: 135.801,
-      west: 135.727
-    }
-  });
-
-  northKyotoArea.addListener('click', function() {
-    map.fitBounds(northKyotoArea.bounds);
-    map.setZoom(15);
-  });
-
-  var kinkakujiArea = new google.maps.Rectangle({
-    strokeColor: '#00FF00',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#00FF00',
-    fillOpacity: 0.35,
-    map: map,
-    bounds: {
-      north: 35.045,
-      south: 35.014,
-      east: 135.737,
-      west: 135.697
-    }
-  });
-
-  kinkakujiArea.addListener('click', function() {
-    map.fitBounds(kinkakujiArea.bounds);
-    map.setZoom(15);
-  });
-
-  var arashiyamaArea = new google.maps.Rectangle({
-    strokeColor: '#000000',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#000000',
-    fillOpacity: 0.35,
-    map: map,
-    bounds: {
-      north: 35.03,
-      south: 35.007,
-      east: 135.697,
-      west: 135.66
-    }
-  });
-
-  arashiyamaArea.addListener('click', function() {
-    map.fitBounds(arashiyamaArea.bounds);
-    map.setZoom(15);
-  });
-
-  var fushimiArea = new google.maps.Rectangle({
-    strokeColor: '#FFFFFF',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#FFFFFF',
-    fillOpacity: 0.35,
-    map: map,
-    bounds: {
-      north: 34.97,
-      south: 34.94,
-      east: 135.78,
-      west: 135.745
-    }
-  });
-  
-  fushimiArea.addListener('click', function() {
-    map.fitBounds(fushimiArea.bounds);
-    map.setZoom(15);
-  });
+  initAreas();    
 }
 
+function findPlaces(placesArray)
+{
+  for (place in placesArray) 
+    {
+      var request = 
+      {
+        location: kyotoLoc,
+        radius: '10000',
+        query: placesArray[place]
+      };
 
+      service = new google.maps.places.PlacesService(map);
+      service.textSearch(request, callback);
+    }
+}
+
+function callback(results, status) 
+{
+  if (status == google.maps.places.PlacesServiceStatus.OK) 
+  {
+    for (var i = 0; i < results.length; i++) 
+    {
+      var marker = new google.maps.Marker({
+      map: map,
+      place: {
+        placeId: results[i].place_id,
+        location: results[i].geometry.location
+      }
+    });
+    }
+  }
+}
 
     </script>
     <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBr7DudxLcsuw4LWulpi2X7H25CUktszSg&callback=initMap">
+      src="http://maps.google.com/maps/api/js?key=AIzaSyBr7DudxLcsuw4LWulpi2X7H25CUktszSg&libraries=places&callback=main">
     </script>
+
+
   </body>
 </html>
 
