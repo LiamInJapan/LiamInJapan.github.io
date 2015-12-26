@@ -235,10 +235,10 @@
       // initialize WebGL
       gl = canvasLayer.canvas.getContext('experimental-webgl');
 
-      MIN_X = 224.42;
-      MAX_X = 224.67;
-      MIN_Y = 101.3;
-      MAX_Y = 101.47;
+      MIN_X = 224.3;
+      MAX_X = 224.79;
+      MIN_Y = 101.23;
+      MAX_Y = 101.525;
 
       createShaderProgram();
       loadData(); 
@@ -422,7 +422,7 @@
         gl_Position = mapMatrix * worldCoord;
 
         // a constant size for points, regardless of zoom level
-        gl_PointSize = 2.;
+        gl_PointSize = 3.;
       }
     </script>
     <script id="pointFragmentShader" type="x-shader/x-fragment">
