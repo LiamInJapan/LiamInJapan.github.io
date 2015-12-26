@@ -1,0 +1,128 @@
+<body>
+    <div id="container"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r73/three.js"></script>
+    <script id="vertexShader" type="x-shader/x-vertex">
+        void main() {
+            gl_Position = vec4( position, 1.0 );
+        }
+    </script>
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        #ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform vec2 u_resolution;
+uniform float u_time;
+
+vec3 colorA = vec3(0.149,0.141,0.912);
+vec3 colorB = vec3(1.000,0.833,0.224);
+
+
+float random(float x)
+{
+    return fract(sin(x)*999.0);
+}
+
+float stepRandom(float x)
+{
+    return random(floor(x));
+}
+
+float smoothStep(float x)
+{
+    return ((x) * (x) * ((x - 1.0) * -2.0 + 1.0));
+}
+
+float smoothSaw(float x)
+{
+    return smoothStep(fract(x));
+}
+
+
+float smoothNoise(float x)
+{
+    return (((stepRandom( x )) * (smoothSaw( x ))) + ((stepRandom( (x - 1.0) )) * (smoothSaw( (x - 1.0) ) * -1.0 + 1.0)));
+}
+
+
+float fractalNoise(float x)
+{
+    return (smoothNoise( x ) + smoothNoise( x / 0.5 ) * 0.5 + smoothNoise( x / 0.25 ) * 0.25 + smoothNoise( x / 0.125 ) * 0.125 + smoothNoise( x / 0.063 ) * 0.063) + -0.71;
+}
+
+void main() {
+    vec3 color = vec3(0.0);
+    //float pct = (sin( u_time / 1.58 ) + sin( u_time / 0.45 ));
+    //float pct = (sin( (u_time- 1.) / -0.1 ) + sin( u_time / 0.23 ));
+
+    //float pct = ((sin( (u_time - 1.0) / -0.1 ) * 0.38 + 0.15 + sin( u_time / 0.23 ) * 0.46) * -0.57);
+    
+    //float pct = fract( sin( u_time / 1.17 ) / 1.42 );
+
+    float pct = fractalNoise(u_time);
+    
+    // Mix uses pct (a value from 0-1) to 
+    // mix the two colors
+    color = mix(colorA, colorB, pct); 
+
+    gl_FragColor = vec4(color,1.0);
+}
+    </script>
+    <script>
+        var container;
+        var camera, scene, renderer;
+        var uniforms;
+
+        init();
+        animate();
+
+        function init() {
+            container = document.getElementById( 'container' );
+
+            camera = new THREE.Camera();
+            camera.position.z = 1;
+
+            scene = new THREE.Scene();
+
+            var geometry = new THREE.PlaneBufferGeometry( 2, 2 );
+
+            uniforms = {
+                u_time: { type: "f", value: 1.0 },
+                u_resolution: { type: "v2", value: new THREE.Vector2() }
+            };
+
+            var material = new THREE.ShaderMaterial( {
+                uniforms: uniforms,
+                vertexShader: document.getElementById( 'vertexShader' ).textContent,
+                fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+            } );
+
+            var mesh = new THREE.Mesh( geometry, material );
+            scene.add( mesh );
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio( window.devicePixelRatio );
+
+            container.appendChild( renderer.domElement );
+
+            onWindowResize();
+            window.addEventListener( 'resize', onWindowResize, false );
+        }
+
+        function onWindowResize( event ) {
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            uniforms.u_resolution.value.x = renderer.domElement.width;
+            uniforms.u_resolution.value.y = renderer.domElement.height;
+        }
+
+        function animate() {
+            requestAnimationFrame( animate );
+            render();
+        }
+
+        function render() {
+            uniforms.u_time.value += 0.05;
+            renderer.render( scene, camera );
+        }
+    </script>
+</body>

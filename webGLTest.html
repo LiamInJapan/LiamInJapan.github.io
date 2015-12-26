@@ -42,8 +42,6 @@
 
     function placeDetailsByPlaceId(service, map, infowindow, marker) 
     {
-      // Create and send the request to obtain details for a specific place,
-      // using its Place ID.
       var request = 
       {
         placeId: marker.getPlace().placeId
@@ -53,19 +51,11 @@
       {
         if (status == google.maps.places.PlacesServiceStatus.OK) 
         {
-          // If the request succeeds, draw the place location on the map
-          // as a marker, and register an event to handle a click on the marker.
           
-          //google.maps.event.addListener(marker, 'click', function() 
-          //{
-            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-              'Place ID: ' + place.place_id + '<br>' +
-              place.formatted_address + '</div>');
-            infowindow.open(map, marker);
-
-          //});
-
-          //map.panTo(place.geometry.location);
+          infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+            'Place ID: ' + place.place_id + '<br>' +
+            place.formatted_address + '</div>');
+          infowindow.open(map, marker);
         }
       });
     }
@@ -326,16 +316,16 @@
       // tell webgl how buffer is laid out (pairs of x,y coords)
       gl.vertexAttribPointer(attributeLoc, 2, gl.FLOAT, false, 0, 0);
     }
-    function loadData() {
-      // this data could be loaded from anywhere, but in this case we'll
-      // generate some random x,y coords in a world coordinate bounding box
+    function loadData() 
+    {
       rawData = new Float32Array(2 * POINT_COUNT);
       speedData = new Float32Array(POINT_COUNT);
       initRawPointData();
       initSpeedData();
     }
 
-    function resize() {
+    function resize() 
+    {
       var width = canvasLayer.canvas.width;
       var height = canvasLayer.canvas.height;
 
@@ -353,7 +343,8 @@
       ]);
     }
 
-    function scaleMatrix(matrix, scaleX, scaleY) {
+    function scaleMatrix(matrix, scaleX, scaleY) 
+    {
       // scaling x and y, which is just scaling first two columns of matrix
       matrix[0] *= scaleX;
       matrix[1] *= scaleX;
@@ -366,7 +357,8 @@
       matrix[7] *= scaleY;
     }
 
-    function translateMatrix(matrix, tx, ty) {
+    function translateMatrix(matrix, tx, ty) 
+    {
       // translation is in last column of matrix
       matrix[12] += matrix[0]*tx + matrix[4]*ty;
       matrix[13] += matrix[1]*tx + matrix[5]*ty;
@@ -375,22 +367,15 @@
     }
 
 
-    function update() {
+    function update() 
+    {
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.clearColor(0.0, 0.0, 0.0, 0.0);
 
       var mapProjection = map.getProjection();
 
       regenRawData();
-      /**
-       * We need to create a transformation that takes world coordinate
-       * points in the pointArrayBuffer to the coodinates WebGL expects.
-       * 1. Start with second half in pixelsToWebGLMatrix, which takes pixel
-       *     coordinates to WebGL coordinates.
-       * 2. Scale and translate to take world coordinates to pixel coords
-       * see https://developers.google.com/maps/documentation/javascript/maptypes#MapCoordinate
-       */
-      
+
       // copy pixel->webgl matrix
       mapMatrix.set(pixelsToWebGLMatrix);
 
@@ -417,7 +402,8 @@
 
       uniform mat4 mapMatrix;
 
-      void main() {
+      void main() 
+      {
         // transform world coordinate by matrix uniform variable
         gl_Position = mapMatrix * worldCoord;
 
@@ -425,14 +411,16 @@
         gl_PointSize = 3.;
       }
     </script>
+
     <script id="pointFragmentShader" type="x-shader/x-fragment">
       precision mediump float;
 
-      void main() {
-        // set pixels in points to something that stands out
+      void main() 
+      {
         gl_FragColor = vec4(1, 1, 1, 1);
       }
     </script>
+
     <script src="http://maps.google.com/maps/api/js?key=AIzaSyBr7DudxLcsuw4LWulpi2X7H25CUktszSg&libraries=places&callback=init"></script>
     <script src="CanvasLayer.js" defer></script>
   </body>
