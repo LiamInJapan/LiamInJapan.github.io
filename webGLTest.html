@@ -40,6 +40,57 @@
     var rawData;
     var speedData;
 
+    function retrievePlaceInformationForPlaceName(placeName, marker)
+    {
+      var places = Parse.Object.extend("Places");
+      var query = new Parse.Query(places);
+      query.equalTo("PlaceName", placeName);
+
+      query.find(
+      {
+        success: function(results) 
+        {
+          // should only ever be one result
+          var place = results[0];
+
+          var pics = Parse.Object.extend("Picture");
+          var queryInner = new Parse.Query(pics);
+
+          queryInner.equalTo("belongsTo", placeName);
+
+          queryInner.find(
+          {
+            success: function(results) 
+            {
+              var infoWindowContent = '<div><strong>' + place.get('PlaceNameFrontEnd') + '</strong><br>' + 
+              'Caption: ' + place.get('Caption') + '<br>' + place.get('PlaceType') + '<br>'; 
+
+              for(var i = 0; i < results.length; i++)
+              {
+                var pic = results[i];
+                infoWindowContent += '<img src="' + pic.get("thePicture").url() + '" width="100" height="100" data-rotate="90">';
+              }
+
+              infoWindowContent += '</div>';
+              infowindow.setContent(infoWindowContent);
+              infowindow.open(map, marker);
+              alert(marker.url);
+            },
+            error: function(error) 
+            {
+              alert("Error: " + error.code + " " + error.message);
+            }
+          });
+          
+          
+        },
+        error: function(error) 
+        {
+          alert("Error: " + error.code + " " + error.message);
+        }
+      });
+    }
+
     function placeDetailsByPlaceId(service, map, infowindow, marker) 
     {
       var request = 
@@ -47,15 +98,12 @@
         placeId: marker.getPlace().placeId
       };
 
+      // warning: this is all a bit horrible and should be moved to server-side caching of locations. That will solve a lot
       service.getDetails(request, function (place, status) 
       {
         if (status == google.maps.places.PlacesServiceStatus.OK) 
         {
-          
-          infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-            'Place ID: ' + place.place_id + '<br>' +
-            place.formatted_address + '</div>');
-          infowindow.open(map, marker);
+          retrievePlaceInformationForPlaceName(place.name, marker);
         }
       });
     }
