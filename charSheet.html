@@ -172,34 +172,57 @@
                         numSkillCircles++;
                     }
 
+                    /*
+
+                    var developers = [
+    { name: "Joe", age: 23 },
+    { name: "Sue", age: 28 },
+    { name: "Jon", age: 32 },
+    { name: "Bob", age: 24 }
+], age = 0;
+
+age = developers.reduce(function(memo, developer) {
+    return memo + developer.age; // return previous total plus current age
+}, 0); // initialize age with 0 that will be passed as memo
+
+console.log("Sum of all developer ages is " + age); 
+
+_.reduce(list, iteratee, [memo], [context]) 
+
+                    */
                     // this should trigger on the last one
-                    if(requestsIn == projectStatuses.length-1)
+                    if(requestsIn == projectStatuses.length)
                     {
-                        var allSkillsUniq = _.uniq(allSkills);
-
-                        /*_.each(allSkillsUniq, function (nom)
-                            {
-                                alert(this.nom.name);
-                            });*/
-
-                        _.each(allSkillsUniq, function(someThing) {
-                            alert(someThing.skillName);
-                        });
-
-                        alert(allSkillsUniq.length);
-
-                        //_.each([1, 2, 3], alert);
-
-                        //var sum = _.reduce([1, 2, 3], function(memo, num){ return memo + num; }, 0);
-
-                        //var    
-                        //_.each(allSkillsDup)
-
-                        //allSkills = _.uniq(allSkills);
                         console.dir(allSkills);
+
+                        var allSkillsUniq = [];
+
+                        allSkills = _.reduce(allSkills, function(memo, skill) 
+                        {
+                            var index = _.indexOf(memo, skill.skillName);
+
+                            if(index === -1)
+                            {
+                                //alert(skill.skillName);
+                                //console.dir(memo);
+                                //console.dir(skill);  
+                                memo.push(skill.skillName);
+                                allSkillsUniq.push(skill);
+                                return memo;
+                            }
+                            else
+                            {
+                                //alert(skill.skillName);
+                                allSkillsUniq[index].hours += skill.hours;
+                                //console.dir(memo);
+                                //console.dir(skill);
+                            }
+
+                            return memo;
+                        }, []);
                     
-                        drawSkillLabels();
-                        drawSkillBars();
+                        drawSkillLabels(allSkillsUniq);
+                        drawSkillBars(allSkillsUniq);
                     }
                 },
                 error: function(error) 
@@ -238,46 +261,31 @@
         Parse.initialize("tpio94gHZkEKpbpxvjCAHKExanIx89VwpIsvtXt5", "aQsoxqb0x8tk09TprScWDnEiZs9SSQFN8qsE3bP1");
     }
 
-    function drawSkillLabels()
+    function drawSkillLabels(skills)
     {
         var x = 10;
         var y = 480;
         var yStep = 20;
 
-        for(var skill in allSkills)
+        for(var skill in skills)
         {
             var skillText = new PointText(new Point(x, y));
             skillText.fillColor = 'black';
-            skillText.content = allSkills[skill].skillName + ":";
+            skillText.content = skills[skill].skillName + ":";
 
             y+=yStep;
         }
     }
 
-    function drawSkillBars()
+    function drawSkillBars(skills)
     {
-        // draw vertical level bars
-        /*for(i = 0; i < allSkills.length; i++)
-        {
-            var path = new Path();
-            path.strokeColor = 'black';
-
-            if(i != 0)
-            {
-                path.strokeWidth = 0.1; 
-            }
-            
-            path.add(new Point(0, (2000*(i+1))/15));
-            path.add(new Point(10000, (2000*(i+1))/15));
-        }*/
-
         var x = 200;
         var y = 480;
         var yStep = 20;
         var barHeight = 10;
 
         // draw horizontal bars for skills
-        for(i = 0; i < allSkills.length; i++)
+        for(i = 0; i < skills.length; i++)
         {
             /*var text1 = new PointText(new Point((i*50)+20, 750));
             text1.fillColor = 'black'
@@ -290,8 +298,8 @@
             path.strokeColor = 'black';
             path.fillColor = 'black';
             path.add(new Point(x, y)); 
-            path.add(new Point(x+(allSkills[i].hours/barHeightDampener), y)); 
-            path.add(new Point(x+(allSkills[i].hours/barHeightDampener), y-barHeight)); 
+            path.add(new Point(x+(skills[i].hours/barHeightDampener), y)); 
+            path.add(new Point(x+(skills[i].hours/barHeightDampener), y-barHeight)); 
             path.add(new Point(x, y-barHeight));     
             path.closed = true;
 
