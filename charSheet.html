@@ -56,11 +56,9 @@
 
         for(var i = 0; i < skillObject.skills.length; i++)
         {
-            allSkills.push(skillObject.skills[i].skillName);
+            allSkills.push(skillObject.skills[i]);
             totalHours += skillObject.skills[i].hours;
         }
-
-        console.dir(allSkills);
 
         return totalHours;
     }
@@ -119,52 +117,12 @@
     var numBadges = 0;
     var numSkillCircles = 0;
 
-
-	function drawSkillBars()
-	{
-        // draw vertical level bars
-		for(i = 0; i < 5; i++)
-		{
-			var path = new Path();
-			path.strokeColor = 'black';
-
-			if(i != 0)
-			{
-				path.strokeWidth = 0.1;	
-			}
-			
-			path.add(new Point(0, (2000*(i+1))/15));
-			path.add(new Point(10000, (2000*(i+1))/15));
-		}
-
-        // draw bars for skills
-    	for(i = 0; i < skills.length; i++)
-		{
-			var text1 = new PointText(new Point((i*50)+20, 750));
-			text1.fillColor = 'black'
-			text1.content = skills[i][0]
-			text1.rotate(90);
-
-            var barHeightDampener = 10;
-
-            var path = new Path();
-            path.strokeColor = 'black';
-            path.fillColor = 'white';
-            path.add(new Point((i*50)+20, 700)); 
-            path.add(new Point((i*50)+20, 700-(skills[i][1]/barHeightDampener))); 
-            path.add(new Point((i*50)+70, 700-(skills[i][1]/barHeightDampener)));
-            path.add(new Point((i*50)+70, 700));     
-            path.closed = true;
-
-		}
-	}
+    var projectStatuses = ["Current", "Released", "Future", "On Hold", "Decommissioned", "Cancelled"];
 
     function drawProjectLabels()
     {
         var y = 50;
         var yStep = 70;
-
-        var projectStatuses = ["Current", "Released", "Future", "On Hold", "Decommissioned", "Cancelled"];
 
         for(var status in projectStatuses)
         {
@@ -183,10 +141,10 @@
         var yStep = 70;
         var xStep = 50;
 
-        var projectStatuses = ["Current", "Released", "Future", "On Hold", "Decommissioned", "Cancelled"];
-
         var projects = Parse.Object.extend("Projects");
         var query = new Parse.Query(projects);
+
+        var requestsIn = 0;
 
         for(var i = 0; i < projectStatuses.length; i++)
         {
@@ -196,6 +154,8 @@
             {
                 success: function(results) 
                 {
+                    requestsIn++;
+
                     for (var j = 0; j < results.length; j++) 
                     { 
                         var project = results[j];
@@ -210,12 +170,36 @@
 
                         skillCircles.push(new Skill(project.get('SkillsUsed'),badges[badges.length - 1]));
                         numSkillCircles++;
+                    }
 
-                        // this should trigger on the last one
-                        if(numBadges == results.length)
-                        {
-                            drawSkillLabels();
-                        }
+                    // this should trigger on the last one
+                    if(requestsIn == projectStatuses.length-1)
+                    {
+                        var allSkillsUniq = _.uniq(allSkills);
+
+                        /*_.each(allSkillsUniq, function (nom)
+                            {
+                                alert(this.nom.name);
+                            });*/
+
+                        _.each(allSkillsUniq, function(someThing) {
+                            alert(someThing.skillName);
+                        });
+
+                        alert(allSkillsUniq.length);
+
+                        //_.each([1, 2, 3], alert);
+
+                        //var sum = _.reduce([1, 2, 3], function(memo, num){ return memo + num; }, 0);
+
+                        //var    
+                        //_.each(allSkillsDup)
+
+                        //allSkills = _.uniq(allSkills);
+                        console.dir(allSkills);
+                    
+                        drawSkillLabels();
+                        drawSkillBars();
                     }
                 },
                 error: function(error) 
@@ -256,17 +240,60 @@
 
     function drawSkillLabels()
     {
-        allSkills = _.uniq(allSkills);
-        console.dir(allSkills);
-
+        var x = 10;
         var y = 480;
         var yStep = 20;
 
         for(var skill in allSkills)
         {
-            var skillText = new PointText(new Point(10, y));
+            var skillText = new PointText(new Point(x, y));
             skillText.fillColor = 'black';
-            skillText.content = allSkills[skill] + ":";
+            skillText.content = allSkills[skill].skillName + ":";
+
+            y+=yStep;
+        }
+    }
+
+    function drawSkillBars()
+    {
+        // draw vertical level bars
+        /*for(i = 0; i < allSkills.length; i++)
+        {
+            var path = new Path();
+            path.strokeColor = 'black';
+
+            if(i != 0)
+            {
+                path.strokeWidth = 0.1; 
+            }
+            
+            path.add(new Point(0, (2000*(i+1))/15));
+            path.add(new Point(10000, (2000*(i+1))/15));
+        }*/
+
+        var x = 200;
+        var y = 480;
+        var yStep = 20;
+        var barHeight = 10;
+
+        // draw horizontal bars for skills
+        for(i = 0; i < allSkills.length; i++)
+        {
+            /*var text1 = new PointText(new Point((i*50)+20, 750));
+            text1.fillColor = 'black'
+            text1.content = skills[i][0]
+            text1.rotate(90);*/
+
+            var barHeightDampener = 2;
+
+            var path = new Path();
+            path.strokeColor = 'black';
+            path.fillColor = 'black';
+            path.add(new Point(x, y)); 
+            path.add(new Point(x+(allSkills[i].hours/barHeightDampener), y)); 
+            path.add(new Point(x+(allSkills[i].hours/barHeightDampener), y-barHeight)); 
+            path.add(new Point(x, y-barHeight));     
+            path.closed = true;
 
             y+=yStep;
         }
@@ -275,7 +302,6 @@
 	function main()
 	{
         initParse();    
-		//drawSkillBars();
         drawProjectLabels();
         drawProjectBoxes();
 	}
