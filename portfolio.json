@@ -156,3 +156,116 @@
         }
     ]
 }
+
+
+<!--
+
+Skill list:
+
+C
+C++
+
+
+Unix CL - 5
+Interface Builder - 25
+Objective C - 90
+iAd - 15
+
+My Announcer
+
+{
+    "skills": [
+        {"skillName":"Unix CL", "hours":5}, 
+        {"skillName":"Interface Builder", "hours":25}, 
+        {"skillName":"Objective C", "hours":90}, 
+        {"skillName":"iAds", "hours":15},
+        {"skillName":"SVN", "hours":10},
+        {"skillName":"Project Management", "hours":10}
+    ]
+}
+
+Kanji Learning Game
+
+{
+    "skills": [
+        {"skillName":"Product Development", "hours":20}, 
+        {"skillName":"Testing", "hours":10}, 
+        {"skillName":"Python", "hours":5}, 
+        {"skillName":"C++", "hours":2},
+        {"skillName":"Unix CL", "hours":5},
+        {"skillName":"Flash", "hours":5},
+        {"skillName":"Game Design", "hours":23},
+        {"skillName":"Project Management", "hours":5}
+    ]
+}
+
+Go! Tokyo
+
+{
+    "skills":[
+        {"skillName":"Javascript","hours":20},
+        {"skillName":"C/C++","hours":70},
+        {"skillName":"HTML","hours":10},
+        {"skillName":"Objective-C","hours":100},
+        {"skillName":"Testing", "hours":40},
+        {"skillName":"SVN", "hours":30},
+        {"skillName":"Project Management", "hours":5}
+    ]
+}
+
+Steampunk Metroidvania Game
+
+{
+    "skills":[]
+}
+
+iElecFan
+
+{
+    "skills":[
+        {"skillName":"C/C++","hours":100},
+        {"skillName":"Interface Builder","hours":10},
+        {"skillName":"Objective-C","hours":100},
+        {"skillName":"Core Audio", "hours":40},
+        {"skillName":"Project Management", "hours":10}
+    ]
+}
+
+
+Happy Valley
+
+{
+    "skills":[
+        {"skillName":"Interface Builder","hours":100},
+        {"skillName":"Parse","hours":30},
+        {"skillName":"Ruby on Rails","hours":50},
+        {"skillName":"Sprite Kit", "hours":200},
+        {"skillName":"Build Management", "hours":60},
+        {"skillName":"Objective-C", "hours":200},
+        {"skillName":"Project Management", "hours":10},
+        {"skillName":"Consulting", "hours":10}
+    ]
+}
+
+Pro Zombie Soccer
+{
+    "skills":[
+        {"skillName":"PSM","hours":350},
+        {"skillName":"C#","hours":300},
+        {"skillName":"GLSL","hours":50}
+    ]
+}
+
+
+{"skills":[["Unix CL","5"],["Interface Builder","35"],["Objective C","80"],["iAds","15"]]}
+
+Tokyo Big Sight
+{
+    "skills":[
+        {"skillName":"XML","hours":10},
+        {"skillName":"Flash","hours":25},
+        {"skillName":"Consulting","hours":10}
+    ]
+}
+
+
