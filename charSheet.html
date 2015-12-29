@@ -5,8 +5,8 @@
 	<title>Character Sheet - Liam Conroy</title>
 	<link rel="stylesheet" href="css/style.css">
 	<script type="text/javascript" src="js/paper-full.js"></script>
-    <script src="//www.parsecdn.com/js/parse-1.6.12.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 	<script type="text/paperscript" canvas="canvas">
     
     var allSkills = [];
@@ -105,11 +105,8 @@
     }
 
     var skills;
-    var currentProjects;
-    var releasedProjects;
-    var futureProjects;
-    var onHoldProjects;
-    var cancelledProjects;
+    var allProjects = [];
+    
 
     var badges = [];
     var skillCircles = [];
@@ -134,6 +131,11 @@
         }
     }
 
+    function organiseSkillsByTime(allSkillsUniq)
+    {
+
+    }
+
     function drawProjectBoxes()
     {
         var x = 50;
@@ -154,6 +156,7 @@
             {
                 success: function(results) 
                 {
+                    console.dir(results);
                     requestsIn++;
 
                     for (var j = 0; j < results.length; j++) 
@@ -172,24 +175,6 @@
                         numSkillCircles++;
                     }
 
-                    /*
-
-                    var developers = [
-    { name: "Joe", age: 23 },
-    { name: "Sue", age: 28 },
-    { name: "Jon", age: 32 },
-    { name: "Bob", age: 24 }
-], age = 0;
-
-age = developers.reduce(function(memo, developer) {
-    return memo + developer.age; // return previous total plus current age
-}, 0); // initialize age with 0 that will be passed as memo
-
-console.log("Sum of all developer ages is " + age); 
-
-_.reduce(list, iteratee, [memo], [context]) 
-
-                    */
                     // this should trigger on the last one
                     if(requestsIn == projectStatuses.length)
                     {
@@ -221,8 +206,11 @@ _.reduce(list, iteratee, [memo], [context])
                             return memo;
                         }, []);
                     
+                        allSkillsUniq = _.sortBy(allSkillsUniq, 'hours').reverse();
+
                         drawSkillLabels(allSkillsUniq);
                         drawSkillBars(allSkillsUniq);
+                        calculateAllHours(allSkillsUniq);
                     }
                 },
                 error: function(error) 
@@ -263,9 +251,9 @@ _.reduce(list, iteratee, [memo], [context])
 
     function drawSkillLabels(skills)
     {
-        var x = 10;
-        var y = 480;
-        var yStep = 20;
+        var x = 210;
+        var y = 10;
+        var yStep = 11;
 
         for(var skill in skills)
         {
@@ -277,11 +265,21 @@ _.reduce(list, iteratee, [memo], [context])
         }
     }
 
+    function calculateAllHours(skills)
+    {
+        var totalHours = 0;
+
+        for(var skill in skills)
+        {
+            totalHours += skills[skill].hours;
+        }
+    }
+
     function drawSkillBars(skills)
     {
-        var x = 200;
-        var y = 480;
-        var yStep = 20;
+        var x = 400;
+        var y = 10;
+        var yStep = 11;
         var barHeight = 10;
 
         // draw horizontal bars for skills
@@ -307,11 +305,150 @@ _.reduce(list, iteratee, [memo], [context])
         }
     }
 
+    function drawTimeLine()
+    {
+        // main line
+        x = 10;
+        xEnd = canvas.width-200;
+        y = canvas.height-40;
+        var path = new Path();
+        path.strokeColor = 'black';
+        path.fillColor = 'black';
+        path.add(new Point(x, y)); 
+        path.add(new Point(xEnd,y));
+
+        drawProjectsOnTimeLine(xEnd-x);
+    }
+
+    // this is buggy and returns minus sometimes, just abs for now...
+    /*function getNumberOfMonths(from, to)
+    {
+        return Math.abs(from.getMonth() - to.getMonth() + (12 * (to.getFullYear() - from.getFullYear())));
+    }*/
+
+    function getNumberOfMonths(from, to) 
+    {
+        var months;
+        months = (to.getFullYear() - from.getFullYear()) * 12;
+        months -= from.getMonth() + 1;
+        months += to.getMonth();
+        return months <= 0 ? 0 : months;
+    }
+    // port to moment.js?
+    // times are occasionally coming out minus...
+    function drawProjectsOnTimeLine(lineLength)
+    {
+        var barHeight = 10;
+        var currentY = canvas.height-40;
+        var xStart = 10;
+
+        // first just sort by start time and sort in y
+
+        allProjects = _.sortBy(allProjects, 'StartDate');
+ 
+        var firstDate = _.first(allProjects).get("StartDate");
+        var lastDate  = new Date();
+
+        var totalNumMonths = getNumberOfMonths(firstDate, lastDate);
+        var oneMonthLength = lineLength/totalNumMonths;
+
+        // year lines
+        var monthCount = 0;
+
+        // calculate properly from 1st
+        var year = 2004;
+
+        while(monthCount < totalNumMonths)
+        {
+            var path = new Path();
+            path.strokeColor = 'black';
+            path.fillColor = 'white';
+            var xPos = xStart+(monthCount*oneMonthLength);
+            // hack in time offset - calculate properly in the future!
+            var yLen = ((monthCount+6) % 12) ? 2 : 5; 
+
+            if(yLen == 5) // on a year border, label
+            {
+                var yearLabel = new PointText(new Point(xPos-14, currentY+24));
+                yearLabel.fillColor = 'black';
+                yearLabel.content = year;
+                yearLabel.rotate(90);
+                year++;
+            }
+            path.add(new Point(xPos, currentY)); 
+            path.add(new Point(xPos, currentY+yLen));
+
+            monthCount++;
+        }
+
+        _.each(allProjects, function(project) 
+        {
+            console.dir(project.get("StartDate"));
+            console.dir(project.get("EndDate"));
+            var lengthInMonths = getNumberOfMonths(project.get("StartDate"), project.get("EndDate"));
+            var lengthInLine = lengthInMonths*oneMonthLength;
+            var lengthInMonthsSinceBeginning = getNumberOfMonths(firstDate, project.get("StartDate"));
+            var xOffset = xStart + lengthInMonthsSinceBeginning*oneMonthLength;
+            console.dir(lengthInMonths);
+            
+            var path = new Path();
+
+            path.strokeColor = 'black';
+            path.fillColor = 'white';
+            path.add(new Point(xOffset, currentY)); 
+            path.add(new Point(xOffset+lengthInLine,currentY));
+            path.add(new Point(xOffset+lengthInLine,currentY-barHeight));
+            path.add(new Point(xOffset,currentY-barHeight));
+            path.closed = true;
+            
+            var projectsLabel = new PointText(new Point(xOffset+lengthInLine+2, currentY));
+            projectsLabel.fillColor = 'black';
+            projectsLabel.content = project.get("Name");
+
+            var getProjectInfo = function(event) 
+            {
+                console.log("click!");
+                window.open(project.get("URL"), "_blank");
+                this.active = true;
+            };
+
+            path.onMouseDown = getProjectInfo;
+            projectsLabel.onMouseDown = getProjectInfo;
+            currentY -= barHeight;
+        });
+    }
+    function processDates()
+    {
+        var projects = Parse.Object.extend("Projects");
+        var query = new Parse.Query(projects);
+
+        query.ascending("StartDate");
+
+        query.find(
+        {
+            success: function(results) 
+            {
+                for (var j = 0; j < results.length; j++) 
+                { 
+                    allProjects.push(results[j]);
+                }
+
+                drawTimeLine();
+            },
+            error: function(error) 
+            {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+
+
+    }
 	function main()
 	{
         initParse();    
-        drawProjectLabels();
-        drawProjectBoxes();
+        //drawProjectLabels();
+        //drawProjectBoxes();
+        processDates();
 	}
 
 	main();
