@@ -111,9 +111,8 @@
     var badges = [];
     var skillCircles = [];
 
-    var numBadges = 0;
-    var numSkillCircles = 0;
 
+    // TODO: pull this in from backend
     var projectStatuses = ["Current", "Released", "Future", "On Hold", "Decommissioned", "Cancelled"];
 
     function drawProjectLabels()
@@ -138,107 +137,41 @@
 
     function drawProjectBoxes()
     {
-        var x = 50;
+        var initialX = 50;
         var y = 80;
         var yStep = 70;
         var xStep = 50;
-
-        var projects = Parse.Object.extend("Projects");
-        var query = new Parse.Query(projects);
 
         var requestsIn = 0;
 
         for(var i = 0; i < projectStatuses.length; i++)
         {
-            query.equalTo("Status", projectStatuses[i]);
+            var count = 0;
 
-            query.find(
+            _.each(allProjects, function(project) 
             {
-                success: function(results) 
+                if(project.get('Status') == projectStatuses[i])
                 {
-                    console.dir(results);
-                    requestsIn++;
+                    var projectName = new PointText(new Point(initialX+(xStep*count), y+(yStep*i)+20));
+                    projectName.fillColor = 'black'
+                    projectName.content = project.get('Name');
 
-                    for (var j = 0; j < results.length; j++) 
-                    { 
-                        var project = results[j];
-                        //placesOInterest.push(object.get('PlaceName'));
-                        var index = projectStatuses.indexOf(project.get('Status')); 
-                        var text1 = new PointText(new Point(x+(xStep*j), y+(yStep*index)+20));
-                        text1.fillColor = 'black'
-                        text1.content = project.get('Name');
+                    badges.push(new Badge(initialX+(xStep*count), y+(yStep*i), 20, project.get('URL')));   
 
-                        badges.push(new Badge(x+(xStep*j), y+(yStep*index), 20, project.get('URL')));   
-                        numBadges++;
-
-                        skillCircles.push(new Skill(project.get('SkillsUsed'),badges[badges.length - 1]));
-                        numSkillCircles++;
-                    }
-
-                    // this should trigger on the last one
-                    if(requestsIn == projectStatuses.length)
-                    {
-                        console.dir(allSkills);
-
-                        var allSkillsUniq = [];
-
-                        allSkills = _.reduce(allSkills, function(memo, skill) 
-                        {
-                            var index = _.indexOf(memo, skill.skillName);
-
-                            if(index === -1)
-                            {
-                                //alert(skill.skillName);
-                                //console.dir(memo);
-                                //console.dir(skill);  
-                                memo.push(skill.skillName);
-                                allSkillsUniq.push(skill);
-                                return memo;
-                            }
-                            else
-                            {
-                                //alert(skill.skillName);
-                                allSkillsUniq[index].hours += skill.hours;
-                                //console.dir(memo);
-                                //console.dir(skill);
-                            }
-
-                            return memo;
-                        }, []);
-                    
-                        allSkillsUniq = _.sortBy(allSkillsUniq, 'hours').reverse();
-
-                        drawSkillLabels(allSkillsUniq);
-                        drawSkillBars(allSkillsUniq);
-                        calculateAllHours(allSkillsUniq);
-                    }
-                },
-                error: function(error) 
-                {
-                    alert("Error: " + error.code + " " + error.message);
+                    skillCircles.push(new Skill(project.get('SkillsUsed'),badges[badges.length - 1]));
+                    count++;
                 }
             });
         }
-
-        /*var currentProjectsText = new PointText(new Point(10, y));
-            currentProjectsText.fillColor = 'black';
-            currentProjectsText.content = ;
-
-        
-
-        for(i = 0; i < projects.length; i++)
-        {
-            
-        }*/
     }
 
     function onFrame(event)
     {
-        for(var i = 0; i < numBadges; i++)
+        for(var i = 0; i < badges.length; i++)
         {
             badges[i].update();
         }
-        for(var i = 0; i < numSkillCircles; i++)
+        for(var i = 0; i < skillCircles.length; i++)
         {
             skillCircles[i].update();
         }
@@ -249,33 +182,23 @@
         Parse.initialize("tpio94gHZkEKpbpxvjCAHKExanIx89VwpIsvtXt5", "aQsoxqb0x8tk09TprScWDnEiZs9SSQFN8qsE3bP1");
     }
 
-    function drawSkillLabels(skills)
+    function drawSkillLabels()
     {
         var x = 210;
         var y = 10;
         var yStep = 11;
 
-        for(var skill in skills)
+        for(var skill in allSkills)
         {
             var skillText = new PointText(new Point(x, y));
             skillText.fillColor = 'black';
-            skillText.content = skills[skill].skillName + ":";
+            skillText.content = allSkills[skill].skillName + ":";
 
             y+=yStep;
         }
     }
 
-    function calculateAllHours(skills)
-    {
-        var totalHours = 0;
-
-        for(var skill in skills)
-        {
-            totalHours += skills[skill].hours;
-        }
-    }
-
-    function drawSkillBars(skills)
+    function drawSkillBars()
     {
         var x = 400;
         var y = 10;
@@ -283,21 +206,16 @@
         var barHeight = 10;
 
         // draw horizontal bars for skills
-        for(i = 0; i < skills.length; i++)
+        for(i = 0; i < allSkills.length; i++)
         {
-            /*var text1 = new PointText(new Point((i*50)+20, 750));
-            text1.fillColor = 'black'
-            text1.content = skills[i][0]
-            text1.rotate(90);*/
-
             var barHeightDampener = 2;
 
             var path = new Path();
             path.strokeColor = 'black';
             path.fillColor = 'black';
             path.add(new Point(x, y)); 
-            path.add(new Point(x+(skills[i].hours/barHeightDampener), y)); 
-            path.add(new Point(x+(skills[i].hours/barHeightDampener), y-barHeight)); 
+            path.add(new Point(x+(allSkills[i].hours/barHeightDampener), y)); 
+            path.add(new Point(x+(allSkills[i].hours/barHeightDampener), y-barHeight)); 
             path.add(new Point(x, y-barHeight));     
             path.closed = true;
 
@@ -383,13 +301,10 @@
 
         _.each(allProjects, function(project) 
         {
-            console.dir(project.get("StartDate"));
-            console.dir(project.get("EndDate"));
             var lengthInMonths = getNumberOfMonths(project.get("StartDate"), project.get("EndDate"));
             var lengthInLine = lengthInMonths*oneMonthLength;
             var lengthInMonthsSinceBeginning = getNumberOfMonths(firstDate, project.get("StartDate"));
             var xOffset = xStart + lengthInMonthsSinceBeginning*oneMonthLength;
-            console.dir(lengthInMonths);
             
             var path = new Path();
 
@@ -417,7 +332,43 @@
             currentY -= barHeight;
         });
     }
-    function processDates()
+    
+    function drawScreenFrame()
+    {
+        var crossoverPoint = new Point(100,100);
+
+        var horizontalBar = new Path();
+        horizontalBar.strokeColor = 'red';
+        horizontalBar.fillColor = 'red';
+        horizontalBar.add(new Point(0, crossoverPoint.y)); 
+        horizontalBar.add(new Point(canvas.width,crossoverPoint.y));
+
+        var verticalBar = new Path();
+        verticalBar.strokeColor = 'red';
+        verticalBar.fillColor = 'red';
+        verticalBar.add(new Point(crossoverPoint.x, 0)); 
+        verticalBar.add(new Point(crossoverPoint.x, canvas.height-40));
+
+        var categories = ["Projects","Skills","Timeline"];
+
+        var y = crossoverPoint.y;
+
+        _.each(categories, function(category)
+        {
+            var categoryLabel = new PointText(new Point(20, y+30));
+            categoryLabel.fillColor = 'black';
+            categoryLabel.content = category; 
+            y += 50;
+
+            var changeCategory = function() 
+            {
+                this.fillColor = 'red';
+            };
+
+            categoryLabel.onMouseDown = changeCategory;
+        });
+    }
+    function pullParseData()
     {
         var projects = Parse.Object.extend("Projects");
         var query = new Parse.Query(projects);
@@ -432,23 +383,73 @@
                 { 
                     allProjects.push(results[j]);
                 }
-
-                drawTimeLine();
+                createUI();
             },
             error: function(error) 
             {
                 alert("Error: " + error.code + " " + error.message);
             }
         });
+    }
+    function reduceSkills()
+    {
+        var allSkillsCopy = [];
 
+        allSkills = _.reduce(allSkills, function(memo, skill) 
+        {
+            var index = _.indexOf(memo, skill.skillName);
 
+            if(index === -1)
+            {
+                memo.push(skill.skillName);
+                allSkillsCopy.push(skill);
+                return memo;
+            }
+            else
+            {
+                allSkillsCopy[index].hours += skill.hours;
+            }
+
+            return memo;
+        }, []);
+    
+        allSkills = _.sortBy(allSkillsCopy, 'hours').reverse();
+    }
+    function createUI()
+    {
+        drawProjectLabels();
+        drawProjectBoxes();
+
+        // TODO: this has a weird dependancy on the calculateTotalHours meaning it must be called after the above... Decouple interface and data more
+        reduceSkills();
+        /*
+        var skillLayer = new Layer();
+        skillLayer.activate();
+        project.layers.push(skillLayer);
+        */
+        drawSkillLabels();
+        drawSkillBars();
+
+        drawTimeLine();
     }
 	function main()
 	{
-        initParse();    
-        //drawProjectLabels();
-        //drawProjectBoxes();
-        processDates();
+        drawScreenFrame();
+        
+        initParse();   
+        pullParseData();
+
+        
+        
+        //var projectLayer = new Layer();
+        //projectLayer.activate();
+
+        
+
+        //project.layers[0].visible = false;
+        //project.layers[1].visble  = false;
+        //project.layers[2].visible = false;
+        //project.layers[3].visible = false;
 	}
 
 	main();
