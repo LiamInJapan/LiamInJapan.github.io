@@ -420,35 +420,7 @@
 
     function pullParseData()
     {
-        var projects = Parse.Object.extend("Projects");
-        var query = new Parse.Query(projects);
-
-        query.ascending("StartDate");
-
-        query.find(
-        {
-            success: function(results) 
-            {
-                for (var j = 0; j < results.length; j++) 
-                { 
-                    var project = results[j];
-
-                    allProjects.push(project);
-                    allSkills = allSkills.concat(project.get('SkillsUsed').skills);
-                }
-                reduceSkills();
-                reduceSkillCategories();
-
-                if(requestsIn == 1)
-                    createUI();
-                else
-                    requestsIn++;
-            },
-            error: function(error) 
-            {
-                alert("Error: " + error.code + " " + error.message);
-            }
-        });
+        
     }
     function reduceSkillCategories()
     {
@@ -598,6 +570,32 @@
 
     }
 
+    function parseCloudCodeTests()
+    {
+        /*Parse.Cloud.run('getSkillCategories', { movie: 'The Matrix' }).then(function(response) 
+        {
+            alert(response);
+        });*/
+        
+        /*Parse.Cloud.run('hello', {}).then(function(response) 
+        {
+            console.dir(response);
+        });*/ 
+
+        /*Parse.Cloud.run('updateSkillsObject', {}).then(function(response) 
+        {
+            console.dir(response);
+        });*/
+        Parse.Cloud.run('updateDB', {}).then(function(response) 
+        {
+            for(var i = 0; i < response.length; i++)
+            {
+                console.dir(response[i].get("Name"));  
+                console.dir(response[i].get("TotalTime"));    
+            }
+            
+        });        
+    }
     function drawContactsArea()
     {
         var contactsTextSpacing = 18;
@@ -621,8 +619,9 @@
         drawAvatar();
         drawContactsArea();
         
-        initParse();   
-        pullParseData();
+        initParse();
+        parseCloudCodeTests();   
+        //pullParseData();
 	}
 
 	main();
