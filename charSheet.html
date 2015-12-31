@@ -7,11 +7,12 @@
 	<script type="text/javascript" src="js/paper-full.js"></script>
     <script src="http://www.parsecdn.com/js/parse-1.6.12.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/2.5.0/math.min.js"></script>
 	<script type="text/paperscript" canvas="canvas">
     
     var allSkills = [];
 
-    function Badge(x, y, size, url) 
+    function Badge(pos, size, url, img) 
     {
         var active = false;
         
@@ -28,10 +29,10 @@
 
         this.path.strokeColor = 'black';
         this.path.fillColor = 'white';
-        this.path.add(new Point(x, y)); 
-        this.path.add(new Point(x+size, y)); 
-        this.path.add(new Point(x+size, y-size));
-        this.path.add(new Point(x, y-size));     
+        this.path.add(pos); 
+        this.path.add(new Point(pos.x+size, pos.y)); 
+        this.path.add(new Point(pos.x+size, pos.y-size));
+        this.path.add(new Point(pos.x, pos.y-size));     
         this.path.closed = true;
         this.path.onMouseDown = function(event) 
         {
@@ -39,6 +40,15 @@
             window.open(url, "_blank");
             this.active = true;
         }
+
+        var image = new Raster(img);
+        //image.scale(0.25);
+        image.bounds = this.path.bounds;
+        //image.fitBounds(path.bounds, true);
+        var group = new Group([this.path, image]);
+        //group.clipMask = true;
+        group.clipped = true;
+
     }
 
     Badge.prototype = 
@@ -66,8 +76,8 @@
     {
         var active = false;
         
-        this.path = new Path.Circle(badge.path.position, totalHours/10);
-        this.fillColor = 'black';
+        //this.path = new Path.Circle(badge.path.position, totalHours/10);
+        //this.fillColor = 'black';
 
 
         /*this.path = new Path.Circle(
@@ -81,14 +91,14 @@
             blendMode: 'screen'
         });*/
 
-        this.path.strokeColor = 'black';
+        //this.path.strokeColor = 'black';
         
-        this.path.onMouseDown = function(event) 
-        {
-            console.log("clickCircle!");   
-        }
+        //this.path.onMouseDown = function(event) 
+        //{
+        //    console.log("clickCircle!");   
+        //}
 
-        this.path.sendToBack();
+        //this.path.sendToBack();
     }
 
     Skill.prototype = 
@@ -136,7 +146,7 @@
         var initialX = 50;
         var y = 80;
         var yStep = 70;
-        var xStep = 50;
+        var xStep = 96;
 
         var requestsIn = 0;
 
@@ -152,7 +162,8 @@
                     projectName.fillColor = 'black'
                     projectName.content = project.get('Name');
 
-                    badges.push(new Badge(initialX+(xStep*count), y+(yStep*i), 20, project.get('URL')));   
+                    var badgePos = new Point(initialX+(xStep*count), y+(yStep*i));
+                    badges.push(new Badge(badgePos, 128, project.get('URL'), project.get('imageName')));   
 
                     var totalHours = calculateTotalHours(project.get('SkillsUsed'));
 
@@ -182,7 +193,7 @@
 
     function drawSkillLabels()
     {
-        var x = 210;
+        var x = 10;
         var y = 10;
         var yStep = 11;
 
@@ -196,9 +207,13 @@
         }
     }
 
+    function drawSkillCategories()
+    {
+
+    }
     function drawSkillBars()
     {
-        var x = 400;
+        var x = 200;
         var y = 10;
         var yStep = 11;
         var barHeight = 10;
@@ -226,7 +241,7 @@
         // main line
         x = 10;
         xEnd = canvas.width-200;
-        y = canvas.height-40;
+        y = canvas.height-200;
         var path = new Path();
         path.strokeColor = 'black';
         path.fillColor = 'black';
@@ -249,7 +264,7 @@
     function drawProjectsOnTimeLine(lineLength)
     {
         var barHeight = 10;
-        var currentY = canvas.height-40;
+        var currentY = canvas.height-200;
         var xStart = 10;
 
         // first just sort by start time and sort in y
@@ -326,9 +341,11 @@
     }
     
     var categoryLabels = [];
-    function drawScreenFrame()
+    var crossoverPoint;
+
+    function drawScreenFrame(x)
     {
-        var crossoverPoint = new Point(100,100);
+        crossoverPoint = new Point(x,x*math.phi);
 
         var horizontalBar = new Path();
         horizontalBar.strokeColor = 'red';
@@ -345,17 +362,17 @@
         var categoriesDict = []; // create an empty array
 
         categoriesDict.push({
-        key:   "Projects",
+        key:   "Projects>>",
         value: 1
         });
 
         categoriesDict.push({
-        key:   "Skills",
+        key:   "Skills>>",
         value: 2
         });
 
         categoriesDict.push({
-        key:   "Timeline",
+        key:   "Timeline>>",
         value: 3
         });
 
@@ -363,11 +380,12 @@
 
         _.each(categoriesDict, function(category)
         {
-            var categoryLabel = new PointText(new Point(20, y+30));
+            var categoryLabel = new PointText(new Point(crossoverPoint.x/2, y+16));
             categoryLabel.fillColor = 'black';
             categoryLabel.name = category.key;
+            categoryLabel.justification = 'center';
             categoryLabel.content = category.key; 
-            y += 50;
+            y += 16;
 
             var changeCategory = function() 
             {
@@ -399,6 +417,7 @@
                     allSkills = allSkills.concat(project.get('SkillsUsed').skills);
                 }
                 reduceSkills();
+                reduceSkillCategories();
                 createUI();
             },
             error: function(error) 
@@ -406,6 +425,10 @@
                 alert("Error: " + error.code + " " + error.message);
             }
         });
+    }
+    function reduceSkillCategories()
+    {
+        
     }
     function reduceSkills()
     {
@@ -448,8 +471,7 @@
 
         for(var i = 1; i < project.layers.length; i++)
         {
-            project.layers[i].position.x += 100;
-            project.layers[i].position.y += 100;
+            project.layers[i].position.x += crossoverPoint.x;
         } 
     }
     function createUI()
@@ -470,9 +492,76 @@
 
         setupLayers();
     }
+    /*function initializePath() 
+    {
+        center = view.center;
+        width = view.size.width;
+        height = view.size.height / 2;
+        path.segments = [];
+        path.add(view.bounds.bottomLeft);
+        
+        for (var i = 1; i < points; i++) 
+        {
+            var point = new Point(width / points * i, center.y);
+            path.add(point);
+        }
+        path.add(view.bounds.bottomRight);
+    }*/
+
+    function drawAvatar()
+    {
+        var borderSize = 50;
+        var path = new Path.Circle(new Point(crossoverPoint.x/2,crossoverPoint.x/2), crossoverPoint.x/2-(borderSize));
+        path.fillColor = 'black';
+        path.strokeColor = 'black';
+
+        var image = new Raster('avatar.jpg');
+        image.scale(0.3);
+        image.bounds = path.bounds;
+        //image.fitBounds(path.bounds, true);
+        var group = new Group([path, image]);
+        //group.clipMask = true;
+        group.clipped = true;
+
+        var nameText = new PointText(new Point(crossoverPoint.x/2, path.bounds.bottom+borderSize));
+        nameText.fillColor = 'black';
+        nameText.justification = 'center';
+        nameText.content = 'Liam Conroy';
+
+        var titleText = new PointText(new Point(crossoverPoint.x/2, nameText.bounds.bottom+borderSize));
+        titleText.fillColor = 'black';
+        titleText.justification = 'center';
+        titleText.content = 'Freelance Game Engineer';
+
+        var locationText = new PointText(new Point(crossoverPoint.x/2, titleText.bounds.bottom+borderSize));
+        locationText.fillColor = 'black';
+        locationText.justification = 'center';
+        locationText.content = 'Kyoto, Japan';
+
+    }
+
+    function drawContactsArea()
+    {
+        var contactsTextSpacing = 18;
+        
+        var contactInfo = ['Want to collaborate?\nHire me?\nFund a project?\nGet in touch!',
+        'mail@liam-conroy.com','@LiamInJapan','@LiamInJapan','LinkedIn','+81 (0)80 4068 1273'].reverse();
+
+        for(var i = 0; i < contactInfo.length; i++)
+        {
+            var yOffset = (i === contactInfo.length-1) ? ((contactsTextSpacing*(i+1))+60) : (contactsTextSpacing*(i+1));
+            var mailText = new PointText(new Point(crossoverPoint.x/2, canvas.height-yOffset));
+            mailText.fillColor = 'black';
+            mailText.justification = 'center';
+            mailText.content = contactInfo[i];
+        }  
+    }
+
 	function main()
 	{
-        drawScreenFrame();
+        drawScreenFrame(250);
+        drawAvatar();
+        drawContactsArea();
         
         initParse();   
         pullParseData();
