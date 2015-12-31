@@ -64,8 +64,12 @@
     {
         var totalHours = 0;
 
+        // this is clumsy, refactor to calculate on the parse side
         for(var i = 0; i < skillObject.skills.length; i++)
         {
+            console.dir(_.indexOf(allSkillCategories, skillObject.skills.skillName));
+
+            //allSkillCategories[_.indexOf(allSkillCategories, skillObject.skills.skillName)]
             totalHours += skillObject.skills[i].hours;
         }
 
@@ -110,8 +114,10 @@
         }
     }
 
-    var skills;
     var allProjects = [];
+    var allSkills = [];
+    var allSkillTypes = [];
+    var allSkillCategories = [];
     
 
     var badges = [];
@@ -193,7 +199,7 @@
 
     function drawSkillLabels()
     {
-        var x = 10;
+        var x = 198;
         var y = 10;
         var yStep = 11;
 
@@ -201,6 +207,7 @@
         {
             var skillText = new PointText(new Point(x, y));
             skillText.fillColor = 'black';
+            skillText.justification = 'right';
             skillText.content = allSkills[skill].skillName + ":";
 
             y+=yStep;
@@ -209,7 +216,18 @@
 
     function drawSkillCategories()
     {
+        var x = 10;
+        var y = 10;
+        var yStep = 11;
 
+        for(var skillCategory in allSkillCategories)
+        {
+            var skillCategoryText = new PointText(new Point(x, y));
+            skillCategoryText.fillColor = 'black';
+            skillCategoryText.content = allSkillCategories[skillCategory];
+
+            y+=yStep;
+        }
     }
     function drawSkillBars()
     {
@@ -342,6 +360,8 @@
     
     var categoryLabels = [];
     var crossoverPoint;
+    var requestsIn = 0;
+
 
     function drawScreenFrame(x)
     {
@@ -418,7 +438,11 @@
                 }
                 reduceSkills();
                 reduceSkillCategories();
-                createUI();
+
+                if(requestsIn == 1)
+                    createUI();
+                else
+                    requestsIn++;
             },
             error: function(error) 
             {
@@ -428,7 +452,40 @@
     }
     function reduceSkillCategories()
     {
-        
+        var skills = Parse.Object.extend("Skills");
+        var query = new Parse.Query(skills);
+
+        query.find(
+        {
+            success: function(results) 
+            {
+                for (var j = 0; j < results.length; j++) 
+                { 
+                    var skillType = results[j];
+                    allSkillTypes.push(skillType);
+                }
+
+                _.each(allSkillTypes, function(skillType) 
+                {
+                    var index = _.indexOf(allSkillCategories,skillType.get("Category"));
+
+                    if(index == -1)
+                    {
+                        allSkillCategories.push(skillType.get("Category"));
+                    }
+                });
+
+                if(requestsIn == 1)
+                    createUI();
+                else
+                    requestsIn++;
+            },
+
+            error: function(error) 
+            {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
     }
     function reduceSkills()
     {
@@ -485,6 +542,7 @@
         skillLayer.activate();
         drawSkillLabels();
         drawSkillBars();
+        drawSkillCategories();
 
         var timeLayer = new Layer();
         timeLayer.activate();

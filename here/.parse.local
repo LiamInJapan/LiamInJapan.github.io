@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "Portfolio": {
+      "applicationId": "tpio94gHZkEKpbpxvjCAHKExanIx89VwpIsvtXt5"
+    },
+    "_default": {
+      "link": "Portfolio"
+    }
+  }
+}
