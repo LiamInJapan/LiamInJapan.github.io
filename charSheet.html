@@ -147,7 +147,7 @@
 
     }
 
-    function drawProjectBoxes()
+    function drawProjectBoxes(projectData)
     {
         var initialX = 50;
         var y = 80;
@@ -160,7 +160,7 @@
         {
             var count = 0;
 
-            _.each(allProjects, function(project) 
+            _.each(projectData, function(project) 
             {
                 if(project.get('Status') == projectStatuses[i])
                 {
@@ -171,7 +171,14 @@
                     var badgePos = new Point(initialX+(xStep*count), y+(yStep*i));
                     badges.push(new Badge(badgePos, 128, project.get('URL'), project.get('imageName')));   
 
-                    var totalHours = calculateTotalHours(project.get('SkillsUsed'));
+                    var skillsUsed = project.get("SkillsUsed");
+                    var totalHours = 0;
+
+                    for(var j = 0; j < skillsUsed.skills.length; j++)
+                    {
+                        var skill = skillsUsed.skills[j];
+                        totalHours += skill.hours;
+                    }
 
                     skillCircles.push(new Skill(totalHours,badges[badges.length - 1]));
                     count++;
@@ -197,39 +204,39 @@
         Parse.initialize("tpio94gHZkEKpbpxvjCAHKExanIx89VwpIsvtXt5", "aQsoxqb0x8tk09TprScWDnEiZs9SSQFN8qsE3bP1");
     }
 
-    function drawSkillLabels()
+    function drawSkillLabels(skillData)
     {
         var x = 198;
         var y = 10;
         var yStep = 11;
 
-        for(var skill in allSkills)
+        for(var skill in skillData)
         {
             var skillText = new PointText(new Point(x, y));
             skillText.fillColor = 'black';
             skillText.justification = 'right';
-            skillText.content = allSkills[skill].skillName + ":";
+            skillText.content = skillData[skill].skillName + ":";
 
             y+=yStep;
         }
     }
 
-    function drawSkillCategories()
+    function drawSkillCategories(categoryData)
     {
         var x = 10;
         var y = 10;
         var yStep = 11;
 
-        for(var skillCategory in allSkillCategories)
+        for(var skillCategory in categoryData)
         {
             var skillCategoryText = new PointText(new Point(x, y));
             skillCategoryText.fillColor = 'black';
-            skillCategoryText.content = allSkillCategories[skillCategory];
+            skillCategoryText.content = categoryData[skillCategory].category;
 
             y+=yStep;
         }
     }
-    function drawSkillBars()
+    function drawSkillBars(skillData)
     {
         var x = 200;
         var y = 10;
@@ -237,7 +244,7 @@
         var barHeight = 10;
 
         // draw horizontal bars for skills
-        for(i = 0; i < allSkills.length; i++)
+        for(i = 0; i < skillData.length; i++)
         {
             var barHeightDampener = 2;
 
@@ -245,8 +252,8 @@
             path.strokeColor = 'black';
             path.fillColor = 'black';
             path.add(new Point(x, y)); 
-            path.add(new Point(x+(allSkills[i].hours/barHeightDampener), y)); 
-            path.add(new Point(x+(allSkills[i].hours/barHeightDampener), y-barHeight)); 
+            path.add(new Point(x+(skillData[i].hours/barHeightDampener), y)); 
+            path.add(new Point(x+(skillData[i].hours/barHeightDampener), y-barHeight)); 
             path.add(new Point(x, y-barHeight));     
             path.closed = true;
 
@@ -420,7 +427,23 @@
 
     function pullParseData()
     {
-        
+        Parse.Cloud.run('getDataOfType', { "dataType": "categories" }).then(function(response) 
+        {
+            drawSkillCategories(response);
+        });
+
+        Parse.Cloud.run('getDataOfType', { "dataType": "skills" }).then(function(response) 
+        {
+            drawSkillLabels(response);
+            drawSkillBars(response);
+        }); 
+
+        Parse.Cloud.run('getDataOfType', { "dataType": "project" }).then(function(response) 
+        {
+            console.dir(response);
+            drawProjectLabels();
+            drawProjectBoxes(response);
+        }); 
     }
     function reduceSkillCategories()
     {
@@ -514,7 +537,7 @@
         skillLayer.activate();
         drawSkillLabels();
         drawSkillBars();
-        drawSkillCategories();
+        drawSkillCategories([]);
 
         var timeLayer = new Layer();
         timeLayer.activate();
@@ -571,30 +594,7 @@
     }
 
     function parseCloudCodeTests()
-    {
-        /*Parse.Cloud.run('getSkillCategories', { movie: 'The Matrix' }).then(function(response) 
-        {
-            alert(response);
-        });*/
-        
-        /*Parse.Cloud.run('hello', {}).then(function(response) 
-        {
-            console.dir(response);
-        });*/ 
-
-        /*Parse.Cloud.run('updateSkillsObject', {}).then(function(response) 
-        {
-            console.dir(response);
-        });*/
-        Parse.Cloud.run('updateDB', {}).then(function(response) 
-        {
-            for(var i = 0; i < response.length; i++)
-            {
-                console.dir(response[i].get("Name"));  
-                console.dir(response[i].get("TotalTime"));    
-            }
-            
-        });        
+    {       
     }
     function drawContactsArea()
     {
@@ -620,7 +620,7 @@
         drawContactsArea();
         
         initParse();
-        parseCloudCodeTests();   
+        pullParseData();   
         //pullParseData();
 	}
 

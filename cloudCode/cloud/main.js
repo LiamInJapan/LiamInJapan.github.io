@@ -18,327 +18,183 @@ getListOfSkillsAndTimes
 getTimelineOfProjects
 getProjects
 
+response.success(returnArray);
+					  	},
+					  	error: function(skillCategoryObject, error) 
+					  	{
+					    	console.log('Failed to create new object, with error code: ' + error);
+					    	response.error("Failed at categories");
+
 */
 
-var allSkills = [];
+var processedData;
+var allProjects = [];
 
-function reduceSkills()
-{
-	var allSkillsCopy = [];
-	var allSkillsNote = [];
 
-	_.each(allSkills, function(skill) 
-    {
-    	var index = _.indexOf(allSkillsNote, skill.get('Name'));
 
-    	//console.log(skill.get('Name'));
-        if(index === -1)
-        {
-        	//console.log(">>>**********" + skill);
-            allSkillsNote.push(skill.get('Name'));
-            allSkillsCopy.push(skill);
-        }
-        else
-        {
-        	allSkillsCopy[index].set("TotalTime", allSkillsCopy[index].get("TotalTime")+skill.get("TotalTime"));
-            //allSkillsCopy[index].TotalTime += skill.get("TotalTime");
-        }
-    });
-
-    allSkills = allSkillsCopy;
-    //allSkills = _.sortBy(allSkillsCopy, 'hours').reverse();	
-}
-
-Parse.Cloud.define("updateDB", function(request, response)
-{
-	var allProjects = [];
-
-	var test = "";
-	var query = new Parse.Query("Projects");
-    query.ascending("StartDate");
-
-    query.find(
+    /*(
     {
     	success: function(results) 
         {
-        	for (var i = 0; i < results.length; i++) 
-            {
-             	var project = results[i];
-	            var skillsUsed = project.get('SkillsUsed');
+        	
 
-	            for(var j = 0; j < skillsUsed.skills.length; j++)
-        		{
-        			var SkillObject = Parse.Object.extend("Skills");
-  		      		var skillObject = new SkillObject();
-        			skillObject.set("Category", "Uncategorised");
-        			skillObject.set("Name",skillsUsed.skills[j].skillName);
-        			skillObject.set("TotalTime", skillsUsed.skills[j].hours);
-        			//console.log("obj:" + skillsUsed.skills[j].skillName);
-        			allSkills.push(skillObject);
-
-        			//allSkillNames.push(skillsUsed.skills[j].skillName);
-        			//test +=  + ", \n";
-        		}
-            }
-
-            console.log(">>> before" + allSkills.length);
-            reduceSkills();
-            console.log(">>> after" + allSkills.length);
-
-            Parse.Object.saveAll(allSkills,
-        	{
-        		success: function(skillObject) 
-			  	{
-			  		//response.success(allSkills);
-			  		console.log('New object created with objectId: ' + skillObject.id);
-			  		response.success(skillObject);
-			  	},
-			  	error: function(skillObject, error) 
-			  	{
-			  		//response.error("werr!");
-			    	console.log('Failed to create new object, with error code: ' + error);
-			  	}
-			});
-
-			
+	       	processedData(dataType);
         },
         error: function(error) 
         {
-        	response.error("Error in updateDB: " + error.code + " " + error.message);
-        }
-    });
-
-});
-
-
-
-/*Parse.Cloud.job("updatesdsdsd", function(request, status)
-{
-	var availableFunctions = _.functions(_);
-	console.log('Available Underscore Functions: ' + JSON.stringify(availableFunctions));
-
-	var allProjects = [];
-
-    var query = new Parse.Query("Projects");
-    query.ascending("StartDate");
-
-    query.find(
-    {
-        success: function(results) 
-        {
-        	var objects = [];
-
-            for (var i = 0; i < results.length; i++) 
-            { 
-                var project = results[i];
-                var skillsUsed = project.get('SkillsUsed');
-                allSkills.push(skillsUsed);
-
-				//console.log("*** skillsUsed *** :" + skillsUsed);
-        		
-        		for(var j = 0; j < skillsUsed.skills.length; j++)
-        		{
-        			var SkillObject = Parse.Object.extend("Skills");
-  		      		var skillObject = new SkillObject();
-        			skillObject.set("Category", "Uncategorised");
-        			skillObject.set("Name",skillsUsed.skills[j].skillName);
-        			skillObject.set("TotalTime", 0);
-        			//console.log("obj:" + skillsUsed.skills[j].skillName);
-        			objects.push(skillObject);
-        		}
-        		//console.log(">>>>>>>>>>");
-            }
-
-            console.log("before:" + allSkills.length);
-            reduceSkills();
-            console.log("after:" + allSkills.length);
-
-            //console.log("*** skillsUsed *** :" + objects);
-
-        	Parse.Object.saveAll(objects,
-        	{
-        		success: function(skillObject) 
-			  	{
-			  		//response.success(allSkills);
-			  		console.log('New object created with objectId: ' + skillObject.id);
-			  	},
-			  	error: function(skillObject, error) 
-			  	{
-			  		//response.error("werr!");
-			    	console.log('Failed to create new object, with error code: ' + error);
-			  	}
-			});
-        },
-        error: function(error) 
-        {
-            response.error("Error in updateSkillsObject: " + error.code + " " + error.message);
-            //console.log('Failed to update');
+        	//response.error("Error in updateDB: " + error.code + " " + error.message);
         }
     });
 });*/
 
-/*Parse.Cloud.define("getSkillCategories", function(request, response)
-{
-	response.success("changed");
-});*
-
 /*
-Parse.Cloud.define("averageStars", function(request, response) {
-  var query = new Parse.Query("Review");
-  query.equalTo("movie", request.params.movie);
-  query.find({
-    success: function(results) {
-      var sum = 0;
-      for (var i = 0; i < results.length; ++i) {
-        sum += results[i].get("stars");
-      }
-      response.success(sum / results.length);
-    },
-    error: function() {
-      response.error("movie lookup failed");
-    }
-  });
-});
-
-{"skills":[{"hours":10,"skillName":"C/C++"},
-{"hours":10,"skillName":"UI Automation"},
-{"hours":10,"skillName":"Unix CL"},
-{"hours":40,"skillName":"Interface Builder"},{"hours":40,"skillName":"Objective C"},{"hours":40,"skillName":"Autolayout"}]}
-*/
-// update skills object - lets run this every time we touch the projects object
-
-/*
-
-var GameScore = Parse.Object.extend("GameScore");
-var gameScore = new GameScore();
-
-gameScore.set("score", 1337);
-gameScore.set("playerName", "Sean Plott");
-gameScore.set("cheatMode", false);
-
-gameScore.save(null, {
-  success: function(gameScore) {
-    // Execute any logic that should take place after the object is saved.
-    alert('New object created with objectId: ' + gameScore.id);
-  },
-  error: function(gameScore, error) {
-    // Execute any logic that should take place if the save fails.
-    // error is a Parse.Error with an error code and message.
-    alert('Failed to create new object, with error code: ' + error.message);
-  }
-});
-
-
-
+{"skills":[{"category":"Design","hours":100,"skillName":"Flash"},
+{"category":"Design","hours":100,"skillName":"Photoshop"},
+{"category":"Design","hours":250,"skillName":"Game Design"},
+{"category":"Programming","hours":250,"skillName":"Pipeline Design"},
+{"category":"Audio","hours":300,"skillName":"Cubase"},
+{"category":"Audio","hours":100,"skillName":"MIDI"},
+{"category":"Programming","hours":50,"skillName":"LUA"},
+{"category":"Programming","hours":50,"skillName":"C/C++"},
+{"category":"Audio","hours":200,"skillName":"Drumming"},
+{"category":"Project","hours":100,"skillName":"Excel"}]}
 */
 
-/*Parse.Cloud.beforeSave("Skills", function(request, response) 
+
+function fetchCategoriesAndTimes()
 {
-	if (!request.object.get("Name")) 
+	processedData = [];
+
+	var previousCategoryNames = [];
+
+	for(var i = 0; i < allProjects.length; i++)
 	{
-		response.error('A skill must have a name!');
-  	} 
-  	else 
-  	{
-	    var query = new Parse.Query("Skills");
-	    query.equalTo("Name", request.object.get("Name"));
-	    query.first(
-	    {
-	    	success: function(object) 
-	      	{
-	      		if (object) 
-	      		{
-	      			response.error("A Skill with this name already exists.");
-	        	} 
-	        	else 
-	        	{
-	          		response.success();
-	        	}
-	      	},
-	      	error: function(error) 
-	      	{
-	        	response.error("Could not validate uniqueness for this Skill name.");
-	      	}
-	    });
-  	}		
+		var skillsUsed = allProjects[i].get("SkillsUsed");
+		for(var j = 0; j < skillsUsed.skills.length; j++)
+		{
+			var skill = skillsUsed.skills[j];
+
+			var index = _.indexOf(previousCategoryNames, skill.category);
+
+        	if(index === -1)
+        	{
+        		previousCategoryNames.push(skill.category);
+        		var categoryAndTime = {category : skill.category, hours: skill.hours};
+        		processedData.push(categoryAndTime);
+        	}
+        	else
+        	{
+        		processedData[index].hours += skill.hours;
+        	}
+		}
+	}
+}
+
+function fetchSkillsAndTimes()
+{
+	processedData = [];
+
+	var previousSkillNames = [];
+
+	for(var i = 0; i < allProjects.length; i++)
+	{
+		var skillsUsed = allProjects[i].get("SkillsUsed");
+
+		for(var j = 0; j < skillsUsed.skills.length; j++)
+		{
+			var skill = skillsUsed.skills[j];
+
+			var index = _.indexOf(previousSkillNames, skill.skillName);
+
+        	if(index === -1)
+        	{
+        		previousSkillNames.push(skill.skillName);
+        		var skillAndTime = {skillName : skill.skillName, hours: skill.hours};
+        		processedData.push(skillAndTime);
+        	}
+        	else
+        	{
+        		processedData[index].hours += skill.hours;
+        	}
+		}
+	}
+}
+
+function fetchProjectsAndTimes()
+{
+	processedData = [];
+
+	for(var i = 0; i < allProjects.length; i++)
+	{
+		var project = allProjects[i];
+        processedData.push(project);
+	}
+}
+
+
+function processData(dataType)
+{
+	if(dataType === "project")
+	{
+		fetchProjectsAndTimes();
+	}
+	else if(dataType === "categories")
+	{
+		fetchCategoriesAndTimes();
+	}
+	else if(dataType === "skills")
+	{
+		fetchSkillsAndTimes();
+	}
+}
+
+Parse.Cloud.define("getDataOfType", function(request, response)
+{
+	var query = new Parse.Query("Projects");
+    query.ascending("StartDate");
+	query.limit(6);
+
+    query.find().then(
+
+    	function (results)
+    	{
+    		console.log("results:" + results.length);
+    		for (var i = 0; i < results.length; i++) 
+            {
+            	allProjects.push(results[i]);
+            }
+    		console.log("got projects: " + allProjects);
+    	},
+    	function (error)
+    	{
+    		console.log("error1");
+    	}
+    ).then(
+    	function (results)
+    	{
+    		console.log("sucess2");
+    		processData(request.params.dataType);
+    	},
+    	function (error)
+    	{
+    		console.log("error2");
+    		response.error("fuuuuuck");
+    	}
+    ).then(
+    	function (results)
+    	{
+    		console.log("I saw this final bit!");
+    		response.success(processedData);
+    	},
+    	function (error)
+    	{
+    		console.log("error2");
+    		response.error("fuuuuuckend");
+    	}
+    );
 });
 
-var allSkills = [];
 
 
 
-Parse.Cloud.job("updateDBsdsdsd", function(request, status)
-{
-	var availableFunctions = _.functions(_);
-	console.log('Available Underscore Functions: ' + JSON.stringify(availableFunctions));
 
-	var allProjects = [];
-
-    var query = new Parse.Query("Projects");
-    query.ascending("StartDate");
-
-    query.find(
-    {
-        success: function(results) 
-        {
-        	var objects = [];
-
-            for (var i = 0; i < results.length; i++) 
-            { 
-                var project = results[i];
-                var skillsUsed = project.get('SkillsUsed');
-                allSkills.push(skillsUsed);
-
-				//console.log("*** skillsUsed *** :" + skillsUsed);
-        		
-        		for(var j = 0; j < skillsUsed.skills.length; j++)
-        		{
-        			var SkillObject = Parse.Object.extend("Skills");
-  		      		var skillObject = new SkillObject();
-        			skillObject.set("Category", "Uncategorised");
-        			skillObject.set("Name",skillsUsed.skills[j].skillName);
-        			skillObject.set("TotalTime", 0);
-        			//console.log("obj:" + skillsUsed.skills[j].skillName);
-        			objects.push(skillObject);
-        		}
-        		//console.log(">>>>>>>>>>");
-            }
-
-            console.log("before:" + allSkills.length);
-            reduceSkills();
-            console.log("after:" + allSkills.length);
-
-            //console.log("*** skillsUsed *** :" + objects);
-
-        	Parse.Object.saveAll(objects,
-        	{
-        		success: function(skillObject) 
-			  	{
-			  		//response.success(allSkills);
-			  		console.log('New object created with objectId: ' + skillObject.id);
-			  	},
-			  	error: function(skillObject, error) 
-			  	{
-			  		//response.error("werr!");
-			    	console.log('Failed to create new object, with error code: ' + error);
-			  	}
-			});
-        },
-        error: function(error) 
-        {
-            response.error("Error in updateSkillsObject: " + error.code + " " + error.message);
-            //console.log('Failed to update');
-        }
-    });
-});*/
-
-// skills categories with total time
-//Parse.Cloud.define("getSkillCategories", function(request, response)
-//{
-//	response.success("changed");
-//});
-
-
-// ordered skills list
-
-//
