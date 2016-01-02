@@ -417,13 +417,144 @@ Chugai
 
 {
     "skills":[
-        {"skillName":"PHP", "hours":10},
-        {"skillName":"Objective C", "hours":40},
-        {"skillName":"Interface Builder", "hours":10},
-        {"skillName":"UIKit", "hours":20}
+        {"skillName":"Unity", "hours":20}
+    ]
+}
+
+{
+    "skills":[
+        {"skillName":"XML", "hours":10},
+        {"skillName":"Illustrator", "hours":10},
+        {"skillName":"Box2D", "hours":10},
+        {"skillName":"Cocos2D", "hours":20},
+        {"skillName":"C/C++", "hours":10}
     ]
 }
 
 
+{"skills":[{"hours":5,"skillName":"Unix CL"},
+{"hours":25,"skillName":"Interface Builder"},
+{"hours":90,"skillName":"Objective C"},
+{"hours":15,"skillName":"iAds"},
+{"hours":50,"skillName":"Java"},
+{"hours":50,"skillName":"Android SDK"},
+{"hours":20,"skillName":"GREE SDK"}
+]}
 
+{
+    "skills":[
+        {"skillName":"Game Design", "hours":20},
+        {"skillName":"Flash", "hours":20}
+    ]
+}
+
+900
+
+{
+    "skills":[
+        {"skillName":"Objective C", "hours":120},
+        {"skillName":"Autolayout", "hours":120},
+        {"skillName":"Interface Builder", "hours":80},
+        {"skillName":"REST", "hours":150},
+        {"skillName":"Agile", "hours":60},
+        {"skillName":"Cog", "hours":30},
+        {"skillName":"Unix CL", "hours":100},
+        {"skillName":"Build Management", "hours":80},
+        {"skillName":"Testflight", "hours":30},
+        {"skillName":"Javascript", "hours":40},
+        {"skillName":"Jenkins", "hours":80},
+        {"skillName":"Gerrit", "hours":10}
+    ]
+}
+
+
+// 1000
+{
+    "skills":[
+        {"skillName":"C/C++", "hours":50},
+        {"skillName":"C#", "hours":50},
+        {"skillName":"Flash", "hours":300},
+        {"skillName":"Research", "hours":300},
+        {"skillName":"Presenting", "hours":100}
+        ]
+}
+
+
+{"skills":[{"hours":10,"skillName":"REST"},{"hours":40,"skillName":"Objective C"},{"hours":10,"skillName":"Interface Builder"},{"hours":20,"skillName":"UIKit"}]}
+
+
+{"skills":[{"hours":10,"skillName":"C/C++"},
+{"hours":10,"skillName":"UI Automation"},
+{"hours":10,"skillName":"Unix CL"},
+{"hours":40,"skillName":"Interface Builder"},
+{"hours":40,"skillName":"Objective C"},
+{"hours":40,"skillName":"Autolayout"}]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{"skills":[{"hours":50,"skillName":"C/C++","category":"Programming"},
+{"hours":50,"skillName":"C#","category":"Programming"},
+{"hours":300,"skillName":"Flash","category":"Design"},
+{"hours":300,"skillName":"Actionscript","category":"Programming"},
+{"hours":300,"skillName":"Research","category":"Other"},
+{"hours":100,"skillName":"Presenting","category":"Project"}]}
+
+
+
+{"skills":[{"hours":100,"skillName":"Flash","category":"Design"},
+{"hours":100,"skillName":"Photoshop","category":"Design"},
+{"hours":250,"skillName":"Game Design","category":"Design"},
+{"hours":250,"skillName":"Pipeline Design","category":"Programming"},
+{"hours":300,"skillName":"Cubase","category":"Audio"},
+{"hours":100,"skillName":"MIDI","category":"Audio"},
+{"hours":50,"skillName":"LUA","category":"Programming"},
+{"hours":50,"skillName":"C/C++","category":"Programming"},
+{"hours":200,"skillName":"Drumming","category":"Audio"},
+{"hours":100,"skillName":"Excel","category":"Project"}]}
+
+
+
+{"skills":[{"hours":50,"skillName":"Unix CL","category":"Programming"},
+{"hours":50,"skillName":"Game Design","category":"Design"},
+{"hours":300,"skillName":"Cubase","category":"Audio"},
+{"hours":100,"skillName":"MIDI","category":"Audio"},
+{"hours":100,"skillName":"C#","category":"Programming"},
+{"hours":300,"skillName":"Drumming","category":"Audio"},
+{"hours":100,"skillName":"Agile","category":"Project"}]}
+
+
+
+
+{"skills":[{"hours":75,"skillName":"Flash","category":"Design"},
+{"hours":75,"skillName":"Actionscript","category":"Programming"},
+{"hours":250,"skillName":"Game Design","category":"Design"},
+{"hours":50,"skillName":"Google Sketchup","category":"Design"},
+{"hours":100,"skillName":"UI Design","category":"Design"},
+{"hours":50,"skillName":"Photoshop","category":"Design"}]}
+
+{"skills":[{"hours":10,"skillName":"XML","category":"Design"},
+{"hours":25,"skillName":"Actionscript","category":"Programming"},
+{"hours":10,"skillName":"Consulting","category":"Project"}]}
+
+
+
+{"skills":[{"hours":5,"skillName":"Unix CL","category":"Project"},
+{"hours":25,"skillName":"Interface Builder","category":"Project"},
+{"hours":90,"skillName":"Objective C","category":"Project"},
+{"hours":15,"skillName":"iAds","category":"Project"},
+{"hours":50,"skillName":"Java","category":"Project"},
+{"hours":50,"skillName":"Android SDK","category":"Project"},
+{"hours":20,"skillName":"GREE SDK","category":"Project"}]}
 

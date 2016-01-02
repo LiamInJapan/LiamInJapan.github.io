@@ -90,7 +90,7 @@ function fetchCategoriesAndTimes()
 	}
 }
 
-function fetchSkillsAndTimes(categoryFilter)
+function fetchSkillsAndTimes(filter)
 {
 	processedData = [];
 
@@ -104,9 +104,9 @@ function fetchSkillsAndTimes(categoryFilter)
 		{
 			var skill = skillsUsed.skills[j];
 
-			if(typeof(categoryFilter) != 'undefined' && categoryFilter != skill.category)
+			if(typeof(filter) != 'undefined' && filter != skill.category)
 			{
-				console.log("moving along..." + categoryFilter + skill.category);
+				console.log("moving along..." + filter + skill.category);
 				continue;
 			}
 				
@@ -129,74 +129,28 @@ function fetchSkillsAndTimes(categoryFilter)
 	processedData = _.sortBy(processedData, 'hours').reverse();	
 }
 
-function fetchProjectsAndTimes()
+function fetchProjectsAndTimes(filter)
 {
 	processedData = [];
 
 	for(var i = 0; i < allProjects.length; i++)
 	{
 		var project = allProjects[i];
-        processedData.push(project);
+
+		console.log("filter: " + filter);
+		console.log("project status: " + project.get("Status"));
+		
+		if(typeof(filter) != 'undefined' && filter != project.get("Status"))
+		{
+			console.log("moving along..." + filter + project.get("Status"));
+			continue;
+		}
+		else
+		{
+			processedData.push(project);
+		}
 	}
 }
-
-/*
-
-function drawProjectsOnTimeLine(lineLength)
-    {
-        var barHeight = 10;
-        var currentY = canvas.height-200;
-        var xStart = 10;
-
-        // first just sort by start time and sort in y
-
-        allProjects = _.sortBy(allProjects, 'StartDate');
- 
-        var firstDate = _.first(allProjects).get("StartDate");
-        var lastDate  = new Date();
-
-        var totalNumMonths = getNumberOfMonths(firstDate, lastDate);
-        var oneMonthLength = lineLength/totalNumMonths;
-
-        // year lines
-        var monthCount = 0;
-
-        // calculate properly from 1st
-        var year = 2004;
-
-        while(monthCount < totalNumMonths)
-        {
-            var path = new Path();
-            path.strokeColor = 'black';
-            path.fillColor = 'white';
-            var xPos = xStart+(monthCount*oneMonthLength);
-            // hack in time offset - calculate properly in the future!
-            var yLen = ((monthCount+6) % 12) ? 2 : 5; 
-
-            if(yLen == 5) // on a year border, label
-            {
-                var yearLabel = new PointText(new Point(xPos-14, currentY+24));
-                yearLabel.fillColor = 'black';
-                yearLabel.content = year;
-                yearLabel.rotate(90);
-                year++;
-            }
-            path.add(new Point(xPos, currentY)); 
-            path.add(new Point(xPos, currentY+yLen));
-
-            monthCount++;
-        }
-
-        _.each(allProjects, function(project) 
-        {
-            var lengthInMonths = getNumberOfMonths(project.get("StartDate"), project.get("EndDate"));
-            var lengthInLine = lengthInMonths*oneMonthLength;
-            var lengthInMonthsSinceBeginning = getNumberOfMonths(firstDate, project.get("StartDate"));
-            var xOffset = xStart + lengthInMonthsSinceBeginning*oneMonthLength;
-        });
-    }
-
-*/
 
 function getNumberOfMonths(from, to) 
 {
@@ -221,7 +175,9 @@ function processData(params)
 {
 	if(params.dataType === "project")
 	{
-		fetchProjectsAndTimes();
+		console.log("********** params: " + params);
+		console.log("********** params.filter: " + params.filter);
+		fetchProjectsAndTimes(params.filter);
 	}
 	else if(params.dataType === "categories")
 	{
@@ -230,7 +186,7 @@ function processData(params)
 	else if(params.dataType === "skills")
 	{
 		console.log("********** params: " + params);
-		fetchSkillsAndTimes(params.categoryFilter);
+		fetchSkillsAndTimes(params.filter);
 	}
 	else if(params.dataType === "timeline")
 	{
