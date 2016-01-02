@@ -261,7 +261,18 @@
         }
     }
 
-    function drawTimeLine()
+    function getNumberOfMonths(from, to) 
+    {
+        var months;
+        months = (to.getFullYear() - from.getFullYear()) * 12;
+        months -= from.getMonth() + 1;
+        months += to.getMonth();
+        return months <= 0 ? 0 : months;
+    }
+    // port to moment.js?
+    // times are occasionally coming out minus...
+
+    function drawTimeLine(response)
     {
         // main line
         x = 10;
@@ -273,28 +284,20 @@
         path.add(new Point(x, y)); 
         path.add(new Point(xEnd,y));
 
-        drawProjectsOnTimeLine(xEnd-x);
+        drawProjectsOnTimeLine(xEnd-x, response);
     }
 
-    function getNumberOfMonths(from, to) 
+    function drawProjectsOnTimeLine(lineLength, response)
     {
-        var months;
-        months = (to.getFullYear() - from.getFullYear()) * 12;
-        months -= from.getMonth() + 1;
-        months += to.getMonth();
-        return months <= 0 ? 0 : months;
-    }
-    // port to moment.js?
-    // times are occasionally coming out minus...
-    function drawProjectsOnTimeLine(lineLength)
-    {
+        console.dir(response);
+
         var barHeight = 10;
         var currentY = canvas.height-200;
         var xStart = 10;
 
         // first just sort by start time and sort in y
 
-        allProjects = _.sortBy(allProjects, 'StartDate');
+        var allProjects = _.sortBy(response, 'StartDate');
  
         var firstDate = _.first(allProjects).get("StartDate");
         var lastDate  = new Date();
@@ -372,7 +375,7 @@
 
     function drawScreenFrame(x)
     {
-        crossoverPoint = new Point(x,x*math.phi);
+        crossoverPoint = new Point(x,x*math.phi);;
 
         var horizontalBar = new Path();
         horizontalBar.strokeColor = 'red';
@@ -429,21 +432,42 @@
     {
         Parse.Cloud.run('getDataOfType', { "dataType": "categories" }).then(function(response) 
         {
+            project.layers[1].activate();
             drawSkillCategories(response);
+            project.layers[1].position.x += crossoverPoint.x;
+            project.layers[1].visible  = false; 
         });
 
         Parse.Cloud.run('getDataOfType', { "dataType": "skills" }).then(function(response) 
         {
+            project.layers[1].activate();
             drawSkillLabels(response);
             drawSkillBars(response);
+            project.layers[1].position.x += crossoverPoint.x;
+            project.layers[1].visible  = false; 
         }); 
 
         Parse.Cloud.run('getDataOfType', { "dataType": "project" }).then(function(response) 
         {
-            console.dir(response);
+            project.layers[2].activate();
             drawProjectLabels();
             drawProjectBoxes(response);
+            project.layers[2].position.x += crossoverPoint.x;
+            project.layers[2].visible = false;
+
+            project.layers[3].activate();
+            drawTimeLine(response);
+            project.layers[3].position.x += crossoverPoint.x;
+            project.layers[3].visible = false;
         }); 
+
+        /*
+        Parse.Cloud.run('getDataOfType', { "dataType": "timeline" }).then(function(response) 
+        {
+            project.layers[3].activate();
+            drawTimeLine();
+        }); 
+        */
     }
     function reduceSkillCategories()
     {
@@ -515,51 +539,6 @@
         }
         //project.layers[visibleIndex].visible = true;
     }
-    function setupLayers()
-    {
-        project.layers[1].visible  = false; 
-        project.layers[2].visible = false;
-        project.layers[3].visible = false;
-
-        for(var i = 1; i < project.layers.length; i++)
-        {
-            project.layers[i].position.x += crossoverPoint.x;
-        } 
-    }
-    function createUI()
-    {
-        var projectLayer = new Layer();
-        projectLayer.activate();
-        drawProjectLabels();
-        drawProjectBoxes();
-        
-        var skillLayer = new Layer();
-        skillLayer.activate();
-        drawSkillLabels();
-        drawSkillBars();
-        drawSkillCategories([]);
-
-        var timeLayer = new Layer();
-        timeLayer.activate();
-        drawTimeLine();
-
-        setupLayers();
-    }
-    /*function initializePath() 
-    {
-        center = view.center;
-        width = view.size.width;
-        height = view.size.height / 2;
-        path.segments = [];
-        path.add(view.bounds.bottomLeft);
-        
-        for (var i = 1; i < points; i++) 
-        {
-            var point = new Point(width / points * i, center.y);
-            path.add(point);
-        }
-        path.add(view.bounds.bottomRight);
-    }*/
 
     function drawAvatar()
     {
@@ -613,14 +592,32 @@
         }  
     }
 
-	function main()
-	{
+    function drawStaticElements()
+    {
+        project.layers[0].activate();
         drawScreenFrame(250);
         drawAvatar();
         drawContactsArea();
+    }
+
+    function initialiseLayers()
+    {
+        var skillLayer = new Layer();
+        skillLayer.activate();
         
+        var projectLayer = new Layer();
+        projectLayer.activate();
+        
+        var timeLayer = new Layer();
+        timeLayer.activate();
+    }
+	function main()
+	{
+        initialiseLayers();
+        drawStaticElements();
+
         initParse();
-        pullParseData();   
+        pullParseData();
         //pullParseData();
 	}
 
