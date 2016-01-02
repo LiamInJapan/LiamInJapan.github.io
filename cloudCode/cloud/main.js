@@ -90,7 +90,7 @@ function fetchCategoriesAndTimes()
 	}
 }
 
-function fetchSkillsAndTimes()
+function fetchSkillsAndTimes(categoryFilter)
 {
 	processedData = [];
 
@@ -103,6 +103,13 @@ function fetchSkillsAndTimes()
 		for(var j = 0; j < skillsUsed.skills.length; j++)
 		{
 			var skill = skillsUsed.skills[j];
+
+			if(typeof(categoryFilter) != 'undefined' && categoryFilter != skill.category)
+			{
+				console.log("moving along..." + categoryFilter + skill.category);
+				continue;
+			}
+				
 
 			var index = _.indexOf(previousSkillNames, skill.skillName);
 
@@ -118,6 +125,8 @@ function fetchSkillsAndTimes()
         	}
 		}
 	}
+
+	processedData = _.sortBy(processedData, 'hours').reverse();	
 }
 
 function fetchProjectsAndTimes()
@@ -131,20 +140,101 @@ function fetchProjectsAndTimes()
 	}
 }
 
+/*
 
-function processData(dataType)
+function drawProjectsOnTimeLine(lineLength)
+    {
+        var barHeight = 10;
+        var currentY = canvas.height-200;
+        var xStart = 10;
+
+        // first just sort by start time and sort in y
+
+        allProjects = _.sortBy(allProjects, 'StartDate');
+ 
+        var firstDate = _.first(allProjects).get("StartDate");
+        var lastDate  = new Date();
+
+        var totalNumMonths = getNumberOfMonths(firstDate, lastDate);
+        var oneMonthLength = lineLength/totalNumMonths;
+
+        // year lines
+        var monthCount = 0;
+
+        // calculate properly from 1st
+        var year = 2004;
+
+        while(monthCount < totalNumMonths)
+        {
+            var path = new Path();
+            path.strokeColor = 'black';
+            path.fillColor = 'white';
+            var xPos = xStart+(monthCount*oneMonthLength);
+            // hack in time offset - calculate properly in the future!
+            var yLen = ((monthCount+6) % 12) ? 2 : 5; 
+
+            if(yLen == 5) // on a year border, label
+            {
+                var yearLabel = new PointText(new Point(xPos-14, currentY+24));
+                yearLabel.fillColor = 'black';
+                yearLabel.content = year;
+                yearLabel.rotate(90);
+                year++;
+            }
+            path.add(new Point(xPos, currentY)); 
+            path.add(new Point(xPos, currentY+yLen));
+
+            monthCount++;
+        }
+
+        _.each(allProjects, function(project) 
+        {
+            var lengthInMonths = getNumberOfMonths(project.get("StartDate"), project.get("EndDate"));
+            var lengthInLine = lengthInMonths*oneMonthLength;
+            var lengthInMonthsSinceBeginning = getNumberOfMonths(firstDate, project.get("StartDate"));
+            var xOffset = xStart + lengthInMonthsSinceBeginning*oneMonthLength;
+        });
+    }
+
+*/
+
+function getNumberOfMonths(from, to) 
 {
-	if(dataType === "project")
+    var months;
+    months = (to.getFullYear() - from.getFullYear()) * 12;
+    months -= from.getMonth() + 1;
+    months += to.getMonth();
+    return months <= 0 ? 0 : months;
+}
+
+function fetchTimeline()
+{
+	var firstDate = _.first(allProjects).get("StartDate");
+    var lastDate  = new Date();
+	var totalNumMonths = getNumberOfMonths(firstDate, lastDate);
+
+	var startYear = 2004;
+}
+
+
+function processData(params)
+{
+	if(params.dataType === "project")
 	{
 		fetchProjectsAndTimes();
 	}
-	else if(dataType === "categories")
+	else if(params.dataType === "categories")
 	{
 		fetchCategoriesAndTimes();
 	}
-	else if(dataType === "skills")
+	else if(params.dataType === "skills")
 	{
-		fetchSkillsAndTimes();
+		console.log("********** params: " + params);
+		fetchSkillsAndTimes(params.categoryFilter);
+	}
+	else if(params.dataType === "timeline")
+	{
+		fetchTimeline();
 	}
 }
 
@@ -158,12 +248,10 @@ Parse.Cloud.define("getDataOfType", function(request, response)
 
     	function (results)
     	{
-    		console.log("results:" + results.length);
     		for (var i = 0; i < results.length; i++) 
             {
             	allProjects.push(results[i]);
             }
-    		console.log("got projects: " + allProjects);
     	},
     	function (error)
     	{
@@ -172,23 +260,19 @@ Parse.Cloud.define("getDataOfType", function(request, response)
     ).then(
     	function (results)
     	{
-    		console.log("sucess2");
-    		processData(request.params.dataType);
+    		processData(request.params);
     	},
     	function (error)
     	{
-    		console.log("error2");
     		response.error("fuuuuuck");
     	}
     ).then(
     	function (results)
     	{
-    		console.log("I saw this final bit!");
     		response.success(processedData);
     	},
     	function (error)
     	{
-    		console.log("error2");
     		response.error("fuuuuuckend");
     	}
     );

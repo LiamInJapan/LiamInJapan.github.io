@@ -10,7 +10,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/2.5.0/math.min.js"></script>
 	<script type="text/paperscript" canvas="canvas">
     
+    var SKILLS = 1;
+    var PROJECTS = 2;
+    var TIMELINE = 3;
+
     var allSkills = [];
+    var layerRefDict;
 
     function Badge(pos, size, url, img) 
     {
@@ -41,13 +46,13 @@
             this.active = true;
         }
 
-        var image = new Raster(img);
+        //var image = new Raster(img);
         //image.scale(0.25);
-        image.bounds = this.path.bounds;
+        //image.bounds = this.path.bounds;
         //image.fitBounds(path.bounds, true);
-        var group = new Group([this.path, image]);
+        //var group = new Group([this.path, image]);
         //group.clipMask = true;
-        group.clipped = true;
+        //group.clipped = true;
 
     }
 
@@ -58,22 +63,6 @@
             if(this.active == true)
                 this.scale(1.1, this.bounds.bottomLeft);
         }
-    }
-
-    function calculateTotalHours(skillObject)
-    {
-        var totalHours = 0;
-
-        // this is clumsy, refactor to calculate on the parse side
-        for(var i = 0; i < skillObject.skills.length; i++)
-        {
-            console.dir(_.indexOf(allSkillCategories, skillObject.skills.skillName));
-
-            //allSkillCategories[_.indexOf(allSkillCategories, skillObject.skills.skillName)]
-            totalHours += skillObject.skills[i].hours;
-        }
-
-        return totalHours;
     }
 
     function Skill(totalHours, badge) 
@@ -114,7 +103,6 @@
         }
     }
 
-    var allProjects = [];
     var allSkills = [];
     var allSkillTypes = [];
     var allSkillCategories = [];
@@ -147,14 +135,54 @@
 
     }
 
-    function drawProjectBoxes(projectData)
+    function drawProjectInitialBoxes(projectData)
     {
-        var initialX = 50;
-        var y = 80;
+        var initialX = 30;
+        var y = 90;
         var yStep = 70;
         var xStep = 96;
 
-        var requestsIn = 0;
+        var numProjects = 0;
+
+        for(var i = 0; i < projectStatuses.length; i++)
+        {
+            var count = 0;
+
+            _.each(projectData, function(project) 
+            {
+                if(project.get('Status') == projectStatuses[i])
+                {
+                    numProjects++;
+                }
+            });
+
+            var badgePos = new Point(initialX+(xStep*count), y+(yStep*i));
+            badges.push(new Badge(badgePos, 32));   
+
+            var numProjectsLabel = new PointText(new Point(badgePos.x+13, badgePos.y-13));
+            numProjectsLabel.fillColor = 'black'
+            numProjectsLabel.content = numProjects;
+
+            numProjects = 0;
+            /*var skillsUsed = project.get("SkillsUsed");
+            var totalHours = 0;
+
+            for(var j = 0; j < skillsUsed.skills.length; j++)
+            {
+                var skill = skillsUsed.skills[j];
+                totalHours += skill.hours;
+            }
+
+            skillCircles.push(new Skill(totalHours,badges[badges.length - 1]));
+            count++;*/
+        }
+    }
+    function drawProjectBoxes(projectData)
+    {
+        var initialX = 30;
+        var y = 90;
+        var yStep = 70;
+        var xStep = 96;
 
         for(var i = 0; i < projectStatuses.length; i++)
         {
@@ -167,9 +195,10 @@
                     var projectName = new PointText(new Point(initialX+(xStep*count), y+(yStep*i)+20));
                     projectName.fillColor = 'black'
                     projectName.content = project.get('Name');
+                    projectName.rotate(10);
 
                     var badgePos = new Point(initialX+(xStep*count), y+(yStep*i));
-                    badges.push(new Badge(badgePos, 128, project.get('URL'), project.get('imageName')));   
+                    badges.push(new Badge(badgePos, 32, project.get('URL'), project.get('imageName')));   
 
                     var skillsUsed = project.get("SkillsUsed");
                     var totalHours = 0;
@@ -206,6 +235,8 @@
 
     function drawSkillLabels(skillData)
     {
+        var skillLabelGroup = project.layers[SKILLS].children["skillLabelGroup"];
+
         var x = 198;
         var y = 10;
         var yStep = 11;
@@ -216,13 +247,19 @@
             skillText.fillColor = 'black';
             skillText.justification = 'right';
             skillText.content = skillData[skill].skillName + ":";
+            skillLabelGroup.addChild(skillText);
 
             y+=yStep;
         }
+
+        skillLabelGroup.visible = false;
+        skillLabelGroup.position.x += crossoverPoint.x;
     }
 
     function drawSkillCategories(categoryData)
     {
+        var skillCategoryGroup = project.layers[SKILLS].children["skillCategoryGroup"];
+
         var x = 10;
         var y = 10;
         var yStep = 11;
@@ -230,14 +267,51 @@
         for(var skillCategory in categoryData)
         {
             var skillCategoryText = new PointText(new Point(x, y));
-            skillCategoryText.fillColor = 'black';
+            skillCategoryText.fillColor = 'black'; 
             skillCategoryText.content = categoryData[skillCategory].category;
+            skillCategoryText.name = skillCategoryText.content;
+            skillCategoryGroup.addChild(skillCategoryText);
 
             y+=yStep;
+
+            var changeSkillCategory = function() 
+            {
+                project.layers[SKILLS].children["skillBarGroup"].removeChildren();
+                project.layers[SKILLS].children["skillLabelGroup"].removeChildren();
+
+                //updateLayers(category.value);
+                Parse.Cloud.run('getDataOfType', { "dataType": "skills", "categoryFilter" : this.content }).then(function(response) 
+                {
+                    console.log("response! " + response);
+                    project.layers[SKILLS].activate();
+                    drawSkillLabels(response);
+                    drawSkillBars(response);
+                    project.layers[SKILLS].children["skillBarGroup"].visible = true;
+                    project.layers[SKILLS].children["skillLabelGroup"].visible = true;
+                });
+
+                for(var i = 0; i < skillCategoryGroup.children.length; i++)
+                {
+                    if(skillCategoryGroup.children[i].name === this.content)
+                    {
+                        skillCategoryGroup.children[i].fillColor = 'red';
+                    }
+                    else
+                    {
+                        skillCategoryGroup.children[i].fillColor = 'black';
+                    }
+                }
+            };
+
+            skillCategoryText.onMouseDown = changeSkillCategory;
         }
+
+        skillCategoryGroup.position.x += crossoverPoint.x;
     }
     function drawSkillBars(skillData)
     {
+        var skillBarGroup = project.layers[SKILLS].children["skillBarGroup"];
+
         var x = 200;
         var y = 10;
         var yStep = 11;
@@ -257,10 +331,17 @@
             path.add(new Point(x, y-barHeight));     
             path.closed = true;
 
+            skillBarGroup.addChild(path);
+
             y+=yStep;
         }
+
+        skillBarGroup.visible = false;
+
+        skillBarGroup.position.x += crossoverPoint.x;
     }
 
+    // move parse-side? or keep here?
     function getNumberOfMonths(from, to) 
     {
         var months;
@@ -370,8 +451,9 @@
     
     var categoryLabels = [];
     var crossoverPoint;
-    var requestsIn = 0;
 
+
+    var categoriesDict = [];
 
     function drawScreenFrame(x)
     {
@@ -392,18 +474,18 @@
         var categoriesDict = []; // create an empty array
 
         categoriesDict.push({
-        key:   "Projects>>",
-        value: 1
+        key:   "Skills>>",
+        value: SKILLS
         });
 
         categoriesDict.push({
-        key:   "Skills>>",
-        value: 2
+        key:   "Projects>>",
+        value: PROJECTS
         });
 
         categoriesDict.push({
         key:   "Timeline>>",
-        value: 3
+        value: TIMELINE
         });
 
         var y = crossoverPoint.y;
@@ -432,33 +514,33 @@
     {
         Parse.Cloud.run('getDataOfType', { "dataType": "categories" }).then(function(response) 
         {
-            project.layers[1].activate();
+            project.layers[SKILLS].activate();
             drawSkillCategories(response);
-            project.layers[1].position.x += crossoverPoint.x;
-            project.layers[1].visible  = false; 
         });
 
-        Parse.Cloud.run('getDataOfType', { "dataType": "skills" }).then(function(response) 
+        Parse.Cloud.run('getDataOfType', { "dataType": "skills"}).then(function(response) 
         {
-            project.layers[1].activate();
+            project.layers[SKILLS].activate();
             drawSkillLabels(response);
             drawSkillBars(response);
-            project.layers[1].position.x += crossoverPoint.x;
-            project.layers[1].visible  = false; 
+            //project.layers[SKILLS].position.x += crossoverPoint.x;
+            project.layers[SKILLS].visible  = false; 
         }); 
 
         Parse.Cloud.run('getDataOfType', { "dataType": "project" }).then(function(response) 
         {
-            project.layers[2].activate();
+            project.layers[PROJECTS].activate();
             drawProjectLabels();
-            drawProjectBoxes(response);
-            project.layers[2].position.x += crossoverPoint.x;
-            project.layers[2].visible = false;
+            
+            drawProjectInitialBoxes(response);
+            //drawProjectBoxes(response);
+            project.layers[PROJECTS].position.x += crossoverPoint.x;
+            project.layers[PROJECTS].visible = false;
 
-            project.layers[3].activate();
+            project.layers[TIMELINE].activate();
             drawTimeLine(response);
-            project.layers[3].position.x += crossoverPoint.x;
-            project.layers[3].visible = false;
+            project.layers[TIMELINE].position.x += crossoverPoint.x;
+            project.layers[TIMELINE].visible = false;
         }); 
 
         /*
@@ -469,75 +551,17 @@
         }); 
         */
     }
-    function reduceSkillCategories()
-    {
-        var skills = Parse.Object.extend("Skills");
-        var query = new Parse.Query(skills);
 
-        query.find(
-        {
-            success: function(results) 
-            {
-                for (var j = 0; j < results.length; j++) 
-                { 
-                    var skillType = results[j];
-                    allSkillTypes.push(skillType);
-                }
-
-                _.each(allSkillTypes, function(skillType) 
-                {
-                    var index = _.indexOf(allSkillCategories,skillType.get("Category"));
-
-                    if(index == -1)
-                    {
-                        allSkillCategories.push(skillType.get("Category"));
-                    }
-                });
-
-                if(requestsIn == 1)
-                    createUI();
-                else
-                    requestsIn++;
-            },
-
-            error: function(error) 
-            {
-                alert("Error: " + error.code + " " + error.message);
-            }
-        });
-    }
-    function reduceSkills()
-    {
-        var allSkillsCopy = [];
-
-        allSkills = _.reduce(allSkills, function(memo, skill) 
-        {
-            var index = _.indexOf(memo, skill.skillName);
-
-            if(index === -1)
-            {
-                memo.push(skill.skillName);
-                allSkillsCopy.push(skill);
-                return memo;
-            }
-            else
-            {
-                allSkillsCopy[index].hours += skill.hours;
-            }
-
-            return memo;
-        }, []);
     
-        allSkills = _.sortBy(allSkillsCopy, 'hours').reverse();
-    }
     function updateLayers(visibleIndex)
     {
+        console.dir(categoryLabels);
+
         for(var i = 1; i < project.layers.length; i++)
         {
             project.layers[i].visible = i === visibleIndex ? true : false;
             categoryLabels[i-1].fillColor = i === visibleIndex ? 'red' : 'black';
         }
-        //project.layers[visibleIndex].visible = true;
     }
 
     function drawAvatar()
@@ -555,6 +579,7 @@
         //group.clipMask = true;
         group.clipped = true;
 
+        // todo: loop
         var nameText = new PointText(new Point(crossoverPoint.x/2, path.bounds.bottom+borderSize));
         nameText.fillColor = 'black';
         nameText.justification = 'center';
@@ -572,9 +597,7 @@
 
     }
 
-    function parseCloudCodeTests()
-    {       
-    }
+    
     function drawContactsArea()
     {
         var contactsTextSpacing = 18;
@@ -602,14 +625,25 @@
 
     function initialiseLayers()
     {
-        var skillLayer = new Layer();
-        skillLayer.activate();
+        var skillsLayer = new Layer();
+        skillsLayer.activate();
+
+        var skillCategoryGroup = new Group();
+        skillCategoryGroup.name = "skillCategoryGroup";
+
+        var skillLabelGroup = new Group();
+        skillLabelGroup.name = "skillLabelGroup";
         
+        var skillBarGroup = new Group();
+        skillBarGroup.name = "skillBarGroup";
+
         var projectLayer = new Layer();
         projectLayer.activate();
         
         var timeLayer = new Layer();
         timeLayer.activate();
+
+        layerRefDict = { 1 : "skillCategories", 2 : "skills", 3 : "project", 4 : "timeLayer" };
     }
 	function main()
 	{
@@ -618,7 +652,6 @@
 
         initParse();
         pullParseData();
-        //pullParseData();
 	}
 
 	main();
