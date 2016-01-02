@@ -130,14 +130,16 @@
         var projectDetailGrouping = project.layers[PROJECTS].children['projectDetailGrouping'];
 
         var initialX = 430;
-        var y = 90;
+        var x = initialX;
+        var initialY = 90;
+        var y = initialY;
         var yStep = 70;
-        var xStep = 96;
+        var xStep = 128;
         var count = 0;
 
         for(var i = 0; i < projectData.length; i++)
         {
-            var badgePos = new Point(initialX+(xStep*count), y+(yStep*i));
+            var badgePos = new Point(x, y);
             var badgePath = new Path();
             var size = 32;
 
@@ -180,6 +182,14 @@
 
             skillCircles.push(new Skill(totalHours,badge));
             count++;*/
+
+            y+=yStep;
+
+            if(y > canvas.height)
+            {
+                x+=xStep;
+                y=initialY;
+            }
         }
 
         //projectInitialGrouping.position.x += crossoverPoint.x;
