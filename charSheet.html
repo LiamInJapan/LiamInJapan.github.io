@@ -2,7 +2,6 @@
 <head>
 	<meta charset='UTF-8'>
 	<title>Character Sheet - Liam Conroy</title>
-	<link rel='stylesheet' href='css/style.css'>
 	<script type='text/javascript' src='js/paper-full.js'></script>
     <script src='http://www.parsecdn.com/js/parse-1.6.12.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
@@ -98,7 +97,7 @@
 
 
     // TODO: pull this in from backend
-    var projectStatuses = ['Current', 'Released', 'Future', 'On Hold', 'Decommissioned', 'Cancelled'];
+    var projectStatuses = ['Decommissioned', 'Released', 'Future', 'Current', 'On Hold', 'Cancelled'];
 
     function drawProjectLabels()
     {
@@ -460,9 +459,10 @@
 
     function drawTimeLine(response)
     {
+        //crossoverPoint
         // main line
         var xStart = 10;
-        var xEnd = canvas.width-200;
+        var xEnd = canvas.width-crossoverPoint.x-60;
         var y = canvas.height-200;
         var path = new Path();
         path.strokeColor = 'black';
@@ -504,7 +504,7 @@
             path.fillColor = 'white';
             var xPos = xStart+(monthCount*oneMonthLength);
             // hack in time offset - calculate properly in the future!
-            var yLen = ((monthCount+6) % 12) ? 2 : 5; 
+            var yLen = ((monthCount+5) % 12) ? 2 : 5; 
 
             if(yLen == 5) // on a year border, label
             {
@@ -522,9 +522,13 @@
 
         _.each(allProjects, function(project) 
         {
+            console.dir("StartDate: " + project.get('StartDate'));
+            console.dir("EndDate: " + project.get('EndDate'));
             var lengthInMonths = getNumberOfMonths(project.get('StartDate'), project.get('EndDate'));
+            console.dir("lengthInMonths: " + lengthInMonths);
             var lengthInLine = lengthInMonths*oneMonthLength;
             var lengthInMonthsSinceBeginning = getNumberOfMonths(firstDate, project.get('StartDate'));
+            console.dir("lengthInMonthsSinceBeginning: " + lengthInMonthsSinceBeginning);
             var xOffset = xStart + lengthInMonthsSinceBeginning*oneMonthLength;
             
             var path = new Path();
@@ -566,12 +570,14 @@
 
         var horizontalBar = new Path();
         horizontalBar.strokeColor = 'red';
+        horizontalBar.visible = false;
         horizontalBar.fillColor = 'red';
         horizontalBar.add(new Point(0, crossoverPoint.y)); 
         horizontalBar.add(new Point(canvas.width,crossoverPoint.y));
 
         var verticalBar = new Path();
         verticalBar.strokeColor = 'red';
+        verticalBar.visible = false;
         verticalBar.fillColor = 'red';
         verticalBar.add(new Point(crossoverPoint.x, 0)); 
         verticalBar.add(new Point(crossoverPoint.x, canvas.height-40));
@@ -593,11 +599,11 @@
         value: TIMELINE
         });
 
-        var y = crossoverPoint.y;
+        var y = crossoverPoint.y-13;
 
         _.each(categoriesDict, function(category)
         {
-            var categoryLabel = new PointText(new Point(crossoverPoint.x/2, y+16));
+            var categoryLabel = new PointText(new Point(crossoverPoint.x/2, y));
             categoryLabel.fillColor = 'black';
             categoryLabel.name = category.key;
             categoryLabel.justification = 'center';
@@ -639,11 +645,13 @@
             drawProjectInitialBoxes(response);
             //drawProjectBoxes(response);
             project.layers[PROJECTS].position.x += crossoverPoint.x;
+            project.layers[PROJECTS].position.y += crossoverPoint.y-250;
             project.layers[PROJECTS].visible = false;
 
             project.layers[TIMELINE].activate();
             drawTimeLine(response);
             project.layers[TIMELINE].position.x += crossoverPoint.x;
+            //project.layers[TIMELINE].position.y += crossoverPoint.y;
             project.layers[TIMELINE].visible = false;
         }); 
 
