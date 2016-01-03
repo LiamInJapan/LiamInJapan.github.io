@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Welcome to My New Website!"
+title:  "Welcome to My New Blog!"
 date:   2016-01-02 19:46:08
 categories: website
 ---
