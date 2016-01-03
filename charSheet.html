@@ -389,9 +389,13 @@
         var skillBarGroup = project.layers[SKILLS].children['skillBarGroup'];
 
         var x = 200;
-        var y = 10;
+        var initialY = 10
+        var y = initialY;
         var yStep = 11;
         var barHeight = 10;
+        var maxSkillAmount = 2000; // dynamically calculate this in the future
+        var totalBarLength = canvas.width-crossoverPoint.x-x-50;
+        var lengthOfOneHour = totalBarLength/maxSkillAmount;
 
         // draw horizontal bars for skills
         for(var i = 0; i < skillData.length; i++)
@@ -402,8 +406,9 @@
             path.strokeColor = 'black';
             path.fillColor = 'black';
             path.add(new Point(x, y)); 
-            path.add(new Point(x+(skillData[i].hours/barHeightDampener), y)); 
-            path.add(new Point(x+(skillData[i].hours/barHeightDampener), y-barHeight)); 
+            console.dir("skill: " + skillData[i].name + " : " + skillData[i].hours);
+            path.add(new Point(x+skillData[i].hours*lengthOfOneHour, y)); 
+            path.add(new Point(x+skillData[i].hours*lengthOfOneHour, y-barHeight)); 
             path.add(new Point(x, y-barHeight));     
             path.closed = true;
 
@@ -412,6 +417,34 @@
             y+=yStep;
         }
 
+        // draw vertical bars for progress
+        /*var vertPath = new Path();
+        vertPath.strokeColor = 'black';
+        vertPath.add(new Point(maxSkillAmount/barHeightDampener, initialY-barHeight));
+        vertPath.add(new Point(maxSkillAmount/barHeightDampener, y));
+        vertPath.opacity = 0.3;
+
+        skillBarGroup.addChild(vertPath);*/
+
+        var numVertBars = 10;
+
+        for(var i = 0; i <= numVertBars; i++)
+        {
+            var vertPath = new Path();
+            vertPath.strokeColor = 'black';
+            var xPos = x+(totalBarLength/numVertBars)*i;
+            vertPath.add(new Point(xPos, initialY-barHeight));
+            vertPath.add(new Point(xPos, y));
+            vertPath.opacity = 0.3;
+            skillBarGroup.addChild(vertPath);
+
+            var skillMaxLabel = new PointText(new Point(xPos-20, y+40));
+            skillMaxLabel.fillColor = 'black';
+            skillMaxLabel.content = ((maxSkillAmount/(numVertBars))*i) + ' hours';
+            skillMaxLabel.rotate(90);
+            skillMaxLabel.opacity = 0.3;
+            skillBarGroup.addChild(skillMaxLabel);
+        }
         skillBarGroup.visible = false;
 
         skillBarGroup.position.x += crossoverPoint.x;
@@ -420,19 +453,13 @@
     // move parse-side? or keep here?
     function getNumberOfMonths(from, to) 
     {
-        console.dir("rawFrom: " + from);
-        console.dir("rawTo: " + to);
         from = convertDateToUTC(from);
         to = convertDateToUTC(to);
-        
-        console.dir("afterFrom: " + from);
-        console.dir("afterTo: " + to);
 
         var months;
         months = (to.getFullYear() - from.getFullYear()) * 12;
         months -= from.getMonth();
         months += to.getMonth();
-        console.dir("******* num months: " + months)
         return months <= 0 ? 0 : months;
     }
     // port to moment.js?
@@ -476,7 +503,6 @@
         var firstDate = _.first(allProjects).get('StartDate');
         var lastDate  = new Date();
 
-        console.dir("total months on timeline calc");
         var totalNumMonths = getNumberOfMonths(firstDate, lastDate);
         var oneMonthLength = lineLength/totalNumMonths;
 
@@ -514,16 +540,14 @@
             var barHeight = 10;
             var yDamper = 50;
             barHeight = (getTotalHoursForProject(project.get('SkillsUsed'))/yDamper < 10) ? 
-            10 : getTotalHoursForProject(project.get('SkillsUsed'))/yDamper; 
-            console.dir("StartDate: " + project.get('StartDate'));
-            console.dir("EndDate: " + project.get('EndDate'));
-            console.dir("length of project in months calc for " + project.get("Name"));
+            10 : getTotalHoursForProject(project.get('SkillsUsed'))/yDamper;
+
+            if(project.get('Status') === 'Current')
+                project.set('EndDate', new Date());
+
             var lengthInMonths = getNumberOfMonths(project.get('StartDate'), project.get('EndDate'));
-            console.dir("lengthInMonths: " + lengthInMonths);
             var lengthInLine = lengthInMonths*oneMonthLength;
-            console.dir("length since beginning in months calc for " + project.get("Name"));
             var lengthInMonthsSinceBeginning = getNumberOfMonths(firstDate, project.get('StartDate'));
-            console.dir("lengthInMonthsSinceBeginning: " + lengthInMonthsSinceBeginning);
             var xOffset = xStart + lengthInMonthsSinceBeginning*oneMonthLength;
             
             var path = new Path();
