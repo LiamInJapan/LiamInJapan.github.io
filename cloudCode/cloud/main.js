@@ -106,7 +106,6 @@ function fetchSkillsAndTimes(filter)
 
 			if(typeof(filter) != 'undefined' && filter != skill.category)
 			{
-				console.log("moving along..." + filter + skill.category);
 				continue;
 			}
 				
@@ -136,13 +135,9 @@ function fetchProjectsAndTimes(filter)
 	for(var i = 0; i < allProjects.length; i++)
 	{
 		var project = allProjects[i];
-
-		console.log("filter: " + filter);
-		console.log("project status: " + project.get("Status"));
 		
 		if(typeof(filter) != 'undefined' && filter != project.get("Status"))
 		{
-			console.log("moving along..." + filter + project.get("Status"));
 			continue;
 		}
 		else
@@ -175,8 +170,6 @@ function processData(params)
 {
 	if(params.dataType === "project")
 	{
-		console.log("********** params: " + params);
-		console.log("********** params.filter: " + params.filter);
 		fetchProjectsAndTimes(params.filter);
 	}
 	else if(params.dataType === "categories")
@@ -185,7 +178,6 @@ function processData(params)
 	}
 	else if(params.dataType === "skills")
 	{
-		console.log("********** params: " + params);
 		fetchSkillsAndTimes(params.filter);
 	}
 	else if(params.dataType === "timeline")
@@ -200,12 +192,18 @@ Parse.Cloud.define("getDataOfType", function(request, response)
     query.ascending("StartDate");
 	//query.limit(6);
 
+	console.log("*****************");
     query.find().then(
 
     	function (results)
     	{
     		for (var i = 0; i < results.length; i++) 
             {
+            	// chop down date into simple format
+            	//var d = new Date(results[i].get("StartDate"));
+            	//var e = d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + (d.getUTCDate());
+            	//console.log(results[i].get("StartDate").getTimezoneOffset());
+            	//results[i].set("StartDate", e);
             	allProjects.push(results[i]);
             }
     	},

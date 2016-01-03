@@ -119,9 +119,17 @@
         projectInitialGrouping.visible = true;
     }
 
-    function organiseSkillsByTime(allSkillsUniq)
-    {
+    function getTotalHoursForProject(skillsUsed)
+    {   
+        var totalHours = 0;
 
+        for(var j = 0; j < skillsUsed.skills.length; j++)
+        {
+            var skill = skillsUsed.skills[j];
+            totalHours += skill.hours;
+        }
+
+        return totalHours;
     }
 
     function drawProjectDetailBoxes(projectData)
@@ -169,18 +177,6 @@
             };
 
             badgePath.onMouseDown = badgeClicked;
-
-            /*var skillsUsed = project.get('SkillsUsed');
-            var totalHours = 0;
-
-            for(var j = 0; j < skillsUsed.skills.length; j++)
-            {
-                var skill = skillsUsed.skills[j];
-                totalHours += skill.hours;
-            }
-
-            skillCircles.push(new Skill(totalHours,badge));
-            count++;*/
 
             y+=yStep;
 
@@ -255,18 +251,6 @@
             };
 
             badgePath.onMouseDown = badgeClicked;
-
-            /*var skillsUsed = project.get('SkillsUsed');
-            var totalHours = 0;
-
-            for(var j = 0; j < skillsUsed.skills.length; j++)
-            {
-                var skill = skillsUsed.skills[j];
-                totalHours += skill.hours;
-            }
-
-            skillCircles.push(new Skill(totalHours,badge));
-            count++;*/
         }
 
         //projectInitialGrouping.position.x += crossoverPoint.x;
@@ -303,18 +287,6 @@
                     badgePath.add(new Point(badgePos.x+size, badgePos.y-size));
                     badgePath.add(new Point(badgePos.x, badgePos.y-size));     
                     badgePath.closed = true;
-  
-                    var skillsUsed = project.get('SkillsUsed');
-                    var totalHours = 0;
-
-                    for(var j = 0; j < skillsUsed.skills.length; j++)
-                    {
-                        var skill = skillsUsed.skills[j];
-                        totalHours += skill.hours;
-                    }
-
-                    skillCircles.push(new Skill(totalHours,badge));
-                    count++;
                 }
             });
         }
@@ -448,14 +420,30 @@
     // move parse-side? or keep here?
     function getNumberOfMonths(from, to) 
     {
+        console.dir("rawFrom: " + from);
+        console.dir("rawTo: " + to);
+        from = convertDateToUTC(from);
+        to = convertDateToUTC(to);
+        
+        console.dir("afterFrom: " + from);
+        console.dir("afterTo: " + to);
+
         var months;
         months = (to.getFullYear() - from.getFullYear()) * 12;
-        months -= from.getMonth() + 1;
+        months -= from.getMonth();
         months += to.getMonth();
+        console.dir("******* num months: " + months)
         return months <= 0 ? 0 : months;
     }
     // port to moment.js?
     // times are occasionally coming out minus...
+
+    function convertDateToUTC(date) 
+    {
+        return new Date(date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + (date.getUTCDate()));
+        //console.log(results[i].get("StartDate").getTimezoneOffset());
+        //results[i].set("StartDate", e); 
+    }
 
     function drawTimeLine(response)
     {
@@ -477,8 +465,8 @@
     {
         console.dir(response);
 
-        var barHeight = 10;
-        var currentY = canvas.height-200;
+        var initialY = canvas.height-200;
+        var currentY = initialY;
         var xStart = 10;
 
         // first just sort by start time and sort in y
@@ -488,6 +476,7 @@
         var firstDate = _.first(allProjects).get('StartDate');
         var lastDate  = new Date();
 
+        console.dir("total months on timeline calc");
         var totalNumMonths = getNumberOfMonths(firstDate, lastDate);
         var oneMonthLength = lineLength/totalNumMonths;
 
@@ -497,7 +486,7 @@
         // calculate properly from 1st
         var year = 2004;
 
-        while(monthCount < totalNumMonths)
+        while(monthCount <= totalNumMonths)
         {
             var path = new Path();
             path.strokeColor = 'black';
@@ -522,11 +511,17 @@
 
         _.each(allProjects, function(project) 
         {
+            var barHeight = 10;
+            var yDamper = 50;
+            barHeight = (getTotalHoursForProject(project.get('SkillsUsed'))/yDamper < 10) ? 
+            10 : getTotalHoursForProject(project.get('SkillsUsed'))/yDamper; 
             console.dir("StartDate: " + project.get('StartDate'));
             console.dir("EndDate: " + project.get('EndDate'));
+            console.dir("length of project in months calc for " + project.get("Name"));
             var lengthInMonths = getNumberOfMonths(project.get('StartDate'), project.get('EndDate'));
             console.dir("lengthInMonths: " + lengthInMonths);
             var lengthInLine = lengthInMonths*oneMonthLength;
+            console.dir("length since beginning in months calc for " + project.get("Name"));
             var lengthInMonthsSinceBeginning = getNumberOfMonths(firstDate, project.get('StartDate'));
             console.dir("lengthInMonthsSinceBeginning: " + lengthInMonthsSinceBeginning);
             var xOffset = xStart + lengthInMonthsSinceBeginning*oneMonthLength;
@@ -554,6 +549,11 @@
 
             path.onMouseDown = getProjectInfo;
             projectsLabel.onMouseDown = getProjectInfo;
+            
+            var point = new Path.Circle(new Point(xOffset, initialY), 3);
+            point.fillColor = 'black';
+            point.strokeColor = 'black';    
+
             currentY -= barHeight;
         });
     }
