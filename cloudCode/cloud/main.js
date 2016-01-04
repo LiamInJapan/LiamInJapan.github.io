@@ -147,6 +147,20 @@ function fetchProjectsAndTimes(filter)
 	}
 }
 
+function fetchSingleProjectDetail(filter)
+{
+	processedData = undefined;
+
+	_.each(allProjects, function(project) 
+    {
+    	if(project.get("Name") === filter)
+    	{	
+    		processedData = project;
+    		return;
+    	}
+    });
+}
+
 function getNumberOfMonths(from, to) 
 {
     var months;
@@ -171,6 +185,10 @@ function processData(params)
 	if(params.dataType === "project")
 	{
 		fetchProjectsAndTimes(params.filter);
+	}
+	else if(params.dataType === "projectDetail")
+	{
+		fetchSingleProjectDetail(params.filter);
 	}
 	else if(params.dataType === "categories")
 	{

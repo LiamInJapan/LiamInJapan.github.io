@@ -102,7 +102,6 @@
     function drawProjectLabels()
     {
         var projectInitialGrouping = project.layers[PROJECTS].children['projectInitialGrouping'];
-        console.dir(projectInitialGrouping);
         
         var y = 50;
         var yStep = 70;
@@ -132,9 +131,9 @@
         return totalHours;
     }
 
-    function drawProjectDetailBoxes(projectData)
+    function drawProjectsOfCategoryBoxes(projectData)
     {
-        var projectDetailGrouping = project.layers[PROJECTS].children['projectDetailGrouping'];
+        var projectsOfStatusGrouping = project.layers[PROJECTS].children['projectsOfStatusGrouping'];
 
         var initialX = 430;
         var x = initialX;
@@ -152,21 +151,28 @@
 
             badgePath.strokeColor = 'black';
             badgePath.fillColor = 'white';
+            badgePath.name = projectData[i].get("Name");
             badgePath.add(badgePos); 
             badgePath.add(new Point(badgePos.x+size, badgePos.y)); 
             badgePath.add(new Point(badgePos.x+size, badgePos.y-size));
             badgePath.add(new Point(badgePos.x, badgePos.y-size));     
             badgePath.closed = true;
-            projectDetailGrouping.addChild(badgePath);   
+            projectsOfStatusGrouping.addChild(badgePath);   
 
             var projectName = new PointText(new Point(badgePos.x+6, badgePos.y-13));
             projectName.fillColor = 'black';
             projectName.content = projectData[i].get("Name");
-            projectDetailGrouping.addChild(projectName);
+            projectsOfStatusGrouping.addChild(projectName);
 
             var badgeClicked = function() 
             {
-                console.dir("this: " + this);
+                Parse.Cloud.run('getDataOfType', { 'dataType': 'projectDetail', 'filter' : this.name}).then(function(response) 
+                {
+                    project.layers[PROJECTS].children['projectDetailGrouping'].removeChildren();
+                    console.dir(response);  
+                    drawProjectDetail(response);
+                });
+
                 /*Parse.Cloud.run('getDataOfType', { 'dataType': 'project', 'filter' : this.name }).then(function(response) 
                 {
                     console.dir('response!' + response);
@@ -188,12 +194,11 @@
         }
 
         //projectInitialGrouping.position.x += crossoverPoint.x;
-        projectInitialGrouping.visible = true;   
+        projectsOfStatusGrouping.visible = true;   
     }
     function drawProjectInitialBoxes(projectData)
     {
         var projectInitialGrouping = project.layers[PROJECTS].children['projectInitialGrouping'];
-        console.dir(projectInitialGrouping);
 
         var initialX = 30;
         var y = 90;
@@ -237,15 +242,13 @@
 
             var badgeClicked = function() 
             {
-                console.dir("this: " + this);
-
                 project.layers[PROJECTS].children['projectDetailGrouping'].removeChildren();
 
                 Parse.Cloud.run('getDataOfType', { 'dataType': 'project', 'filter' : this.name }).then(function(response) 
                 {
                     console.dir('response!' + response);
                     project.layers[PROJECTS].activate();
-                    drawProjectDetailBoxes(response);
+                    drawProjectsOfCategoryBoxes(response);
                     project.layers[PROJECTS].children['projectDetailGrouping'].visible = true;
                 });
             };
@@ -405,8 +408,7 @@
             var path = new Path();
             path.strokeColor = 'black';
             path.fillColor = 'black';
-            path.add(new Point(x, y)); 
-            console.dir("skill: " + skillData[i].name + " : " + skillData[i].hours);
+            path.add(new Point(x, y));
             path.add(new Point(x+skillData[i].hours*lengthOfOneHour, y)); 
             path.add(new Point(x+skillData[i].hours*lengthOfOneHour, y-barHeight)); 
             path.add(new Point(x, y-barHeight));     
@@ -488,10 +490,50 @@
         drawProjectsOnTimeLine(xEnd-xStart, response);
     }
 
+    function drawProjectDetail(response)
+    {
+        var projectDetailGrouping = project.layers[PROJECTS].children['projectDetailGrouping'];
+
+        var projectName = new PointText(new Point(0, 100));
+        projectName.fillColor = 'black';
+        projectName.justification = 'center';
+        projectName.content = "Project Name: " + response.get("Name");
+        projectDetailGrouping.addChild(projectName);
+
+        var projectPlatform = new PointText(new Point(0, 200));
+        projectPlatform.fillColor = 'black';
+        projectPlatform.justification = 'center';
+        projectPlatform.content = "Platform: " + response.get("Platform");
+        projectDetailGrouping.addChild(projectPlatform)
+
+        var projectStatus = new PointText(new Point(0, 300));
+        projectStatus.fillColor = 'black';
+        projectStatus.justification = 'center';
+        projectStatus.content = "Status: " + response.get("Status");
+        projectDetailGrouping.addChild(projectStatus)
+
+        var projectDescription = new PointText(new Point(0, 400));
+        projectDescription.fillColor = 'black';
+        projectDescription.justification = 'center';
+        projectDescription.content = "Description: " + response.get("Description");
+        projectDetailGrouping.addChild(projectDescription)
+
+        var projectImage = new Path();
+        projectImage.fillColor = 'black';
+        projectImage.strokeColor = 'black';
+        projectImage.add(new Point(0,0));
+        projectImage.add(new Point(100,0));
+        projectImage.add(new Point(100,100));
+        projectImage.add(new Point(0,100));
+        projectImage.closed = true;
+        projectDetailGrouping.addChild(projectImage);
+
+
+        projectDetailGrouping.position.x += canvas.width;
+        projectDetailGrouping.visible = true;
+    }
     function drawProjectsOnTimeLine(lineLength, response)
     {
-        console.dir(response);
-
         var initialY = canvas.height-200;
         var currentY = initialY;
         var xStart = 10;
@@ -691,8 +733,6 @@
     
     function updateLayers(visibleIndex)
     {
-        console.dir(categoryLabels);
-
         for(var i = 1; i < project.layers.length; i++)
         {
             project.layers[i].visible = i === visibleIndex ? true : false;
@@ -778,6 +818,9 @@
 
         var projectInitialGrouping = new Group();
         projectInitialGrouping.name = 'projectInitialGrouping';
+
+        var projectsOfStatusGrouping = new Group();
+        projectsOfStatusGrouping.name = 'projectsOfStatusGrouping';
 
         var projectDetailGrouping = new Group();
         projectDetailGrouping.name = 'projectDetailGrouping';

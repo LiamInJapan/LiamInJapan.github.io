@@ -1,0 +1,75 @@
+<html>
+<head>
+	<meta charset='UTF-8'>
+	<title>Character Sheet New - Liam Conroy</title>
+	<script type='text/javascript' src='js/paper-full.js'></script>
+    <script src='SpecialGroup.js'></script>
+    <script src='http://www.parsecdn.com/js/parse-1.6.12.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjs/2.5.0/math.min.js'></script>
+	<script type='text/paperscript' canvas='canvas'>
+    
+    'use strict';
+    var SKILLS = 1;
+    var PROJECTS = 2;
+    var TIMELINE = 3;
+
+    var layerRefDict;
+
+    
+
+    function initialiseLayers()
+    {
+        var skillsLayer = new Layer();
+        skillsLayer.activate();
+
+        var skillCategoryGroup = new Group();
+        skillCategoryGroup.name = 'skillCategoryGroup';
+
+        var skillLabelGroup = new Group();
+        skillLabelGroup.name = 'skillLabelGroup';
+        
+        var skillBarGroup = new Group();
+        skillBarGroup.name = 'skillBarGroup';
+
+        var projectLayer = new Layer();
+        projectLayer.activate();
+
+        var projectInitialGrouping = new Group();
+        projectInitialGrouping.name = 'projectInitialGrouping';
+
+        var projectsOfStatusGrouping = new Group();
+        projectsOfStatusGrouping.name = 'projectsOfStatusGrouping';
+
+        var projectDetailGrouping = new Group();
+        projectDetailGrouping.name = 'projectDetailGrouping';
+        
+        var timeLayer = new Layer();
+        timeLayer.activate();
+
+        var groupTest = new SpecialGroup(3,3);
+        groupTest.printName();
+
+        layerRefDict = { 1 : 'skillCategories', 2 : 'skills', 3 : 'project', 4 : 'timeLayer' };
+    }
+	function main()
+	{
+        initialiseLayers();
+	}
+
+	main();
+
+	function onResize(event) 
+	{
+	// Whenever the window is resized, recenter the path:
+		//path.position = view.center;	
+	}
+
+
+
+	</script>
+</head>
+<body>
+	<canvas id='canvas' resize stats hidpi='off'></canvas>
+</body>
+</html>
