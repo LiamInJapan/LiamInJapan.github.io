@@ -1,14 +1,58 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset='UTF-8'>
 	<title>Character Sheet New - Liam Conroy</title>
+    <style type="text/css">
+    html,
+    body {
+        margin: 0;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    /* Scale canvas with resize attribute to full size */
+    canvas[resize] {
+        width: 100%;
+        height: 100%;
+    }
+    </style>
 	<script type='text/javascript' src='js/paper-full.js'></script>
-    <script src='SpecialGroup.js'></script>
-    <script src='http://www.parsecdn.com/js/parse-1.6.12.min.js'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjs/2.5.0/math.min.js'></script>
-	<script type='text/paperscript' canvas='canvas'>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.22/require.js'></script>
+    <script type="text/paperscript" canvas="canvas">
     
+    var SuperGroup = paper.Group.extend({
+        addDebug: function() 
+        {
+            var path = new Path.Rectangle(this.bounds);
+            path.strokeColor = 'black';
+            path.strokeWidth = 6;
+            path.name = 'path';
+            /*path.add(new Point(0,0));
+            path.add(new Point(canvas.width,0));
+            path.add(new Point(canvas.width,canvas.height));
+            path.add(new Point(0,canvas.height));
+            path.closed = 'true';*/
+
+            this.addChild(path);
+        },
+        onResize: function()
+        {
+            this.children['path'].remove();
+            var path = new Path.Rectangle(this.bounds);
+            console.log(this.bounds);
+            path.strokeColor = 'black';
+            path.strokeWidth = 6;
+            path.name = 'path';
+            /*path.add(new Point(0,0));
+            path.add(new Point(canvas.width,0));
+            path.add(new Point(canvas.width,canvas.height));
+            path.add(new Point(0,canvas.height));
+            path.closed = 'true';*/
+            this.addChild(path);
+        }
+    });
+
     'use strict';
     var SKILLS = 1;
     var PROJECTS = 2;
@@ -23,37 +67,45 @@
         var skillsLayer = new Layer();
         skillsLayer.activate();
 
-        var skillCategoryGroup = new Group();
+        var skillCategoryGroup = new paper.Group();
         skillCategoryGroup.name = 'skillCategoryGroup';
 
-        var skillLabelGroup = new Group();
+        var skillLabelGroup = new paper.Group();
         skillLabelGroup.name = 'skillLabelGroup';
         
-        var skillBarGroup = new Group();
+        var skillBarGroup = new paper.Group();
         skillBarGroup.name = 'skillBarGroup';
 
-        var projectLayer = new Layer();
+        var projectLayer = new paper.Layer();
         projectLayer.activate();
 
-        var projectInitialGrouping = new Group();
+        var projectInitialGrouping = new paper.Group();
         projectInitialGrouping.name = 'projectInitialGrouping';
 
-        var projectsOfStatusGrouping = new Group();
+        var projectsOfStatusGrouping = new paper.Group();
         projectsOfStatusGrouping.name = 'projectsOfStatusGrouping';
 
-        var projectDetailGrouping = new Group();
+        var projectDetailGrouping = new SuperGroup();
+        projectDetailGrouping.bounds = new Rectangle(0,0, canvas.width, canvas.height);
+        console.log("****" +projectDetailGrouping.bounds);
         projectDetailGrouping.name = 'projectDetailGrouping';
-        
-        var timeLayer = new Layer();
+        projectDetailGrouping.addDebug();
+
+        var timeLayer = new paper.Layer();
         timeLayer.activate();
 
-        var groupTest = new SpecialGroup(3,3);
-        groupTest.printName();
+        //var groupTest = new SuperGroup(new Rectangle(10,10,100,100));
 
         layerRefDict = { 1 : 'skillCategories', 2 : 'skills', 3 : 'project', 4 : 'timeLayer' };
     }
 	function main()
 	{
+        console.log("start");
+        //var path = new Path();
+        //path.strokeColor = 'black';
+        
+
+        console.log("test");
         initialiseLayers();
 	}
 
@@ -61,8 +113,7 @@
 
 	function onResize(event) 
 	{
-	// Whenever the window is resized, recenter the path:
-		//path.position = view.center;	
+        project.layers[2].children['projectDetailGrouping'].onResize();
 	}
 
 
@@ -70,6 +121,6 @@
 	</script>
 </head>
 <body>
-	<canvas id='canvas' resize stats hidpi='off'></canvas>
+	<canvas id='canvas' resize='true'></canvas>
 </body>
 </html>
