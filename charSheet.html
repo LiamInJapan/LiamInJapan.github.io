@@ -140,7 +140,7 @@
         var initialY = 90;
         var y = initialY;
         var yStep = 70;
-        var xStep = 128;
+        var xStep = 180;
         var count = 0;
 
         for(var i = 0; i < projectData.length; i++)
@@ -263,7 +263,7 @@
     {
         var initialX = 30;
         var y = 90;
-        var yStep = 70;
+        var yStep = 100;
         var xStep = 96;
 
         for(var i = 0; i < projectStatuses.length; i++)
@@ -316,7 +316,7 @@
     {
         var skillLabelGroup = project.layers[SKILLS].children['skillLabelGroup'];
 
-        var x = 198;
+        var x = 250;
         var y = 10;
         var yStep = 11;
 
@@ -391,7 +391,7 @@
     {
         var skillBarGroup = project.layers[SKILLS].children['skillBarGroup'];
 
-        var x = 200;
+        var x = 252;
         var initialY = 10
         var y = initialY;
         var yStep = 11;
@@ -580,7 +580,7 @@
         _.each(allProjects, function(project) 
         {
             var barHeight = 10;
-            var yDamper = 50;
+            var yDamper = 55;
             barHeight = (getTotalHoursForProject(project.get('SkillsUsed'))/yDamper < 10) ? 
             10 : getTotalHoursForProject(project.get('SkillsUsed'))/yDamper;
 
