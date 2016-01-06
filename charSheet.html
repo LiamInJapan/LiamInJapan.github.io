@@ -147,15 +147,17 @@
         {
             var badgePos = new Point(x, y);
             var badgePath = new Path();
-            var size = 32;
+            
+            var xsize = 150;
+            var ysize = 32;
 
             badgePath.strokeColor = 'black';
             badgePath.fillColor = 'white';
             badgePath.name = projectData[i].get("Name");
             badgePath.add(badgePos); 
-            badgePath.add(new Point(badgePos.x+size, badgePos.y)); 
-            badgePath.add(new Point(badgePos.x+size, badgePos.y-size));
-            badgePath.add(new Point(badgePos.x, badgePos.y-size));     
+            badgePath.add(new Point(badgePos.x+xsize, badgePos.y)); 
+            badgePath.add(new Point(badgePos.x+xsize, badgePos.y-ysize));
+            badgePath.add(new Point(badgePos.x, badgePos.y-ysize));     
             badgePath.closed = true;
             projectsOfStatusGrouping.addChild(badgePath);   
 
@@ -221,15 +223,16 @@
 
             var badgePos = new Point(initialX+(xStep*count), y+(yStep*i));
             var badgePath = new Path();
-            var size = 32;
+            var xsize = 42;
+            var ysize = 32;
 
             badgePath.strokeColor = 'black';
             badgePath.fillColor = 'white';
             badgePath.name = projectStatuses[i];
             badgePath.add(badgePos); 
-            badgePath.add(new Point(badgePos.x+size, badgePos.y)); 
-            badgePath.add(new Point(badgePos.x+size, badgePos.y-size));
-            badgePath.add(new Point(badgePos.x, badgePos.y-size));     
+            badgePath.add(new Point(badgePos.x+xsize, badgePos.y)); 
+            badgePath.add(new Point(badgePos.x+xsize, badgePos.y-ysize));
+            badgePath.add(new Point(badgePos.x, badgePos.y-ysize));     
             badgePath.closed = true;
             projectInitialGrouping.addChild(badgePath);   
 
