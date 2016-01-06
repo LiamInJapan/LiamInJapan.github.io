@@ -40,7 +40,7 @@ While in theory I know how a web application is put together, I am yet to touch 
 Luckily it turns out its not that massively different from native mobile application development. :)
 
 - Gamified CPD (Continued Professional Development)
-As a professional [software engineer][ukspec] and aspiring [Chartered Engineer][ceng wiki] I aim to engage in Continued Professional Development (e.g. to constantly strive to update my knowledge portfolio). As was once said by Mary Poppins *“In every job that must be done, there is an element of fun. You find the fun and 'snap', the job's a game.”*; my attempt at finding the game in this is to create a skill sheet that I can level up. If I can be compelled to grind to gain levels in an RPG, perhaps I can use some of these motivational tricks to "grind" at real-life skills.
+As a professional [software engineer][ukspec] and aspiring [Chartered Engineer][ceng wiki] I aim to engage in Continued Professional Development (e.g. to constantly strive to update my knowledge portfolio). As was once said by Mary Poppins *“In every job that must be done, there is an element of fun. You find the fun and 'snap', the job's a game”*; my attempt at finding the game in this is to create a skill sheet that I can level up. If I can be compelled to grind to gain levels in an RPG, perhaps I can use some of these motivational tricks to "grind" at real-life skills.
 
 Potential Uses of a Data-Driven Portfolio
 -----------------------------------------
@@ -59,8 +59,6 @@ Limitations
 -----------
 
 - Accuracy of initial audit and ongoing data collection/honesty and integrity of data
-
-Of course, the figures that are put into the system are self-evaluated, and that can be lied about. But this is no different from a regular resume (and arguably, given the depth and contextuality of this system, and the ability to do some data processing on it, it'd be harder to do so).
 
 The results that the system shows are only as honest as the data that is input into the system. This is also true of the traditional resume however, and this format at least provides the ability to do some basic data processessing and sanity checks. 
 
@@ -104,8 +102,6 @@ Similar Ideas:
 
 [portfolio]: http://liaminjapan.github.io/charSheet.html
 [full stack]: http://www.laurencegellert.com/2012/08/what-is-a-full-stack-developer/
-
-
 [ukspec]: http://www.engc.org.uk/ukspec.aspx
 [ceng wiki]: https://en.wikipedia.org/wiki/Chartered_Engineer_(UK)
 [jsonresume]: https://jsonresume.org/
