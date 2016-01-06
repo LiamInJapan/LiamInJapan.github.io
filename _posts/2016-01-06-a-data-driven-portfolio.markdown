@@ -80,17 +80,19 @@ Technical Improvements and Future Features
 
 - Visual and Motion Design - This still needs a lot of work to make the interface more obvious and pleasurable to use.
 - Canvas Use Reduction - Canvas is used a lot in this project
-- Responsive Design Implementation - Currently the interface is designed to my laptops screen, in Chrome. Time needs to be spent to increase its "responsivity" to different screen sizes.
+- Responsive Design Implementation - Currently the interface is designed to my laptops screen, in Chrome. Time needs to be spent to increase its "responsivity" to different screen sizes. I've started some [tests][responsive-test] for this.
 - Aesthetics - Very little has been done to the color, graphic design and aesthetics of the page. This needs to be developed more.
-- Tech choice - I chose the tech as it was all stuff I wanted to learn. In retrospect, I may not have used Parse if I know what I know now. Rather, one large plain JSON object and some custom overloaded functions to modify it might be a faster, more scalable solution
+- Tech choice - I chose the tech as it was all stuff I wanted to learn. In retrospect, I may not have used Parse if I know what I know now. Rather, one large plain JSON object and some custom overloaded functions to modify it might be a faster, more scalable solution (scalable, in terms of multiple users viewing *my* portfolio at least.)
 - Caching - No consideration of caching has been made at all at this point. Thinking about this more could definitely provide some serious optimisation.
-- Scalability - No consideration of scalability has been made. Using parse's free package has provided some interesting limitations however, and has made me think about scalability issues with web services and databases more deeply. For example, Parse only allows 30 requests a second
+- Scalability - No consideration of scalability has been made. Using parse's free package has provided some interesting limitations however, and has made me think about scalability issues with web services and databases more deeply. For example, Parse only allows 30 requests a second; Parse also doesn't have any in-built support for uniqueness. I can program uniqueness myself by using Parse Cloud Code's pre-save hooks to check against values. However, even when saving an array of objects with Parse, the pre-save hook counts as one request per-object, which results in very quickly burning through your free request limit. This provides an interesting limitation to work around and doing this had made me think more about scalability tradeoffs and whether to run code server-side or client-side.
 - Mouseovers - I'd like to develop mouseovers and more contextual information for the interface. E.g. **What** skill was used with **which** project and **how**.
 - Source Control links - Links to source for different projects would be nice to show code samples to back up the portfolio.
 - Refactoring and Optimisation - I am pretty new to javascript, and a lot of the code has been written pretty poorly. I definitely need to brushup on the javascript way of doing things and write things better.
 - User accounts and teams and query API - As mentioned above, this could be a useful tool for HR departments and other developers. For it to be more than just a portfolio, an accounts system and a query API would need to be developed to make this a reality.
 - Goal Setting - It would be good to mark projects or skills as "focus points" to allow this to also be used for goal setting.
 - Adding hooks to other productivity systems (pomodoros, Hansoft, Asana and so on)
+- Deep linking to allow the interface to be open in specific state
+
 
 I'll hopefully get through some of this feature list over the coming weeks!
 
@@ -107,3 +109,6 @@ Similar Ideas:
 [jsonresume]: https://jsonresume.org/
 [hropenstandards]: http://www.hropenstandards.org/
 [geekresume]: http://www.howardism.org/Technical/Other/Geek_Resume.html
+[responsive-test]: file:///Users/liam/Development/LiamInJapan.github.io/responsiveGrid.html
+
+
