@@ -494,25 +494,25 @@
     {
         var projectDetailGrouping = project.layers[PROJECTS].children['projectDetailGrouping'];
 
-        var projectName = new PointText(new Point(0, 100));
+        var projectName = new PointText(new Point(0, 200));
         projectName.fillColor = 'black';
         projectName.justification = 'center';
         projectName.content = "Project Name: " + response.get("Name");
         projectDetailGrouping.addChild(projectName);
 
-        var projectPlatform = new PointText(new Point(0, 200));
+        var projectPlatform = new PointText(new Point(0, 300));
         projectPlatform.fillColor = 'black';
         projectPlatform.justification = 'center';
         projectPlatform.content = "Platform: " + response.get("Platform");
         projectDetailGrouping.addChild(projectPlatform)
 
-        var projectStatus = new PointText(new Point(0, 300));
+        var projectStatus = new PointText(new Point(0, 400));
         projectStatus.fillColor = 'black';
         projectStatus.justification = 'center';
         projectStatus.content = "Status: " + response.get("Status");
         projectDetailGrouping.addChild(projectStatus)
 
-        var projectDescription = new PointText(new Point(0, 400));
+        var projectDescription = new PointText(new Point(0, 500));
         projectDescription.fillColor = 'black';
         projectDescription.justification = 'center';
         projectDescription.content = "Description: " + response.get("Description");
@@ -528,8 +528,16 @@
         projectImage.closed = true;
         projectDetailGrouping.addChild(projectImage);
 
+        var image = new Raster(response.get("imageName"));
+        image.scale(0.3);
+        image.bounds = projectImage.bounds;
+        var group = new Group([projectImage, image]);
+        //group.clipMask = true;
+        group.clipped = true;
+        projectDetailGrouping.addChild(group);
 
-        projectDetailGrouping.position.x += canvas.width;
+
+        projectDetailGrouping.position.x += canvas.width - 200;
         projectDetailGrouping.visible = true;
     }
     function drawProjectsOnTimeLine(lineLength, response)
