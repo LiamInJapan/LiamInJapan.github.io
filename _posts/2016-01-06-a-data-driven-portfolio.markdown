@@ -96,6 +96,8 @@ Technical Improvements and Future Features
 
 I'll hopefully get through some of this feature list over the coming weeks!
 
+The wonderful illustration in the circle is provided by the equally wonderful [Maa-Kun][maamite-portfolio]! Thanks Maa!
+
 Similar Ideas:
 --------------
 - [JSON Resume][jsonresume]
@@ -109,6 +111,7 @@ Similar Ideas:
 [jsonresume]: https://jsonresume.org/
 [hropenstandards]: http://www.hropenstandards.org/
 [geekresume]: http://www.howardism.org/Technical/Other/Geek_Resume.html
-[responsive-test]: file:///Users/liam/Development/LiamInJapan.github.io/responsiveGrid.html
+[responsive-test]: http://LiamInJapan.github.io/responsiveGrid.html
+[maamite-portfolio]: http://maamite.com/
 
 

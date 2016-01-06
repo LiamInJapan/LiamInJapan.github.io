@@ -131,8 +131,53 @@
         return totalHours;
     }
 
+    var createBoxText = function(text, x, y)
+    {
+        var snd = new Audio("beep.mp3"); // buffers automatically when created
+
+        var boxText = new PointText(new Point(x,y));
+        boxText.fillColor = 'black';
+        boxText.content = text;
+
+        var boxTextBorder = new Path();
+        boxTextBorder.name = text;
+        boxTextBorder.strokeColor = 'white';
+        boxTextBorder.fillColor = 'grey';
+        boxTextBorder.opacity = 0.3;
+        boxTextBorder.add(x-2, y+3); 
+        boxTextBorder.add(new Point(x+boxText.bounds.width+2, y+3)); 
+        boxTextBorder.add(new Point(x+boxText.bounds.width+2, y-boxText.bounds.height));
+        boxTextBorder.add(new Point(x-2, y-boxText.bounds.height));     
+        boxTextBorder.closed = true;
+
+        boxTextBorder.addChild(boxText);
+        boxTextBorder.sendToBack();
+
+        var enter = function()
+        {
+            console.dir("Enter");
+            boxTextBorder.fillColor = 'grey';
+            snd.play();
+        };
+
+        var leave = function ()
+        {
+            console.dir("Leave");
+            boxTextBorder.fillColor = 'white';
+        };
+    
+        boxTextBorder.onMouseEnter = enter;
+        boxTextBorder.onMouseLeave = leave;
+        boxText.onMouseEnter = enter;
+        boxText.onMouseLeave = leave;
+        boxText.onMouseDown = boxText.onMouseDown;
+        
+        return boxTextBorder;
+    }
+
     function drawProjectsOfCategoryBoxes(projectData)
     {
+        console.dir(projectData);
         var projectsOfStatusGrouping = project.layers[PROJECTS].children['projectsOfStatusGrouping'];
 
         var initialX = 430;
@@ -146,26 +191,13 @@
         for(var i = 0; i < projectData.length; i++)
         {
             var badgePos = new Point(x, y);
-            var badgePath = new Path();
             
             var xsize = 160;
             var ysize = 32;
 
-            badgePath.strokeColor = 'black';
-            badgePath.fillColor = 'white';
-            badgePath.name = projectData[i].get("Name");
-            badgePath.add(badgePos); 
-            badgePath.add(new Point(badgePos.x+xsize, badgePos.y)); 
-            badgePath.add(new Point(badgePos.x+xsize, badgePos.y-ysize));
-            badgePath.add(new Point(badgePos.x, badgePos.y-ysize));     
-            badgePath.closed = true;
-            projectsOfStatusGrouping.addChild(badgePath);   
-
-            var projectName = new PointText(new Point(badgePos.x+6, badgePos.y-13));
-            projectName.fillColor = 'black';
-            projectName.content = projectData[i].get("Name");
-            projectsOfStatusGrouping.addChild(projectName);
-
+            var projectNameText = createBoxText(projectData[i].get("Name"), badgePos.x, badgePos.y);
+            projectsOfStatusGrouping.addChild(projectNameText);   
+            
             var badgeClicked = function() 
             {
                 Parse.Cloud.run('getDataOfType', { 'dataType': 'projectDetail', 'filter' : this.name}).then(function(response) 
@@ -174,17 +206,10 @@
                     console.dir(response);  
                     drawProjectDetail(response);
                 });
-
-                /*Parse.Cloud.run('getDataOfType', { 'dataType': 'project', 'filter' : this.name }).then(function(response) 
-                {
-                    console.dir('response!' + response);
-                    project.layers[PROJECTS].activate();
-                    drawProjectDetailBoxes(response);
-                    project.layers[PROJECTS].children['projectDetailGrouping'].visible = true;
-                });*/
             };
 
-            badgePath.onMouseDown = badgeClicked;
+            projectNameText.onMouseDown = badgeClicked;
+            
 
             y+=yStep;
 
@@ -222,31 +247,12 @@
             });
 
             var badgePos = new Point(initialX+(xStep*count), y+(yStep*i));
-            var badgePath = new Path();
-            var xsize = 42;
-            var ysize = 32;
+            var projectStatusText = createBoxText(numProjects + ">>", badgePos.x, badgePos.y);
+            projectInitialGrouping.addChild(projectStatusText);   
+            projectStatusText.name = projectStatuses[i]; // override name to make filter below work
 
-            badgePath.strokeColor = 'black';
-            badgePath.fillColor = 'white';
-            badgePath.name = projectStatuses[i];
-            badgePath.add(badgePos); 
-            badgePath.add(new Point(badgePos.x+xsize, badgePos.y)); 
-            badgePath.add(new Point(badgePos.x+xsize, badgePos.y-ysize));
-            badgePath.add(new Point(badgePos.x, badgePos.y-ysize));     
-            badgePath.closed = true;
-            projectInitialGrouping.addChild(badgePath);   
-
-            var numProjectsLabel = new PointText(new Point(badgePos.x+6, badgePos.y-13));
-            numProjectsLabel.fillColor = 'black';
-            numProjectsLabel.content = numProjects + ">>";
-            projectInitialGrouping.addChild(numProjectsLabel);
-
-            numProjects = 0;
-
-            var badgeClicked = function() 
+            var textClicked = function() 
             {
-                project.layers[PROJECTS].children['projectDetailGrouping'].removeChildren();
-
                 Parse.Cloud.run('getDataOfType', { 'dataType': 'project', 'filter' : this.name }).then(function(response) 
                 {
                     console.dir('response!' + response);
@@ -256,7 +262,11 @@
                 });
             };
 
-            badgePath.onMouseDown = badgeClicked;
+            projectStatusText.onMouseDown = textClicked;
+
+            numProjects = 0;
+
+            
         }
 
         //projectInitialGrouping.position.x += crossoverPoint.x;
