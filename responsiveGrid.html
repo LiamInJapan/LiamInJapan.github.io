@@ -23,14 +23,9 @@
     height: 32%;
     padding-bottom: 0.1%; /* = width for a 1:1 aspect ratio */
     margin:0.1%;
-    background-color: #1E1E1E;
+    background-color: #E8E8E8;
 }
     </style>
-	<script type='text/javascript' src='js/paper-full.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.22/require.js'></script>
-    <script type="text/paperscript" canvas="canvas">
-    
-	</script>
 </head>
 <body>
     <!-- 1st row */ -->
@@ -39,7 +34,143 @@
 <div></div>
 <!-- 2nd row */ -->
 <div></div>
-<div></div>
+<div>
+    <canvas id='canvas' resize stats hidpi='off'></canvas>
+<script type='text/javascript' src='js/paper-full.js'></script>
+    <script src='http://www.parsecdn.com/js/parse-1.6.12.min.js'></script>
+    <script type="text/paperscript" canvas="canvas">
+    
+    'use strict';
+
+    function getPointRelativeToCanvas(x,y)
+    {
+        return new Point(canvas.width*x, canvas.height*y);
+    }
+
+    var skillData;
+
+    var createBarGraph = function(size)
+    {
+        var barChart = new Group();   
+
+        var generateFromData = function(size)
+        {
+            var barHeight = (size.height/skillData.length)/2;
+            var x = 0;
+            var initialY = 0
+            var y = initialY;
+            var maxSkillAmount = 2000; // dynamically calculate this in the future
+            var totalBarLength = (size.width-(x*2))/2;
+            var lengthOfOneHour = totalBarLength/maxSkillAmount;
+
+            // draw horizontal bars for skills
+            for(var i = 0; i < skillData.length; i++)
+            {
+                var path = new Path();
+                path.strokeColor = 'black';
+                path.fillColor = 'black';
+                var barLength = skillData[i].hours*lengthOfOneHour;
+                var textOffset = 8;
+                path.add(new Point(x, y));
+                path.add(new Point(x+barLength, y)); 
+                path.add(new Point(x+barLength, y+barHeight)); 
+                path.add(new Point(x, y+barHeight));     
+                path.closed = true;
+                barChart.addChild(path);
+
+                var skillText = new PointText(new Point((x+skillData[i].hours*lengthOfOneHour)+textOffset, y));
+                skillText.fillColor = 'black';
+                skillText.justification = 'left';
+                skillText.fontSize = barHeight;
+                skillText.content = skillData[i].skillName + ':';
+                barChart.addChild(skillText);
+
+                y+=barHeight;
+            }
+
+            var numVertBars = 10;
+
+            for(var i = 0; i <= numVertBars; i++)
+            {
+                var vertPath = new Path();
+                vertPath.strokeColor = 'black';
+                var xPos = x+(totalBarLength/numVertBars)*i;
+                vertPath.add(new Point(xPos, initialY-barHeight));
+                vertPath.add(new Point(xPos, size.height/2));
+                vertPath.opacity = 0.3;
+                barChart.addChild(vertPath);
+
+                var skillAmountLabel = new PointText(new Point(xPos-20, size.height/4));
+                skillAmountLabel.fillColor = 'black';
+                skillAmountLabel.content = ((maxSkillAmount/(numVertBars))*i) + ' hours';
+                skillAmountLabel.rotate(90);
+                skillAmountLabel.opacity = 0.3;
+                barChart.addChild(skillAmountLabel);
+            }
+        }
+
+        var update = function(size)
+        {
+            barChart.removeChildren();
+            generateFromData(size);
+        };
+
+        generateFromData(size);
+        return barChart;
+    }
+
+    function initParse()
+    {
+        Parse.initialize('tpio94gHZkEKpbpxvjCAHKExanIx89VwpIsvtXt5', 'aQsoxqb0x8tk09TprScWDnEiZs9SSQFN8qsE3bP1');
+    }
+
+    function pullParseData()
+    {
+        Parse.Cloud.run('getDataOfType', { 'dataType': 'skills'}).then(function(response) 
+        {
+            skillData = response;
+            var graph = createBarGraph(new Size(canvas.width,canvas.height));
+            graph.name = 'graph';
+            //project.activeLayer.addChild(graph); 
+        }); 
+    }
+    function main()
+    {
+        initParse();
+        pullParseData();
+        console.log("start");
+        
+        
+    }
+
+    main();
+
+    function onResize(event) 
+    {
+        console.dir("width: "  + canvas.width);
+        console.dir("height: " + canvas.height);
+
+        if(skillData)
+        {
+            project.activeLayer.children['graph'].remove();
+            var graph = createBarGraph(new Size(canvas.width,canvas.height));
+            graph.name = 'graph';    
+        } 
+        /*var path = new Path();
+        path.strokeColor = 'black';
+        path.strokeWidth = 6;
+        path.name = 'path';
+        path.add(getPointRelativeToCanvas(0.1,0.1));
+        path.add(getPointRelativeToCanvas(0.25,0.1));
+        path.add(getPointRelativeToCanvas(0.25,0.25));
+        path.add(getPointRelativeToCanvas(0.1,0.25));
+        path.closed = 'true';*/
+    }
+
+
+
+    </script>
+</div>
 <div></div>
 <!-- 3rd row */ -->
 <div></div>
