@@ -92,7 +92,7 @@ Technical Improvements and Future Features
 - Goal Setting - It would be good to mark projects or skills as "focus points" to allow this to also be used for goal setting.
 - Adding hooks to other productivity systems (pomodoros, Hansoft, Asana and so on)
 - Deep linking to allow the interface to be open in specific state
-
+- Breaking up of the database and environment into development and production
 
 I'll hopefully get through some of this feature list over the coming weeks!
 

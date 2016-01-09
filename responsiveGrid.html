@@ -33,6 +33,8 @@
 <div></div>
 <div></div>
 <!-- 2nd row */ -->
+<div>
+</div>
 <div id='testDiv'>
 <canvas id='canvas' resize stats hidpi='off'></canvas>
 <script type='text/javascript' src='js/paper-full.js'></script>
@@ -108,12 +110,6 @@
             }
         }
 
-        var update = function(size)
-        {
-            barChart.removeChildren();
-            generateFromData(size);
-        };
-
         generateFromData(size);
         return barChart;
     }
@@ -182,12 +178,9 @@
             graph.name = 'graph';    
         }
     }
-    
-    </script>
+</script>
 </div>
 
-
-<div></div>
 <div></div>
 <!-- 3rd row */ -->
 <div></div>

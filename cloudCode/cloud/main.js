@@ -208,7 +208,7 @@ Parse.Cloud.define("getDataOfType", function(request, response)
 {
 	var query = new Parse.Query("Projects");
     query.ascending("StartDate");
-	query.limit(6);
+	//query.limit(6);
 
 	console.log("*****************");
     query.find().then(

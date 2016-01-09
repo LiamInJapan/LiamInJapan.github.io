@@ -15,89 +15,79 @@
 
     var layerRefDict;
 
-    function Badge(pos, size, filter, img) 
+    var createBarGraph = function(skillData, size)
     {
-        //var active = false;
-        
-        
+        console.dir("skillData: " + skillData);
+        console.dir("size: " + size);
 
-        /*this.path.onMouseDown = function(event) 
+        var barChart = new Group();   
+
+        var generateFromData = function(size)
         {
-            Parse.Cloud.run('getDataOfType', { 'dataType': 'project', 'filter' : filter }).then(function(response) 
+            var barHeight = (size.height/skillData.length);
+            var x = 0;
+            var initialY = 0
+            var y = initialY;
+            var maxSkillAmount = 2000; // dynamically calculate this in the future
+            var totalBarLength = (size.width-(x*2));
+            var lengthOfOneHour = totalBarLength/maxSkillAmount;
+
+            // draw horizontal bars for skills
+            for(var i = 0; i < skillData.length; i++)
             {
-                console.dir('response!' + response);
-            });
-        };*/
+                var path = new Path();
+                path.strokeColor = 'black';
+                path.fillColor = 'black';
+                var barLength = skillData[i].hours*lengthOfOneHour;
+                var textOffset = 8;
+                path.add(new Point(x, y));
+                path.add(new Point(x+barLength, y)); 
+                path.add(new Point(x+barLength, y+barHeight)); 
+                path.add(new Point(x, y+barHeight));     
+                path.closed = true;
+                barChart.addChild(path);
 
-        //var image = new Raster(img);
-        //image.scale(0.25);
-        //image.bounds = this.path.bounds;
-        //image.fitBounds(path.bounds, true);
-        //var group = new Group([this.path, image]);
-        //group.clipMask = true;
-        //group.clipped = true;
+                var skillText = new PointText(new Point((x+skillData[i].hours*lengthOfOneHour)+textOffset, y));
+                skillText.fillColor = 'black';
+                skillText.justification = 'left';
+                skillText.fontSize = barHeight;
+                skillText.content = skillData[i].skillName + ':';
+                barChart.addChild(skillText);
 
-    }
+                y+=barHeight;
+            }
 
-    Badge.prototype = 
-    {
-        update: function()
-        {
-            if(this.active === true)
+            var numVertBars = 10;
+
+            for(var i = 0; i <= numVertBars; i++)
             {
-                this.scale(1.1, this.bounds.bottomLeft);
+                var vertPath = new Path();
+                vertPath.strokeColor = 'black';
+                var xPos = x+(totalBarLength/numVertBars)*i;
+                vertPath.add(new Point(xPos, initialY-barHeight));
+                vertPath.add(new Point(xPos, size.height));
+                vertPath.opacity = 0.3;
+                barChart.addChild(vertPath);
+
+                var skillAmountLabel = new PointText(new Point(xPos-40, size.height/2));
+                skillAmountLabel.fillColor = 'black';
+                skillAmountLabel.content = ((maxSkillAmount/(numVertBars))*i) + ' hours';
+                skillAmountLabel.rotate(90);
+                skillAmountLabel.opacity = 0.3;
+                barChart.addChild(skillAmountLabel);
             }
         }
-    };
 
-    function Skill(totalHours, badge) 
-    {
-        var active = false;
-        
-        //this.path = new Path.Circle(badge.path.position, totalHours/10);
-        //this.fillColor = 'black';
-
-
-        /*this.path = new Path.Circle(
-        {
-            fillColor: 
-            {
-                hue: Math.random() * 360,
-                saturation: 1,
-                brightness: 1
-            },
-            blendMode: 'screen'
-        });*/
-
-        //this.path.strokeColor = 'black';
-        
-        //this.path.onMouseDown = function(event) 
-        //{
-        //    console.log('clickCircle!');   
-        //}
-
-        //this.path.sendToBack();
+        generateFromData(size);
+        return barChart;
     }
-
-    Skill.prototype = 
-    {
-        update: function()
-        {
-            if(this.active === true)
-            {
-                this.scale(1.1, this.bounds.bottomLeft);
-            }
-        }
-    };
 
     var allSkillTypes = [];
     var allSkillCategories = [];
-    
-    var skillCircles = [];
 
 
     // TODO: pull this in from backend
-    var projectStatuses = ['Decommissioned', 'Released', 'Future', 'Current', 'On Hold', 'Cancelled'];
+    var projectStatuses = ['Decommissioned', 'Completed', 'Future', 'Current', 'On Hold', 'Cancelled'];
 
     function drawProjectLabels()
     {
@@ -131,53 +121,96 @@
         return totalHours;
     }
 
-    var createBoxText = function(text, x, y)
+    function BoxText(text, pos, clickFunc, group)
     {
+        var selected = false;
+
         var snd = new Audio("beep.mp3"); // buffers automatically when created
 
-        var boxText = new PointText(new Point(x,y));
+        var boxText = new PointText(pos);
         boxText.fillColor = 'black';
         boxText.content = text;
 
         var boxTextBorder = new Path();
         boxTextBorder.name = text;
         boxTextBorder.strokeColor = 'white';
-        boxTextBorder.fillColor = 'grey';
+        boxTextBorder.fillColor = 'white';
         boxTextBorder.opacity = 0.3;
-        boxTextBorder.add(x-2, y+3); 
-        boxTextBorder.add(new Point(x+boxText.bounds.width+2, y+3)); 
-        boxTextBorder.add(new Point(x+boxText.bounds.width+2, y-boxText.bounds.height));
-        boxTextBorder.add(new Point(x-2, y-boxText.bounds.height));     
+        boxTextBorder.add(pos.x-2, pos.y+3); 
+        boxTextBorder.add(new Point(pos.x+boxText.bounds.width+2, pos.y+3)); 
+        boxTextBorder.add(new Point(pos.x+boxText.bounds.width+2, pos.y-boxText.bounds.height));
+        boxTextBorder.add(new Point(pos.x-2, pos.y-boxText.bounds.height));     
         boxTextBorder.closed = true;
 
         boxTextBorder.addChild(boxText);
         boxTextBorder.sendToBack();
-
-        var enter = function()
-        {
-            console.dir("Enter");
-            boxTextBorder.fillColor = 'grey';
-            snd.play();
-        };
-
-        var leave = function ()
-        {
-            console.dir("Leave");
-            boxTextBorder.fillColor = 'white';
-        };
     
-        boxTextBorder.onMouseEnter = enter;
-        boxTextBorder.onMouseLeave = leave;
-        boxText.onMouseEnter = enter;
-        boxText.onMouseLeave = leave;
-        boxText.onMouseDown = boxText.onMouseDown;
+        var test = "************** TEST *******************";
+
+        this.overrideName = function(name)
+        {
+            boxText.name = name;
+            boxTextBorder.name = name;
+        };
+
+        this.enter = function()
+        {
+            if(!selected)
+            {
+                console.dir("Enter");
+                boxTextBorder.fillColor = 'grey';
+                snd.play();    
+            }
+        };
+
+        this.leave = function()
+        {
+            if(!selected)
+            {
+                console.dir("Leave");
+                boxTextBorder.fillColor = 'white';    
+            }
+        };
+
+        this.select = function()
+        {
+            selected = true;
+            boxText.fillColor = 'red';
+            boxTextBorder.fillColor = 'red';
+        }
+
+        this.unselect = function()
+        {
+            selected = false;
+            boxText.fillColor = 'black';
+            boxTextBorder.fillColor = 'white';
+        }
+
+        boxTextBorder.onMouseEnter = this.enter;
+        boxTextBorder.onMouseLeave = this.leave;
+        boxText.onMouseEnter = this.enter;
+        boxText.onMouseLeave = this.leave;
+        boxText.onMouseDown = clickFunc;
+        boxTextBorder.onMouseDown = clickFunc;
+
+        this.name = text;
+        boxText.name = text;
+        boxTextBorder.name = text;
         
-        return boxTextBorder;
-    }
+        if(group)
+        {
+            group.addChild(boxTextBorder);
+            group.addChild(boxText);
+            console.dir("added to group " + group);
+        }
+    };
+
+
+    
 
     function drawProjectsOfCategoryBoxes(projectData)
     {
-        console.dir(projectData);
+        console.dir("project data: " + projectData);
         var projectsOfStatusGrouping = project.layers[PROJECTS].children['projectsOfStatusGrouping'];
 
         var initialX = 430;
@@ -195,11 +228,10 @@
             var xsize = 160;
             var ysize = 32;
 
-            var projectNameText = createBoxText(projectData[i].get("Name"), badgePos.x, badgePos.y);
-            projectsOfStatusGrouping.addChild(projectNameText);   
-            
-            var badgeClicked = function() 
+            var boxClicked = function() 
             {
+                console.dir("in boxClicked: " + this.name);
+
                 Parse.Cloud.run('getDataOfType', { 'dataType': 'projectDetail', 'filter' : this.name}).then(function(response) 
                 {
                     project.layers[PROJECTS].children['projectDetailGrouping'].removeChildren();
@@ -208,8 +240,9 @@
                 });
             };
 
-            projectNameText.onMouseDown = badgeClicked;
-            
+            console.dir("***************:" + projectsOfStatusGrouping);
+            var projectNameText = new BoxText(projectData[i].get("Name"), badgePos, boxClicked, projectsOfStatusGrouping);
+            //console.dir("name:" + projectNameText.name);
 
             y+=yStep;
 
@@ -246,27 +279,35 @@
                 }
             });
 
-            var badgePos = new Point(initialX+(xStep*count), y+(yStep*i));
-            var projectStatusText = createBoxText(numProjects + ">>", badgePos.x, badgePos.y);
-            projectInitialGrouping.addChild(projectStatusText);   
-            projectStatusText.name = projectStatuses[i]; // override name to make filter below work
-
             var textClicked = function() 
             {
+                console.dir("name: " + this.name);
+
                 Parse.Cloud.run('getDataOfType', { 'dataType': 'project', 'filter' : this.name }).then(function(response) 
                 {
                     console.dir('response!' + response);
+
                     project.layers[PROJECTS].activate();
+
+                    console.dir('children: ' + project.layers[PROJECTS].children['projectsOfStatusGrouping'].children.length);
+                    
+
+                    project.layers[PROJECTS].children['projectsOfStatusGrouping'].removeChildren();
+                    project.layers[PROJECTS].children['projectDetailGrouping'].removeChildren();
+
+                    console.dir('children: ' + project.layers[PROJECTS].children['projectsOfStatusGrouping'].children.length);
+
                     drawProjectsOfCategoryBoxes(response);
-                    project.layers[PROJECTS].children['projectDetailGrouping'].visible = true;
+
+                    console.dir('children: ' + project.layers[PROJECTS].children['projectsOfStatusGrouping'].children.length);
                 });
             };
 
-            projectStatusText.onMouseDown = textClicked;
-
-            numProjects = 0;
-
+            var badgePos = new Point(initialX+(xStep*count), y+(yStep*i));
+            var projectStatusText = new BoxText(numProjects + ">>", badgePos, textClicked, projectInitialGrouping);
+            projectStatusText.overrideName(projectStatuses[i]);  
             
+            numProjects = 0;
         }
 
         //projectInitialGrouping.position.x += crossoverPoint.x;
@@ -310,14 +351,6 @@
 
     function onFrame(event)
     {
-        //for(var i = 0; i < badges.length; i++)
-        //{
-            //badges[i].update();
-        //}
-        for(var i = 0; i < skillCircles.length; i++)
-        {
-            skillCircles[i].update();
-        }
     }
     
     function initParse()
@@ -353,21 +386,16 @@
         var skillCategoryGroup = project.layers[SKILLS].children['skillCategoryGroup'];
 
         var x = 10;
-        var y = 10;
-        var yStep = 11;
+        var y = 18;
+        var yStep = 18;
+
+        var skillCategoryLabels = [];
 
         for(var skillCategory in categoryData)
         {
-            var skillCategoryText = new PointText(new Point(x, y));
-            skillCategoryText.fillColor = 'black'; 
-            skillCategoryText.content = categoryData[skillCategory].category;
-            skillCategoryText.name = skillCategoryText.content;
-            skillCategoryGroup.addChild(skillCategoryText);
-
-            y+=yStep;
-
             var changeSkillCategory = function() 
             {
+                console.dir("in changeSkillCategory");
                 project.layers[SKILLS].children['skillBarGroup'].removeChildren();
                 project.layers[SKILLS].children['skillLabelGroup'].removeChildren();
 
@@ -382,20 +410,32 @@
                     project.layers[SKILLS].children['skillLabelGroup'].visible = true;
                 });
 
-                for(var i = 0; i < skillCategoryGroup.children.length; i++)
+                /*for(var i = 1; i < skillCategoryGroup.children.length; i++)
                 {
-                    if(skillCategoryGroup.children[i].name === this.content)
+                    project.layers[i].visible = i === visibleIndex ? true : false;
+                    i === visibleIndex ? categoryLabels[i-1].select() : categoryLabels[i-1].unselect();
+                }*/
+
+                // TODO: Refactor this into a "selection group" tyoe thing for a selection of BoxLabels
+                for(var i = 0; i < skillCategoryLabels.length; i++)
+                {
+                    if(skillCategoryLabels[i].name === this.content)
                     {
-                        skillCategoryGroup.children[i].fillColor = 'red';
+                        console.dir("SELECT ***:" + this.content + " : " + skillCategoryLabels[i].name);
+                        skillCategoryLabels[i].select();
                     }
                     else
                     {
-                        skillCategoryGroup.children[i].fillColor = 'black';
+                        console.dir("UNSELECT ***:" + this.content + " : " + skillCategoryLabels[i].name);
+                        skillCategoryLabels[i].unselect();
                     }
                 }
             };
 
-            skillCategoryText.onMouseDown = changeSkillCategory;
+            var skillCategoryText = new BoxText(categoryData[skillCategory].category, new Point(x,y), changeSkillCategory, skillCategoryGroup);
+            skillCategoryText.overrideName("TEST");
+            skillCategoryLabels.push(skillCategoryText);
+            y+=yStep;
         }
 
         skillCategoryGroup.position.x += crossoverPoint.x;
@@ -549,8 +589,12 @@
         group.clipped = true;
         projectDetailGrouping.addChild(group);
 
-
+        // draw skills used graph
+        var graph = createBarGraph(response.get("SkillsUsed"), new Size(200,100));
+        graph.name = 'graph';
         projectDetailGrouping.position.x += canvas.width - 200;
+        projectDetailGrouping.addChild(graph);
+
         projectDetailGrouping.visible = true;
     }
     function drawProjectsOnTimeLine(lineLength, response)
@@ -690,21 +734,19 @@
 
         _.each(categoriesDict, function(category)
         {
-            var categoryLabel = new PointText(new Point(crossoverPoint.x/2, y));
-            categoryLabel.fillColor = 'black';
-            categoryLabel.name = category.key;
-            categoryLabel.justification = 'center';
-            categoryLabel.content = category.key; 
-            y += 16;
-
             var changeCategory = function() 
             {
+                console.dir(this);
                 updateLayers(category.value);
                 this.fillColor = 'red';
             };
 
-            categoryLabel.onMouseDown = changeCategory;
-            categoryLabels.push(categoryLabel);
+            var categoryText = new BoxText(category.key, new Point(crossoverPoint.x/2, y), changeCategory);
+            categoryText.justification = 'right';
+            categoryText.overrideName(category.key);
+            y += 16;
+
+            categoryLabels.push(categoryText);
         });
     }
 
@@ -757,7 +799,7 @@
         for(var i = 1; i < project.layers.length; i++)
         {
             project.layers[i].visible = i === visibleIndex ? true : false;
-            categoryLabels[i-1].fillColor = i === visibleIndex ? 'red' : 'black';
+            i === visibleIndex ? categoryLabels[i-1].select() : categoryLabels[i-1].unselect();
         }
     }
 
