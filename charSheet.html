@@ -20,13 +20,13 @@
         console.dir("skillData: " + skillData);
         console.dir("size: " + size);
 
-        var barChart = new Group();   
+        var barChart = new Group();
 
         var generateFromData = function(size)
         {
             var barHeight = (size.height/skillData.length);
             var x = 0;
-            var initialY = 0
+            var initialY = 0;
             var y = initialY;
             var maxSkillAmount = 2000; // dynamically calculate this in the future
             var totalBarLength = (size.width-(x*2));
@@ -79,6 +79,8 @@
         }
 
         generateFromData(size);
+
+        console.dir("group:" + barChart);
         return barChart;
     }
 
@@ -119,6 +121,79 @@
         }
 
         return totalHours;
+    }
+
+    function BarGraph(pos, size, data, group)
+    {
+        var maxSkillAmount = 0;
+
+        //var yLen = ((monthCount+5) % 12) ? 2 : 5
+        for(var i = 0; i < data.length; i++)
+        {
+            maxSkillAmount = (data[i].hours > maxSkillAmount) ? data[i].hours : maxSkillAmount;
+        }
+
+        console.dir(maxSkillAmount);
+
+        var barHeight = (size.height/data.length) > 15 ? 15 : (size.height/data.length);
+
+        var x = 0;
+        var initialY = 0;
+        var y = initialY;
+        var totalBarLength = (size.width-(x*2));
+        var lengthOfOneHour = totalBarLength/maxSkillAmount;
+
+        // draw horizontal bars for skills
+        console.dir("data: " + data.length);
+
+        for(var i = 0; i < data.length; i++)
+        {
+            var path = new Path();
+            path.strokeColor = 'white';
+            path.fillColor = 'black';
+            var barLength = data[i].hours*lengthOfOneHour;
+            var textOffset = 8;
+            path.add(new Point(x, y));
+            path.add(new Point(x+barLength, y)); 
+            path.add(new Point(x+barLength, y+barHeight)); 
+            path.add(new Point(x, y+barHeight));     
+            path.closed = true;
+            group.addChild(path);
+            path.position += pos;
+
+            var skillText = new PointText(new Point((x+data[i].hours*lengthOfOneHour)+textOffset, y+barHeight-2));
+            skillText.fillColor = 'black';
+            skillText.justification = 'left';
+            skillText.fontSize = barHeight;
+            skillText.content = data[i].skillName + ':';
+            group.addChild(skillText);
+            skillText.position += pos;
+
+            y+=barHeight;
+        }
+
+        var rightLimit = Math.ceil(maxSkillAmount/100)*100;
+        var numVertBars = rightLimit/100;
+
+        for(var i = 0; i <= numVertBars; i++)
+        {
+            var vertPath = new Path();
+            vertPath.strokeColor = 'black';
+            var xPos = x+(totalBarLength/numVertBars)*i;
+            vertPath.add(new Point(xPos, initialY-barHeight));
+            vertPath.add(new Point(xPos, size.height));
+            vertPath.opacity = 0.3;
+            group.addChild(vertPath);
+            vertPath.position += pos;
+
+            var skillAmountLabel = new PointText(new Point(xPos-40, size.height/2));
+            skillAmountLabel.fillColor = 'black';
+            skillAmountLabel.content = ((maxSkillAmount/(numVertBars))*i) + ' hours';
+            skillAmountLabel.rotate(90);
+            skillAmountLabel.opacity = 0.3;
+            group.addChild(skillAmountLabel);
+            skillAmountLabel.position += pos;
+        }
     }
 
     function BoxText(text, pos, clickFunc, group)
@@ -196,7 +271,7 @@
         this.name = text;
         boxText.name = text;
         boxTextBorder.name = text;
-        
+
         if(group)
         {
             group.addChild(boxTextBorder);
@@ -590,11 +665,14 @@
         projectDetailGrouping.addChild(group);
 
         // draw skills used graph
-        var graph = createBarGraph(response.get("SkillsUsed"), new Size(200,100));
-        graph.name = 'graph';
-        projectDetailGrouping.position.x += canvas.width - 200;
-        projectDetailGrouping.addChild(graph);
+        //var graph = createBarGraph(response.get("SkillsUsed"), new Size(200,100));
+        console.dir("response:" + response);
+        console.dir("skills used:" + response.get("SkillsUsed"));
 
+        var graph = new BarGraph(new Point(-150,550), new Size(200,100), response.get("SkillsUsed").skills, projectDetailGrouping);
+        graph.name = 'graph';
+        //graph.position.x += 100;
+        projectDetailGrouping.position.x += canvas.width - 200;
         projectDetailGrouping.visible = true;
     }
     function drawProjectsOnTimeLine(lineLength, response)
