@@ -930,7 +930,7 @@
         'http//liaminjapan.github.io/', 
         ''].reverse();
 
-        var imageLinks = ['','mail.png','twitter.png','github.png','linkedin.png','blog.png','phone.png'];
+        var imageLinks = ['','mail.png','twitter.png','github.png','linkedin.jpeg','blog.jpeg','phone.png'].reverse();
 
         for(var i = 0; i < contactInfo.length; i++)
         {
@@ -942,7 +942,9 @@
             contactText.content = contactInfo[i];
 
             var image = new Raster(imageLinks[i]);
-            image.position = new Point((contactText.position.x - 32),contactText.position.y);
+            image.scale(0.5);
+            image.name = i;
+            image.position = new Point((contactText.position.x - 96),contactText.position.y);
 
             var contactLinkClicked = function ()
             {
@@ -956,6 +958,7 @@
             };
 
             contactText.onMouseDown = contactLinkClicked;
+            image.onMouseDown = contactLinkClicked;
 
         }  
     }
