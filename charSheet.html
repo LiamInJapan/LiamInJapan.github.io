@@ -920,15 +920,43 @@
         var contactsTextSpacing = 18;
         
         var contactInfo = ['Want to collaborate?\nHire me?\nFund a project?\nGet in touch!',
-        'mail@liam-conroy.com','@LiamInJapan','@LiamInJapan','LinkedIn','+81 (0)80 4068 1273'].reverse();
+        'mail@liam-conroy.com','@LiamInJapan','@LiamInJapan','LinkedIn', 'Blog','+81 (0)80 4068 1273'].reverse();
+
+        var contactLinks = ['', 
+        'mailto:mail@liam-conroy?subject=Hello!&body=Hello!', 
+        'https://twitter.com/LiamInJapan', 
+        'https://github.com/LiamInJapan', 
+        'https://www.linkedin.com/profile/view?id=AAMAAAC8ZG4BuOY-TNoiQ1tT4TgkOVvYNCRNotM&trk=hp-identity-name', 
+        'http//liaminjapan.github.io/', 
+        ''].reverse();
+
+        var imageLinks = ['','mail.png','twitter.png','github.png','linkedin.png','blog.png','phone.png'];
 
         for(var i = 0; i < contactInfo.length; i++)
         {
             var yOffset = (i === contactInfo.length-1) ? ((contactsTextSpacing*(i+1))+60) : (contactsTextSpacing*(i+1));
-            var mailText = new PointText(new Point(crossoverPoint.x/2, canvas.height-yOffset));
-            mailText.fillColor = 'black';
-            mailText.justification = 'center';
-            mailText.content = contactInfo[i];
+            var contactText = new PointText(new Point(crossoverPoint.x/2, canvas.height-yOffset));
+            contactText.fillColor = 'black';
+            contactText.justification = 'center';
+            contactText.name = i;
+            contactText.content = contactInfo[i];
+
+            var image = new Raster(imageLinks[i]);
+            image.position = new Point((contactText.position.x - 32),contactText.position.y);
+
+            var contactLinkClicked = function ()
+            {
+                var link = contactLinks[this.name];
+                console.dir("this.name: " + this.name);
+                console.dir("link: " + link);
+                //var mailto_link = 'mailto:' + email + '?subject=' + subject + '&body=' + body_message;
+                //var win = window.open(link, 'emailWindow');
+                //if (win && win.open && !win.closed) win.close();
+                window.open(link, 'emailWindow');
+            };
+
+            contactText.onMouseDown = contactLinkClicked;
+
         }  
     }
 

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Minimum Viable Portfolio"
-date:   2016-01-02 19:46:08
+date:   2016-01-06 19:46:08
 categories: website
 ---
 
