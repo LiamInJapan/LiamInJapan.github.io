@@ -204,6 +204,7 @@
 
         var boxText = new PointText(pos);
         boxText.fillColor = 'black';
+        boxText.justification = 'center';
         boxText.content = text;
 
         var boxTextBorder = new Path();
@@ -216,6 +217,7 @@
         boxTextBorder.add(new Point(pos.x+boxText.bounds.width+2, pos.y-boxText.bounds.height));
         boxTextBorder.add(new Point(pos.x-2, pos.y-boxText.bounds.height));     
         boxTextBorder.closed = true;
+        boxTextBorder.position.x -= boxText.bounds.width/2; // this is to offset for the text justification
 
         boxTextBorder.addChild(boxText);
         boxTextBorder.sendToBack();
@@ -810,8 +812,12 @@
 
         var y = crossoverPoint.y-13;
 
+        console.dir("cat dict" + categoriesDict);
+
         _.each(categoriesDict, function(category)
         {
+            console.dir("*** TICK TOCK ***:" + category);
+
             var changeCategory = function() 
             {
                 console.dir(this);
@@ -820,7 +826,7 @@
             };
 
             var categoryText = new BoxText(category.key, new Point(crossoverPoint.x/2, y), changeCategory);
-            categoryText.justification = 'right';
+            categoryText.justification = 'center';
             categoryText.overrideName(category.key);
             y += 16;
 
@@ -938,18 +944,18 @@
             var contactText = new PointText(new Point(crossoverPoint.x/2, canvas.height-yOffset));
             contactText.fillColor = 'black';
             contactText.justification = 'center';
-            contactText.name = i;
+            contactText.name = toString(i+10);  // ugly offset hack to make namespace not collide...
             contactText.content = contactInfo[i];
 
             var image = new Raster(imageLinks[i]);
             image.scale(0.5);
-            image.name = i;
+            image.name = toString(i+10);
             image.position = new Point((contactText.position.x - 96),contactText.position.y);
 
             var contactLinkClicked = function ()
             {
-                var link = contactLinks[this.name];
-                console.dir("this.name: " + this.name);
+                var link = contactLinks[parseInt(this.name)-10];
+                console.dir("this.name: " + parseInt(this.name)-10);
                 console.dir("link: " + link);
                 //var mailto_link = 'mailto:' + email + '?subject=' + subject + '&body=' + body_message;
                 //var win = window.open(link, 'emailWindow');
