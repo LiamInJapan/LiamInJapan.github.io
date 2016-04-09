@@ -6,7 +6,6 @@
     <script src='http://www.parsecdn.com/js/parse-1.6.12.min.js'></script>
     <script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjs/2.5.0/math.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/javascript-state-machine/2.0.0/state-machine.min.js'></script>
 	<script type='text/paperscript' canvas='canvas'>
     
     'use strict';
@@ -199,84 +198,36 @@
 
     function BoxText(text, pos, clickFunc, group)
     {
-        var fsm = StateMachine.create(
-        {
-            initial: 'unselected',
-
-            events: 
-            [
-                { name: 'select',  from: 'unselected',  to: 'selected' },
-                { name: 'load', from: 'selected', to: 'loading'    },
-                { name: 'loadFinish',  from: 'loading',    to: 'loaded' },
-                { name: 'loadConclude', from: 'loaded', to: 'selected'  },
-                { name: 'unselect', from: 'selected', to: 'unselected'  }
-            ],
-            callbacks:
-            {
-                onselect:       function(event, from, to) 
-                { 
-                    console.dir("onselect"); 
-                    selected = true;
-                    this.boxText.fillColor = 'red';
-                    this.boxTextBorder.fillColor = 'red';
-                    fsm.load();             
-                },
-                onload:         function(event, from, to) 
-                { 
-                    console.dir("onload");
-                    this.boxText.content = "loading...";       
-                },
-                onloadFinish:   function(event, from, to)      
-                { 
-                    console.dir("onloadFinish");
-                    this.boxText.content = "loaded!";
-                    fsm.loadConclude();    
-                },
-                onloadConclude: function(event, from, to)      
-                { 
-                    console.dir("onloadConclude");
-                },
-                onunselect:     function(event, from, to)      
-                { 
-                    console.dir("onunselect"); 
-                    selected = false;
-                    this.boxText.fillColor = 'black';
-                    this.boxTextBorder.fillColor = 'white';    
-                },
-            }
-
-        });
-
         var selected = false;
 
         var snd = new Audio("beep.mp3"); // buffers automatically when created
 
-        this.boxText = new PointText(pos);
-        this.boxText.fillColor = 'black';
-        this.boxText.justification = 'center';
-        this.boxText.content = text;
+        var boxText = new PointText(pos);
+        boxText.fillColor = 'black';
+        boxText.justification = 'center';
+        boxText.content = text;
 
-        this.boxTextBorder = new Path();
-        this.boxTextBorder.name = text;
-        this.boxTextBorder.strokeColor = 'white';
-        this.boxTextBorder.fillColor = 'white';
-        this.boxTextBorder.opacity = 0.3;
-        this.boxTextBorder.add(pos.x-2, pos.y+3); 
-        this.boxTextBorder.add(new Point(pos.x+this.boxText.bounds.width+2, pos.y+3)); 
-        this.boxTextBorder.add(new Point(pos.x+this.boxText.bounds.width+2, pos.y-this.boxText.bounds.height));
-        this.boxTextBorder.add(new Point(pos.x-2, pos.y-this.boxText.bounds.height));     
-        this.boxTextBorder.closed = true;
-        this.boxTextBorder.position.x -= this.boxText.bounds.width/2; // this is to offset for the text justification
+        var boxTextBorder = new Path();
+        boxTextBorder.name = text;
+        boxTextBorder.strokeColor = 'white';
+        boxTextBorder.fillColor = 'white';
+        boxTextBorder.opacity = 0.3;
+        boxTextBorder.add(pos.x-2, pos.y+3); 
+        boxTextBorder.add(new Point(pos.x+boxText.bounds.width+2, pos.y+3)); 
+        boxTextBorder.add(new Point(pos.x+boxText.bounds.width+2, pos.y-boxText.bounds.height));
+        boxTextBorder.add(new Point(pos.x-2, pos.y-boxText.bounds.height));     
+        boxTextBorder.closed = true;
+        boxTextBorder.position.x -= boxText.bounds.width/2; // this is to offset for the text justification
 
-        this.boxTextBorder.addChild(this.boxText);
-        this.boxTextBorder.sendToBack();
+        boxTextBorder.addChild(boxText);
+        boxTextBorder.sendToBack();
     
         var test = "************** TEST *******************";
 
         this.overrideName = function(name)
         {
-            this.boxText.name = name;
-            this.boxTextBorder.name = name;
+            boxText.name = name;
+            boxTextBorder.name = name;
         };
 
         this.enter = function()
@@ -284,7 +235,7 @@
             if(!selected)
             {
                 console.dir("Enter");
-                this.boxTextBorder.fillColor = 'grey';
+                boxTextBorder.fillColor = 'grey';
                 snd.play();    
             }
         };
@@ -294,48 +245,41 @@
             if(!selected)
             {
                 console.dir("Leave");
-                this.boxTextBorder.fillColor = 'white';    
+                boxTextBorder.fillColor = 'white';    
             }
         };
 
         this.select = function()
         {
-            fsm.select();
+            selected = true;
+            boxText.fillColor = 'red';
+            boxTextBorder.fillColor = 'red';
         }
 
         this.unselect = function()
         {
-            fsm.unselect();   
+            selected = false;
+            boxText.fillColor = 'black';
+            boxTextBorder.fillColor = 'white';
         }
 
-        this.loadConclude = function()
-        {
-            fsm.loadConclude();
-        }
-
-        /*boxTextBorder.onMouseEnter = this.enter;
+        boxTextBorder.onMouseEnter = this.enter;
         boxTextBorder.onMouseLeave = this.leave;
         boxText.onMouseEnter = this.enter;
         boxText.onMouseLeave = this.leave;
         boxText.onMouseDown = clickFunc;
-        boxTextBorder.onMouseDown = clickFunc;*/
-
-        this.onMouseEnter = this.enter;
-        this.onMouseLeave = this.leave;
-        this.onMouseDown = clickFunc;
+        boxTextBorder.onMouseDown = clickFunc;
 
         this.name = text;
-        this.boxText.name = text;
-        this.boxTextBorder.name = text;
+        boxText.name = text;
+        boxTextBorder.name = text;
 
         if(group)
         {
-            group.addChild(this.boxTextBorder);
-            group.addChild(this.boxText);
+            group.addChild(boxTextBorder);
+            group.addChild(boxText);
             console.dir("added to group " + group);
         }
-
-        console.dir("BoxText THIS: " + this);
     };
 
 
@@ -350,7 +294,7 @@
         var x = initialX;
         var initialY = 90;
         var y = initialY;
-        var yStep = 30;
+        var yStep = 70;
         var xStep = 180;
         var count = 0;
 
@@ -375,7 +319,6 @@
 
             console.dir("***************:" + projectsOfStatusGrouping);
             var projectNameText = new BoxText(projectData[i].get("Name"), badgePos, boxClicked, projectsOfStatusGrouping);
-
             //console.dir("name:" + projectNameText.name);
 
             y+=yStep;
@@ -529,16 +472,13 @@
         {
             var changeSkillCategory = function() 
             {
-                console.dir("in changeSkillCategory. This is: " + this);
+                console.dir("in changeSkillCategory");
                 project.layers[SKILLS].children['skillBarGroup'].removeChildren();
                 project.layers[SKILLS].children['skillLabelGroup'].removeChildren();
 
-                var objRef = this;
                 //updateLayers(category.value);
                 Parse.Cloud.run('getDataOfType', { 'dataType': 'skills', 'filter' : this.content }).then(function(response) 
                 {
-                    console.dir("parent:" + objRef.fsm);
-                    objRef.loadConclude();
                     console.log('response! ' + response);
                     project.layers[SKILLS].activate();
                     drawSkillLabels(response);
@@ -572,7 +512,6 @@
             var skillCategoryText = new BoxText(categoryData[skillCategory].category, new Point(x,y), changeSkillCategory, skillCategoryGroup);
             skillCategoryText.overrideName("TEST");
             skillCategoryLabels.push(skillCategoryText);
-            //skillCategoryText.onMouseDown(changeSkillCategory);
             y+=yStep;
         }
 
@@ -697,11 +636,11 @@
         projectPlatform.content = "Platform: " + response.get("Platform");
         projectDetailGrouping.addChild(projectPlatform)
 
-        var projectRole = new PointText(new Point(0, 400));
+        var projectStatus = new PointText(new Point(0, 400));
         projectStatus.fillColor = 'black';
         projectStatus.justification = 'center';
-        projectStatus.content = "Role: " + response.get("Role");
-        projectDetailGrouping.addChild(projectRole)
+        projectStatus.content = "Status: " + response.get("Status");
+        projectDetailGrouping.addChild(projectStatus)
 
         var projectDescription = new PointText(new Point(0, 500));
         projectDescription.fillColor = 'black';
@@ -740,7 +679,7 @@
     }
     function drawProjectsOnTimeLine(lineLength, response)
     {
-        var initialY = canvas.height-50;
+        var initialY = canvas.height-200;
         var currentY = initialY;
         var xStart = 10;
 
@@ -877,16 +816,17 @@
 
         _.each(categoriesDict, function(category)
         {
+            console.dir("*** TICK TOCK ***:" + category);
+
             var changeCategory = function() 
             {
-                console.dir("in change category! " + this);
+                console.dir(this);
                 updateLayers(category.value);
                 this.fillColor = 'red';
             };
 
             var categoryText = new BoxText(category.key, new Point(crossoverPoint.x/2, y), changeCategory);
             categoryText.justification = 'center';
-            categoryText.onMouseDown = changeCategory;
             categoryText.overrideName(category.key);
             y += 16;
 
@@ -940,7 +880,6 @@
     
     function updateLayers(visibleIndex)
     {
-        console.dir(categoryLabels);
         for(var i = 1; i < project.layers.length; i++)
         {
             project.layers[i].visible = i === visibleIndex ? true : false;
