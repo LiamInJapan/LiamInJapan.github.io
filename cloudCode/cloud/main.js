@@ -9,57 +9,8 @@ Parse.Cloud.define("hello", function(request, response)
 	response.success("Hello world!");
 });
 
-/*
-interface:
-
-updateDB
-getSkillCategories
-getListOfSkillsAndTimes
-getTimelineOfProjects
-getProjects
-
-response.success(returnArray);
-					  	},
-					  	error: function(skillCategoryObject, error) 
-					  	{
-					    	console.log('Failed to create new object, with error code: ' + error);
-					    	response.error("Failed at categories");
-
-*/
-
 var processedData;
 var allProjects = [];
-
-
-
-    /*(
-    {
-    	success: function(results) 
-        {
-        	
-
-	       	processedData(dataType);
-        },
-        error: function(error) 
-        {
-        	//response.error("Error in updateDB: " + error.code + " " + error.message);
-        }
-    });
-});*/
-
-/*
-{"skills":[{"category":"Design","hours":100,"skillName":"Flash"},
-{"category":"Design","hours":100,"skillName":"Photoshop"},
-{"category":"Design","hours":250,"skillName":"Game Design"},
-{"category":"Programming","hours":250,"skillName":"Pipeline Design"},
-{"category":"Audio","hours":300,"skillName":"Cubase"},
-{"category":"Audio","hours":100,"skillName":"MIDI"},
-{"category":"Programming","hours":50,"skillName":"LUA"},
-{"category":"Programming","hours":50,"skillName":"C/C++"},
-{"category":"Audio","hours":200,"skillName":"Drumming"},
-{"category":"Project","hours":100,"skillName":"Excel"}]}
-*/
-
 
 function fetchCategoriesAndTimes()
 {
@@ -217,11 +168,6 @@ Parse.Cloud.define("getDataOfType", function(request, response)
     	{
     		for (var i = 0; i < results.length; i++) 
             {
-            	// chop down date into simple format
-            	//var d = new Date(results[i].get("StartDate"));
-            	//var e = d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + (d.getUTCDate());
-            	//console.log(results[i].get("StartDate").getTimezoneOffset());
-            	//results[i].set("StartDate", e);
             	allProjects.push(results[i]);
             }
     	},
