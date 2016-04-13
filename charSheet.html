@@ -732,6 +732,8 @@
             if(project.get('Status') === 'Current')
                 project.set('EndDate', new Date());
 
+            var hightlight = project.get('Highlight');
+
             var lengthInMonths = getNumberOfMonths(project.get('StartDate'), project.get('EndDate'));
             var lengthInLine = lengthInMonths*oneMonthLength;
             var lengthInMonthsSinceBeginning = getNumberOfMonths(firstDate, project.get('StartDate'));
@@ -747,25 +749,30 @@
             path.add(new Point(xOffset,currentY-barHeight));
             path.closed = true;
             
-            var projectsLabel = new PointText(new Point(xOffset+lengthInLine+2, currentY));
-            projectsLabel.fillColor = 'black';
-            projectsLabel.content = project.get('Name');
-
-            var getProjectInfo = function(event) 
+            if(!highlight)
+                path.opacity = 0.3
+            else
             {
-                console.log('click!');
-                window.open(project.get('URL'), '_blank');
-                this.active = true;
-            };
+                var projectsLabel = new PointText(new Point(xOffset+lengthInLine+2, currentY));
+                projectsLabel.fillColor = 'black';
+                projectsLabel.content = project.get('Name');
 
-            path.onMouseDown = getProjectInfo;
-            projectsLabel.onMouseDown = getProjectInfo;
-            
-            var point = new Path.Circle(new Point(xOffset, initialY), 3);
-            point.fillColor = 'black';
-            point.strokeColor = 'black';    
+                var getProjectInfo = function(event) 
+                {
+                    console.log('click!');
+                    window.open(project.get('URL'), '_blank');
+                    this.active = true;
+                };
 
-            currentY -= barHeight;
+                path.onMouseDown = getProjectInfo;
+                projectsLabel.onMouseDown = getProjectInfo;
+                
+                var point = new Path.Circle(new Point(xOffset, initialY), 3);
+                point.fillColor = 'black';
+                point.strokeColor = 'black';    
+
+                currentY -= barHeight;
+            }
         });
     }
     
