@@ -749,10 +749,10 @@
             path.add(new Point(xOffset,currentY-barHeight));
             path.closed = true;
             
-            if(!highlight)
-                path.opacity = 0.3
-            else
-            {
+            //if(!highlight)
+            //    path.opacity = 0.3
+            //else
+            //{
                 var projectsLabel = new PointText(new Point(xOffset+lengthInLine+2, currentY));
                 projectsLabel.fillColor = 'black';
                 projectsLabel.content = project.get('Name');
@@ -770,7 +770,7 @@
                 var point = new Path.Circle(new Point(xOffset, initialY), 3);
                 point.fillColor = 'black';
                 point.strokeColor = 'black';
-            }
+            //}
 
             currentY -= barHeight;
         });
