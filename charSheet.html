@@ -740,7 +740,7 @@
             var path = new Path();
 
             path.strokeColor = 'black';
-            path.fillColor = 'white';
+            path.fillColor = project.get('Color');
             path.add(new Point(xOffset, currentY)); 
             path.add(new Point(xOffset+lengthInLine,currentY));
             path.add(new Point(xOffset+lengthInLine,currentY-barHeight));
