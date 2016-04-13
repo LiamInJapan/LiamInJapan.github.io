@@ -751,14 +751,14 @@
             
             if(!highlight)
             {
-                path.opacity = 0.3
+                path.opacity = 0.1
             }
             else
             {
                 var projectsLabel = new PointText(new Point(xOffset+lengthInLine+2, currentY));
                 projectsLabel.fillColor = 'black';
                 projectsLabel.content = project.get('Name');
-                projectsLabel.fontSize = 20;
+                projectsLabel.fontSize = 36;
 
                 var getProjectInfo = function(event) 
                 {
