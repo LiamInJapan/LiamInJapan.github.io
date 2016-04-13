@@ -732,7 +732,7 @@
             if(project.get('Status') === 'Current')
                 project.set('EndDate', new Date());
 
-            var hightlight = project.get('Highlight');
+            var highlight = project.get('Highlight');
 
             var lengthInMonths = getNumberOfMonths(project.get('StartDate'), project.get('EndDate'));
             var lengthInLine = lengthInMonths*oneMonthLength;
