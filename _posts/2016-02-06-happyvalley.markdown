@@ -1,5 +1,6 @@
 ---
 layout: post
+type: current
 title:  "Happy Valley"
 date:   2016-02-06 15:08:10 -0500
 img: img/portfolio/HappyValley.png

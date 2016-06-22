@@ -1,9 +1,12 @@
 ---
 layout: post
+type: current
 title:  "AgriPlay"
 date:   2016-02-04 15:08:10 -0500
 img: img/portfolio/AgriPlay.png
 modalID: modalAgriPlay
 category: Programming, Consultancy
 ---
-A project to try and encourage people to get back into farming through fun gameplay mechanics.
+A project to try and encourage people to get back into farming through fun gameplay mechanics. Art provided by the very talented [Hawken King][hawken-link]
+
+[hawken-link]: http://www.hawkenking.com/
