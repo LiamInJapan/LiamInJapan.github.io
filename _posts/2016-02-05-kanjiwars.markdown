@@ -3,7 +3,7 @@ layout: post
 title:  "Kanji Wars"
 date:   2016-02-05 15:08:10 -0500
 img: img/portfolio/KanjiWars.png
-modalID: modalCake
+modalID: modalKanjiWars
 category: Game Design, Programming
 ---
 
