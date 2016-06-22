@@ -1,13 +1,28 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
+
 # Site settings
-title: Liam's Development Blog
+title: Liam Conroys Portfolio
 email: mail@liam-conroy.com
 description: > # this means to ignore newlines until "baseurl:"
-  Programming blog of Liam Conroy, freelance software engineer 
-  living and working in Kyoto. 
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://liaminjapan.github.io" # the base hostname & protocol for your site
+  Software Engineer - Game Designer - Vacation Rental Manager
+baseurl: "/startbootstrap-freelancer-jekyll" # the subpath of your site, e.g. /blog
+url: "http://www.liam-conroy.com/" # the base hostname & protocol for your site
+
+# Social media profiles - feel free to add more here
 twitter_username: LiamInJapan
 github_username:  LiamInJapan
+facebook_username: liam.conroy3
+
+# Address information
+address_street: Share Music
+address_city: Sakyo-Ku
+address_state: Kyoto
+address_zip: 606-8414
 
 # Build settings
 markdown: kramdown
