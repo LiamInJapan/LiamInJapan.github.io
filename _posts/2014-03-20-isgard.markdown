@@ -1,0 +1,14 @@
+---
+layout: post
+type: on-hold
+title:  "Isgard"
+date:   2014-03-20 15:08:10 -0500
+img: img/portfolio/Isgard.png
+modalID: modalIsgard
+category: Programming, Game Design
+---
+
+An original concept by [Hawken King][hawken-link], [Isgard][isgard-link] a kind of 2d Mechwarrior: Merenaries meets Counter Strike style team-on-team competitive blaster. I jumped in on this and worked a little on controls and network. It soon became apparent it was way too ambitious to tackle with 2 people. It's a great concept though and I'd be very happy to work on this again if funding ever came up.
+
+[hawken-link]: http://www.hawkenking.com/
+[isgard-link]: http://www.playisgard.com/

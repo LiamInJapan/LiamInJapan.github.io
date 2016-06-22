@@ -1,0 +1,13 @@
+---
+layout: post
+type: on-hold
+title:  "Virius"
+date:   2013-12-20 15:08:10 -0500
+img: img/portfolio/Virius.png
+modalID: modalVirius
+category: Programming, Game Design
+---
+
+Virius was an original concept I worked on for [Vitei Backroom][vitei-backroom-link]. They decided not to continue the concept, but I plan to spend some of my own time in the future revisiting this.
+
+[vitei-backroom-link]: http://www.vitei.com/
