@@ -4,10 +4,10 @@
     <title>Liam Conroys Portfolio</title>
     <description>Software Engineer - Game Designer - Vacation Rental Manager
 </description>
-    <link>http://www.liam-conroy.com//startbootstrap-freelancer-jekyll/</link>
-    <atom:link href="http://www.liam-conroy.com//startbootstrap-freelancer-jekyll/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 22 Jun 2016 19:12:16 +0900</pubDate>
-    <lastBuildDate>Wed, 22 Jun 2016 19:12:16 +0900</lastBuildDate>
+    <link>http://www.liam-conroy.com//</link>
+    <atom:link href="http://www.liam-conroy.com//feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 22 Jun 2016 19:29:40 +0900</pubDate>
+    <lastBuildDate>Wed, 22 Jun 2016 19:29:40 +0900</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
     
       <item>
@@ -16,8 +16,8 @@
 
 </description>
         <pubDate>Sun, 07 Feb 2016 05:08:10 +0900</pubDate>
-        <link>http://www.liam-conroy.com//startbootstrap-freelancer-jekyll/programming/2016/02/07/happyvalley.html</link>
-        <guid isPermaLink="true">http://www.liam-conroy.com//startbootstrap-freelancer-jekyll/programming/2016/02/07/happyvalley.html</guid>
+        <link>http://www.liam-conroy.com//programming/2016/02/07/happyvalley.html</link>
+        <guid isPermaLink="true">http://www.liam-conroy.com//programming/2016/02/07/happyvalley.html</guid>
         
         
         <category>Programming</category>
@@ -30,8 +30,8 @@
 
 </description>
         <pubDate>Sat, 06 Feb 2016 05:08:10 +0900</pubDate>
-        <link>http://www.liam-conroy.com//startbootstrap-freelancer-jekyll/game%20design,%20programming/2016/02/06/kanjiwars.html</link>
-        <guid isPermaLink="true">http://www.liam-conroy.com//startbootstrap-freelancer-jekyll/game%20design,%20programming/2016/02/06/kanjiwars.html</guid>
+        <link>http://www.liam-conroy.com//game%20design,%20programming/2016/02/06/kanjiwars.html</link>
+        <guid isPermaLink="true">http://www.liam-conroy.com//game%20design,%20programming/2016/02/06/kanjiwars.html</guid>
         
         
         <category>Game Design, Programming</category>
@@ -43,8 +43,8 @@
         <description>&lt;p&gt;A project to try and encourage people to get back into farming through fun gameplay mechanics.&lt;/p&gt;
 </description>
         <pubDate>Fri, 05 Feb 2016 05:08:10 +0900</pubDate>
-        <link>http://www.liam-conroy.com//startbootstrap-freelancer-jekyll/programming,%20consultancy/2016/02/05/agriplay.html</link>
-        <guid isPermaLink="true">http://www.liam-conroy.com//startbootstrap-freelancer-jekyll/programming,%20consultancy/2016/02/05/agriplay.html</guid>
+        <link>http://www.liam-conroy.com//programming,%20consultancy/2016/02/05/agriplay.html</link>
+        <guid isPermaLink="true">http://www.liam-conroy.com//programming,%20consultancy/2016/02/05/agriplay.html</guid>
         
         
         <category>Programming, Consultancy</category>
