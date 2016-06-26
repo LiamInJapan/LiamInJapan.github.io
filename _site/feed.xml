@@ -6,13 +6,13 @@
 </description>
     <link>http://www.liam-conroy.com//</link>
     <atom:link href="http://www.liam-conroy.com//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 23 Jun 2016 02:35:05 +0900</pubDate>
-    <lastBuildDate>Thu, 23 Jun 2016 02:35:05 +0900</lastBuildDate>
+    <pubDate>Sun, 26 Jun 2016 20:51:48 +0900</pubDate>
+    <lastBuildDate>Sun, 26 Jun 2016 20:51:48 +0900</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
     
       <item>
         <title>Happy Valley</title>
-        <description>&lt;p&gt;A current project in conjunction with &lt;a href=&quot;http://www.mellimited.com/&quot;&gt;ME Limited&lt;/a&gt; to teach young learners of English as a second language to help learn english. Set in the &lt;a href=&quot;http://www.happyvalley.tv/&quot;&gt;Happy Valley&lt;/a&gt; universe.&lt;/p&gt;
+        <description>&lt;p&gt;A current project in conjunction with &lt;a href=&quot;http://www.mellimited.com/&quot;&gt;ME Limited&lt;/a&gt; to teach young learners of English as a second language to help learn basic English skills. Set in the &lt;a href=&quot;http://www.happyvalley.tv/&quot;&gt;Happy Valley&lt;/a&gt; universe, a colorful and playful world perfect for young learners.&lt;/p&gt;
 
 </description>
         <pubDate>Sun, 07 Feb 2016 05:08:10 +0900</pubDate>
@@ -40,7 +40,7 @@
     
       <item>
         <title>Kanji Wars</title>
-        <description>&lt;p&gt;Kanji Wars is a personal project to help anyone study Japanese in a fun and amusing way. Art is provided by the very talented &lt;a href=&quot;http://beresnev.design/&quot;&gt;Oleg Beresnev&lt;/a&gt;&lt;/p&gt;
+        <description>&lt;p&gt;Kanji Wars is a personal project to help anyone study Japanese in a fun and amusing way. Art is provided by the very talented &lt;a href=&quot;http://beresnev.design/&quot;&gt;Oleg Beresnev&lt;/a&gt;. Development has started recently, and we hope to release an early version to teach Hiragana and Katakana within a couple of months.&lt;/p&gt;
 
 </description>
         <pubDate>Sat, 06 Feb 2016 05:08:10 +0900</pubDate>
@@ -54,7 +54,9 @@
     
       <item>
         <title>AgriPlay</title>
-        <description>&lt;p&gt;A project to try and encourage people to get back into farming through fun gameplay mechanics. Art provided by the very talented &lt;a href=&quot;http://www.hawkenking.com/&quot;&gt;Hawken King&lt;/a&gt;&lt;/p&gt;
+        <description>&lt;p&gt;A project to try and encourage people to get into farming through fun gameplay mechanics. Sensors pull data from the soil, and generate events for groups to tackle. Like Farmville but with real farming activities instead of endless clicking.&lt;/p&gt;
+
+&lt;p&gt;Art provided by the very talented &lt;a href=&quot;http://www.hawkenking.com/&quot;&gt;Hawken King&lt;/a&gt;&lt;/p&gt;
 
 </description>
         <pubDate>Fri, 05 Feb 2016 05:08:10 +0900</pubDate>
@@ -68,7 +70,7 @@
     
       <item>
         <title>Slow Escape</title>
-        <description>&lt;p&gt;Slow Escape was created in conjunction with Pauline Machabert and Tom as part of a Global Game Jam. I worked on it for a few weeks after too before things got too busy with other projects. However I definitely think there is a fun game in here (and also one with scope that could be carried out by only a couple of people) and hope to revisit it in the not too distant future.&lt;/p&gt;
+        <description>&lt;p&gt;&lt;a href=&quot;http://globalgamejam.org/2015/games/slow-escape&quot;&gt;Slow Escape&lt;/a&gt; was created in conjunction with Pauline Machabert and Tom Hart as part of a Global Game Jam. I worked on it for a few weeks after too before things got too busy with other projects. However I definitely think there is a fun game in here (and also one with scope that could be carried out by only a couple of people) and hope to revisit it in the not too distant future.&lt;/p&gt;
 
 </description>
         <pubDate>Wed, 21 Jan 2015 05:08:10 +0900</pubDate>
@@ -105,6 +107,20 @@
         
         
         <category>Programming, Game Design</category>
+        
+      </item>
+    
+      <item>
+        <title>Rakuten</title>
+        <description>&lt;p&gt;I worked at &lt;a href=&quot;http://www.rakuten.co.jp/&quot;&gt;Rakuten&lt;/a&gt; full time for a year, where I laid down build processes for the department. Working with Jenkins, Testflight and lots of bits and bobs of shell script and other tools, I built and automated processes to allow for the creation and distribution of potentially dozens of apps. I also did some work on the remake of the &lt;a href=&quot;https://itunes.apple.com/my/app/rakuten-shopping/id762167763?mt=8&quot;&gt;Rakuten Ichiba&lt;/a&gt; app as well as various libraries and apps for the department.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 21 Sep 2013 05:08:10 +0900</pubDate>
+        <link>http://www.liam-conroy.com//software%20engineer/2013/09/21/rakuten.html</link>
+        <guid isPermaLink="true">http://www.liam-conroy.com//software%20engineer/2013/09/21/rakuten.html</guid>
+        
+        
+        <category>Software Engineer</category>
         
       </item>
     

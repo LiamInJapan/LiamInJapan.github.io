@@ -7,6 +7,8 @@ img: img/portfolio/AgriPlay.png
 modalID: modalAgriPlay
 category: Programming, Consultancy
 ---
-A project to try and encourage people to get back into farming through fun gameplay mechanics. Art provided by the very talented [Hawken King][hawken-link]
+A project to try and encourage people to get into farming through fun gameplay mechanics. Sensors pull data from the soil, and generate events for groups to tackle. Like Farmville but with real farming activities instead of endless clicking.
+
+Art provided by the very talented [Hawken King][hawken-link]
 
 [hawken-link]: http://www.hawkenking.com/

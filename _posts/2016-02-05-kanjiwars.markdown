@@ -8,6 +8,6 @@ modalID: modalKanjiWars
 category: Game Design, Programming
 ---
 
-Kanji Wars is a personal project to help anyone study Japanese in a fun and amusing way. Art is provided by the very talented [Oleg Beresnev][oleg-link]
+Kanji Wars is a personal project to help anyone study Japanese in a fun and amusing way. Art is provided by the very talented [Oleg Beresnev][oleg-link]. Development has started recently, and we hope to release an early version to teach Hiragana and Katakana within a couple of months.
 
 [oleg-link]: http://beresnev.design/

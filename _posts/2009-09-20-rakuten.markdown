@@ -1,0 +1,14 @@
+---
+layout: post
+type: past
+title:  "Rakuten"
+date:   2013-09-20 15:08:10 -0500
+img: img/portfolio/Rakuten.png
+modalID: modalRakuten
+category: Software Engineer
+---
+
+I worked at [Rakuten][rakuten-link] full time for a year, where I laid down build processes for the department. Working with Jenkins, Testflight and lots of bits and bobs of shell script and other tools, I built and automated processes to allow for the creation and distribution of potentially dozens of apps. I also did some work on the remake of the [Rakuten Ichiba][rakuten-ichiba-app] app as well as various libraries and apps for the department.
+
+[rakuten-link]: http://www.rakuten.co.jp/
+[rakuten-ichiba-app]: https://itunes.apple.com/my/app/rakuten-shopping/id762167763?mt=8

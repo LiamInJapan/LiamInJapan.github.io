@@ -1,0 +1,13 @@
+---
+layout: post
+type: past
+title:  "Rock Revolution"
+date:   2008-06-20 15:08:10 -0500
+img: img/portfolio/RockRev.png
+modalID: modalRockRev
+category: Game Design
+---
+
+I worked on [Rock Revolution][rock-rev-link] as my first job out of University. It was a steep learning curve with plenty of opportunity for failure. I learned a lot.
+
+[rock-rev-link]: https://en.wikipedia.org/wiki/Rock_Revolution
