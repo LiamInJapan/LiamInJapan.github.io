@@ -7,8 +7,13 @@ img: img/portfolio/Tilterpillar.png
 modalID: modalTilterpillar
 category: Programming, Game Design
 ---
-Someone wrote as a review "[Tilterpillar][tilterpillar-link] game is like Zen" - "snake", for relaxing times.
-Made in conjunction with [Hawken King][hawken-link]. I made the initial prototype, he made the visuals. It was fun to make.
+Some reviews: 
+
+"[Tilterpillar][tilterpillar-link] game is like Zen"
+
+"Snake", for relaxing times.
+
+Made in conjunction with [Hawken King][hawken-link]. I made the initial prototype, he made the visuals. It was a fun project.
 
 [hawken-link]: http://www.hawkenking.com/
 [tilterpillar-link]: http://www.tilterpillar.com/

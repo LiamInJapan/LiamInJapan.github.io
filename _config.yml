@@ -11,7 +11,7 @@ email: mail@liam-conroy.com
 description: > # this means to ignore newlines until "baseurl:"
   Software Engineer - Game Designer - Vacation Rental Manager
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://www.liam-conroy.com/" # the base hostname & protocol for your site
+url: "http://liam-conroy.com/" # the base hostname & protocol for your site
 
 # Social media profiles - feel free to add more here
 twitter_username: LiamInJapan
