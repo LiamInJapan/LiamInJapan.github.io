@@ -2,7 +2,7 @@
 layout: post
 type: past
 title:  "Listen and Repeat"
-date:   2016-02-06 15:08:10 -0500
+date:   2013-11-06 15:08:10 -0500
 img: img/portfolio/ListenAndRepeat.png
 itunesURL: https://itunes.apple.com/us/app/listen-repeat/id852180537?mt=8 
 modalID: modalListenAndRepeat

@@ -2,7 +2,7 @@
 layout: post
 type: past
 title:  "Rock Revolution"
-date:   2008-06-20 15:08:10 -0500
+date:   2008-03-20 15:08:10 -0500
 img: img/portfolio/RockRev.png
 modalID: modalRockRev
 category: Game Design

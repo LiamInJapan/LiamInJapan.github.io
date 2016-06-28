@@ -1,0 +1,13 @@
+---
+layout: post
+type: past
+title:  "Pro Zombie Soccer"
+date:   2014-09-20 15:08:10 -0500
+img: img/portfolio/PZS.png
+modalID: modalPZS
+category: Programming
+---
+
+I ported [PZS][pzs-link] from iOS to Playstation Mobile. The libaries we're pretty awful to use, take-up by the community for it weak, and the conditions of my contract terrible. This never saw the light of day unfortunately, and I ended up working close to 1000 hours unpaid. A harsh lesson.
+
+[pzs-link]: http://www.prozombiesoccer.com/

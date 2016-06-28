@@ -2,7 +2,7 @@
 layout: post
 type: past
 title:  "Split Second"
-date:   2009-09-20 15:08:10 -0500
+date:   2008-09-20 15:08:10 -0500
 img: img/portfolio/SplitSecond.png
 modalID: modalSplitSecond
 category: Game Design
