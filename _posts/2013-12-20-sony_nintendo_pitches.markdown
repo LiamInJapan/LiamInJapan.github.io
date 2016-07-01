@@ -3,7 +3,7 @@ layout: post
 type: past
 title:  "Sony and Nintendo Pitches"
 date:   2013-12-20 15:08:10 -0500
-img: img/portfolio/SonyPitch.png
+img: img/portfolio/SonyNintendoPitch.png
 modalID: modalSonyPitch
 category: Game Design
 ---
