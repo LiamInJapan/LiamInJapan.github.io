@@ -1,3 +1,4 @@
+- Mail server is still broken!
 - Add analytics
 - Work out 404 issue with liam-conroy.com
 - Add in blog section
@@ -6,4 +7,5 @@
 - Add in skill bar charts to Modal popups
 - "Available on App Store" link
 - Add data for all apps available on the app store
-
+- Fix missing button graphics along bottom
+- Fix link colors in description
