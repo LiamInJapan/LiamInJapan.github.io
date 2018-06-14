@@ -1,0 +1,13 @@
+---
+layout: post
+type: current
+title:  "Neko Card"
+date:   2018-02-05 15:08:10 -0500
+img: img/portfolio/neko-card.png
+modalID: modalNekoCard
+category: Programming, Project Management, Art Direction, Sound Direction
+---
+
+An AR business card. Graphics by the very talented [Oleg Beresnev][oleg-link]. Programming and motion design by the very talented Owen Bennett. We hope to make this into a fully fledged service in the future with some secret ideas in store. Stay tuned!
+
+[oleg-link]: http://beresnev.design/
