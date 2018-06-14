@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Liam Conroy&#39;s Portfolio</title>
-    <description>Software Engineer - Game Designer - Vacation Rental Manager
+    <title>Liam Conroy's Portfolio</title>
+    <description>Software Engineer - Game Designer
 </description>
-    <link>http://liam-conroy.com//</link>
-    <atom:link href="http://liam-conroy.com//feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 01 Jul 2016 09:56:04 +0900</pubDate>
-    <lastBuildDate>Fri, 01 Jul 2016 09:56:04 +0900</lastBuildDate>
-    <generator>Jekyll v3.1.6</generator>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Mon, 20 Feb 2017 17:27:34 +0900</pubDate>
+    <lastBuildDate>Mon, 20 Feb 2017 17:27:34 +0900</lastBuildDate>
+    <generator>Jekyll v3.3.1</generator>
     
       <item>
         <title>Happy Valley</title>
@@ -16,8 +16,8 @@
 
 </description>
         <pubDate>Sun, 07 Feb 2016 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//programming/2016/02/07/happyvalley.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//programming/2016/02/07/happyvalley.html</guid>
+        <link>http://localhost:4000/programming/2016/02/07/happyvalley.html</link>
+        <guid isPermaLink="true">http://localhost:4000/programming/2016/02/07/happyvalley.html</guid>
         
         
         <category>Programming</category>
@@ -30,8 +30,8 @@
 
 </description>
         <pubDate>Sat, 06 Feb 2016 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//game%20design,%20programming/2016/02/06/kanjiwars.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//game%20design,%20programming/2016/02/06/kanjiwars.html</guid>
+        <link>http://localhost:4000/game%20design,%20programming/2016/02/06/kanjiwars.html</link>
+        <guid isPermaLink="true">http://localhost:4000/game%20design,%20programming/2016/02/06/kanjiwars.html</guid>
         
         
         <category>Game Design, Programming</category>
@@ -46,8 +46,8 @@
 
 </description>
         <pubDate>Fri, 05 Feb 2016 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//programming,%20consultancy/2016/02/05/agriplay.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//programming,%20consultancy/2016/02/05/agriplay.html</guid>
+        <link>http://localhost:4000/programming,%20consultancy/2016/02/05/agriplay.html</link>
+        <guid isPermaLink="true">http://localhost:4000/programming,%20consultancy/2016/02/05/agriplay.html</guid>
         
         
         <category>Programming, Consultancy</category>
@@ -60,8 +60,8 @@
 
 </description>
         <pubDate>Wed, 21 Jan 2015 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//programming,%20game%20design/2015/01/21/slow_ecape.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//programming,%20game%20design/2015/01/21/slow_ecape.html</guid>
+        <link>http://localhost:4000/programming,%20game%20design/2015/01/21/slow_ecape.html</link>
+        <guid isPermaLink="true">http://localhost:4000/programming,%20game%20design/2015/01/21/slow_ecape.html</guid>
         
         
         <category>Programming, Game Design</category>
@@ -74,8 +74,8 @@
 
 </description>
         <pubDate>Sun, 21 Sep 2014 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//programming/2014/09/21/pzs.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//programming/2014/09/21/pzs.html</guid>
+        <link>http://localhost:4000/programming/2014/09/21/pzs.html</link>
+        <guid isPermaLink="true">http://localhost:4000/programming/2014/09/21/pzs.html</guid>
         
         
         <category>Programming</category>
@@ -88,8 +88,8 @@
 
 </description>
         <pubDate>Sat, 21 Jun 2014 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//programming,%20game%20design/2014/06/21/isgard.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//programming,%20game%20design/2014/06/21/isgard.html</guid>
+        <link>http://localhost:4000/programming,%20game%20design/2014/06/21/isgard.html</link>
+        <guid isPermaLink="true">http://localhost:4000/programming,%20game%20design/2014/06/21/isgard.html</guid>
         
         
         <category>Programming, Game Design</category>
@@ -102,8 +102,8 @@
 
 </description>
         <pubDate>Sat, 21 Dec 2013 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//programming,%20game%20design/2013/12/21/virius.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//programming,%20game%20design/2013/12/21/virius.html</guid>
+        <link>http://localhost:4000/programming,%20game%20design/2013/12/21/virius.html</link>
+        <guid isPermaLink="true">http://localhost:4000/programming,%20game%20design/2013/12/21/virius.html</guid>
         
         
         <category>Programming, Game Design</category>
@@ -116,8 +116,8 @@
 
 </description>
         <pubDate>Sat, 21 Dec 2013 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//game%20design/2013/12/21/sony_nintendo_pitches.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//game%20design/2013/12/21/sony_nintendo_pitches.html</guid>
+        <link>http://localhost:4000/game%20design/2013/12/21/sony_nintendo_pitches.html</link>
+        <guid isPermaLink="true">http://localhost:4000/game%20design/2013/12/21/sony_nintendo_pitches.html</guid>
         
         
         <category>Game Design</category>
@@ -130,8 +130,8 @@
 
 </description>
         <pubDate>Thu, 07 Nov 2013 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//programming/2013/11/07/listen_and_repeat.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//programming/2013/11/07/listen_and_repeat.html</guid>
+        <link>http://localhost:4000/programming/2013/11/07/listen_and_repeat.html</link>
+        <guid isPermaLink="true">http://localhost:4000/programming/2013/11/07/listen_and_repeat.html</guid>
         
         
         <category>Programming</category>
@@ -144,8 +144,8 @@
 
 </description>
         <pubDate>Fri, 21 Jun 2013 05:08:10 +0900</pubDate>
-        <link>http://liam-conroy.com//software%20engineer/2013/06/21/rakuten.html</link>
-        <guid isPermaLink="true">http://liam-conroy.com//software%20engineer/2013/06/21/rakuten.html</guid>
+        <link>http://localhost:4000/software%20engineer/2013/06/21/rakuten.html</link>
+        <guid isPermaLink="true">http://localhost:4000/software%20engineer/2013/06/21/rakuten.html</guid>
         
         
         <category>Software Engineer</category>
