@@ -2,7 +2,7 @@
 layout: post
 type: past
 title:  "Halotrade"
-date:   2013-12-20 15:08:10 -0500
+date:   2014-12-20 15:08:10 -0500
 img: img/portfolio/halotrade.png
 modalID: modalHaloTrade
 category: Programming, Project Management, Consulting
